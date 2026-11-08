@@ -9,6 +9,14 @@ import {
   useSlidePageNumber,
 } from '@open-slide/core';
 import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import chipAlpha from './assets/chip-alpha.jpg';
+import chipMpc750 from './assets/chip-mpc750.jpg';
+import chipOpteron from './assets/chip-opteron.jpg';
+import chipPa8000 from './assets/chip-pa8000.jpg';
+import chipPentium4 from './assets/chip-pentium4.jpg';
+import chipPower7 from './assets/chip-power7.jpg';
+import chipPpc970 from './assets/chip-ppc970.jpg';
+import chipSparc from './assets/chip-sparc.jpg';
 import compaqLogo from './assets/compaq-logo.svg';
 import decAlphaGeneration from './assets/dec-alpha-generation.svg';
 import decLogo from './assets/dec-logo.svg';
@@ -18,12 +26,17 @@ import g5Front from './assets/g5-front.jpg';
 import g5Open from './assets/g5-open.jpg';
 import hpLogo from './assets/hp-logo.svg';
 import ibmLogo from './assets/ibm-logo.svg';
+import mobo1 from './assets/mobo-1.jpg';
+import mobo486 from './assets/mobo-486.jpg';
 import marenostrumA from './assets/marenostrum-a.jpg';
 import marenostrumD from './assets/marenostrum-d.jpg';
 import mareRacks from './assets/mare.jpg';
 import power7Badge from './assets/power7-badge.svg';
 import powerpcLogo from './assets/powerpc-logo.svg';
 import tru64Login from './assets/tru64.png';
+import uvmLogo from './assets/uvm-logo.svg';
+import wafer12 from './assets/wafer-12in.jpg';
+import wafer2 from './assets/wafer-2.jpg';
 import winlabBuilding from './assets/winlab-building.jpg';
 import winlabLogo from './assets/winlab-logo.jpg';
 import xbox360Pro from './assets/xbox360-pro.jpg';
@@ -240,6 +253,21 @@ const CSS = `
 @keyframes tc-jab { 0%, 55%, 100% { transform: rotate(0deg); } 65% { transform: rotate(-16deg); } 75% { transform: rotate(5deg); } 85% { transform: rotate(-14deg); } }
 @keyframes tc-led { 0%, 100% { opacity: 0.18; } 50% { opacity: 1; } }
 @keyframes tc-smug { 0%, 100% { transform: rotate(0deg) translateY(0); } 50% { transform: rotate(-3deg) translateY(-5px); } }
+@keyframes tc-spot { 0%, 14%, 100% { box-shadow: 0 0 0 0 var(--g0); } 7% { box-shadow: 0 0 56px 10px var(--g1); } }
+@keyframes tc-spin { to { transform: rotate(360deg); } }
+@keyframes tc-ching { 0% { opacity: 0; transform: scale(0.2) rotate(-14deg); } 55% { opacity: 1; transform: scale(1.22) rotate(5deg); } 78% { transform: scale(0.96) rotate(-2deg); } 100% { opacity: 1; transform: none; } }
+@keyframes tc-usd { 0% { opacity: 0; transform: translateY(40px) scale(0.5) rotate(var(--rot, 0deg)); } 20%, 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-150px) scale(1.15) rotate(calc(var(--rot, 0deg) * -1)); } }
+@keyframes tc-bulbglow { 0%, 100% { transform: scale(0.85); opacity: 0.5; } 50% { transform: scale(1.3); opacity: 1; } }
+@keyframes tc-sway { from { transform: rotate(-14deg); } to { transform: rotate(14deg); } }
+@keyframes tc-dipwave { from { transform: rotate(-7deg); } to { transform: rotate(9deg); } }
+@keyframes tc-writearm { from { transform: rotate(-5deg); } to { transform: rotate(6deg); } }
+.tc-active [data-osd-step="revealed"] .tc-ching { animation: tc-ching 800ms cubic-bezier(0.34, 1.56, 0.64, 1) 400ms both, tc-neon 3s linear 1200ms infinite; }
+.tc-active [data-osd-step="revealed"] .tc-usd { animation: tc-usd 2.6s ease-out var(--d) infinite both; }
+.tc-active [data-osd-step="revealed"] .tc-bulbglow { animation: tc-bulbglow 1.6s ease-in-out 900ms infinite both; }
+.tc-active [data-osd-step="revealed"] .tc-bulbpop { animation: tc-popin 700ms cubic-bezier(0.34, 1.56, 0.64, 1) 500ms both; }
+.tc-active [data-osd-step="revealed"] .tc-sway { animation: tc-sway 1.4s ease-in-out infinite alternate; }
+.tc-active [data-osd-step="revealed"] .tc-dipwave { animation: tc-dipwave 0.9s ease-in-out infinite alternate; }
+.tc-active [data-osd-step="revealed"] .tc-writearm { animation: tc-writearm 0.35s ease-in-out infinite alternate; }
 @media (prefers-reduced-motion: reduce) { .tc-a { animation: none !important; } }
 `;
 
@@ -2662,6 +2690,23 @@ const WalkHome: Page = () => {
       <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', top: 230, left: 120, width: 1680, height: 380 }}>
         <HomeJourney />
       </div>
+      <div
+        className="tc-a"
+        style={{
+          position: 'absolute',
+          top: 690,
+          left: 120,
+          width: 1680,
+          textAlign: 'center',
+          fontSize: 76,
+          fontWeight: 800,
+          lineHeight: 1.15,
+          letterSpacing: '-0.035em',
+          ...rise(active, 600),
+        }}
+      >
+        Going back where I started - <span style={{ color: 'var(--osd-accent)' }}>with a real job!</span>
+      </div>
     </Frame>
   );
 };
@@ -3403,8 +3448,525 @@ const MareNostrum: Page = () => {
 };
 MareNostrum.transition = settle;
 
+/* ───────────────────────── 14 show and tell ───────────────────────── */
+
+const ChipCard = ({
+  src,
+  alt,
+  x,
+  y,
+  rot,
+  d,
+  spot,
+  color,
+  rgb,
+  vendor,
+  name,
+  big,
+}: {
+  src: string;
+  alt: string;
+  x: number;
+  y: number;
+  rot: number;
+  d: number;
+  spot: number;
+  color: string;
+  rgb: string;
+  vendor: string;
+  name: string;
+  /** Larger card: a taller photo and a one-line label bar. */
+  big?: boolean;
+}) => {
+  const active = useIsActivePage();
+  return (
+    <div
+      className="tc-a"
+      style={
+        {
+          '--r': `${rot}deg`,
+          position: 'absolute',
+          left: x,
+          top: y,
+          width: big ? 366 : 300,
+          height: big ? 420 : 232,
+          transform: `rotate(${rot}deg)`,
+          animation: active ? `tc-polaroid 900ms ${SPRING} ${d}ms both` : undefined,
+        } as CSSProperties
+      }
+    >
+      <div
+        className="tc-a"
+        style={{
+          width: '100%',
+          height: '100%',
+          animation: active ? `tc-bobsm ${4.4 + (d % 3) * 0.4}s ease-in-out ${d + 1200}ms infinite` : undefined,
+        }}
+      >
+        <div
+          className="tc-a"
+          style={
+            {
+              '--g0': `rgba(${rgb},0)`,
+              '--g1': `rgba(${rgb},0.6)`,
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              boxSizing: 'border-box',
+              borderRadius: 'var(--osd-radius)',
+              border: `2px solid ${color}`,
+              background: 'rgba(255,255,255,0.05)',
+              overflow: 'hidden',
+              animation: active ? `tc-spot 10s ease-in-out ${spot}ms infinite` : undefined,
+            } as CSSProperties
+          }
+        >
+          <div
+            style={{
+              height: big ? 362 : 156,
+              boxSizing: 'border-box',
+              padding: big ? 0 : 6,
+              background: '#F3F6FC',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <img src={src} alt={alt} style={{ display: 'block', maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+          </div>
+          {big ? (
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 14, padding: '8px 18px', whiteSpace: 'nowrap' }}>
+              <div style={{ fontFamily: mono, fontSize: 20, letterSpacing: '0.14em', color }}>{vendor}</div>
+              <div style={{ fontSize: 32, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.03em' }}>{name}</div>
+            </div>
+          ) : (
+            <div style={{ padding: '6px 16px' }}>
+              <div style={{ fontFamily: mono, fontSize: 18, lineHeight: 1.2, letterSpacing: '0.14em', color }}>{vendor}</div>
+              <div style={{ whiteSpace: 'nowrap', fontSize: 30, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.03em' }}>{name}</div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/** A round wafer that slowly spins under a sweeping glint. */
+const Wafer = ({ src, alt, x, y, d, size = 165, reverse }: { src: string; alt: string; x: number; y: number; d: number; size?: number; reverse?: boolean }) => {
+  const active = useIsActivePage();
+  return (
+    <div
+      className="tc-a"
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        width: size,
+        height: size,
+        boxSizing: 'border-box',
+        borderRadius: '50%',
+        overflow: 'hidden',
+        border: '3px solid #C8D3EE',
+        boxShadow: '0 0 40px rgba(180,200,255,0.35)',
+        animation: active ? `tc-badge 800ms ${SPRING} ${d}ms both` : undefined,
+      }}
+    >
+      <div
+        className="tc-a"
+        style={{
+          width: '100%',
+          height: '100%',
+          animation: active ? `tc-spin 30s linear infinite ${reverse ? 'reverse' : 'normal'}` : undefined,
+        }}
+      >
+        <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
+      </div>
+      <div
+        aria-hidden="true"
+        className="tc-a"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'conic-gradient(from 0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0.42) 50%, rgba(255,255,255,0) 60%, rgba(255,255,255,0) 100%)',
+          animation: active ? 'tc-spin 4s linear infinite' : undefined,
+        }}
+      />
+    </div>
+  );
+};
+
+const Board = ({ src, alt, x, y, d, label }: { src: string; alt: string; x: number; y: number; d: number; label: string }) => {
+  const active = useIsActivePage();
+  return (
+    <div
+      className="tc-a"
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        width: 360,
+        height: 108,
+        boxSizing: 'border-box',
+        borderRadius: 'var(--osd-radius)',
+        overflow: 'hidden',
+        border: `2px solid ${C.teal}`,
+        boxShadow: '0 0 36px rgba(79,209,197,0.25)',
+        animation: active ? `tc-up 700ms ${SPRING} ${d}ms both` : undefined,
+      }}
+    >
+      <img src={src} alt={alt} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'cover' }} />
+      <div
+        aria-hidden="true"
+        className="tc-a"
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          width: '24%',
+          background: 'linear-gradient(90deg, rgba(79,209,197,0), rgba(79,209,197,0.45), rgba(79,209,197,0))',
+          animation: active ? `tc-shimmer 4s ease-in-out ${d + 1000}ms infinite` : undefined,
+        }}
+      />
+      <div
+        style={{
+          position: 'absolute',
+          left: 10,
+          bottom: 10,
+          padding: '3px 12px',
+          borderRadius: 999,
+          background: 'rgba(3,5,12,0.82)',
+          color: C.teal,
+          fontFamily: mono,
+          fontSize: 15,
+          letterSpacing: '0.1em',
+        }}
+      >
+        {label}
+      </div>
+    </div>
+  );
+};
+
+const ShowTell: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="14 · SHOW AND TELL"
+      title={
+        <span style={{ display: 'block', fontSize: 112, lineHeight: 1.05, whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          Now — <span style={{ color: 'var(--osd-accent)' }}><Wave text="show and tell!" delay={600} /></span>
+        </span>
+      }
+    >
+      <ChipCard src={chipPentium4} alt="Intel Pentium 4 processor" x={120} y={262} rot={-2} d={300} spot={1800} color="#4DA6FF" rgb="77,166,255" vendor="INTEL" name="Pentium 4" />
+      <ChipCard src={chipOpteron} alt="AMD Opteron processor" x={444} y={262} rot={1.5} d={460} spot={2900} color="#5BE49B" rgb="91,228,155" vendor="AMD" name="Opteron" />
+      <ChipCard src={chipPower7} alt="IBM POWER7 processor die" x={768} y={262} rot={-1} d={620} spot={4000} color="#9AD7FF" rgb="154,215,255" vendor="IBM" name="POWER7" />
+      <ChipCard src={chipPpc970} alt="IBM PowerPC 970MP processor" x={1092} y={262} rot={2} d={780} spot={5100} color="#4FD1C5" rgb="79,209,197" vendor="IBM" name="PowerPC 970MP" />
+      <ChipCard big src={chipMpc750} alt="IBM PowerPC 750 processor" x={120} y={528} rot={1.5} d={940} spot={6200} color="#FFC56B" rgb="255,197,107" vendor="IBM" name="PowerPC 750" />
+      <ChipCard big src={chipAlpha} alt="DEC Alpha 21164 processor" x={558} y={528} rot={-1.5} d={1100} spot={7300} color="#FF5D6C" rgb="255,93,108" vendor="DEC" name="Alpha 21164" />
+      <ChipCard big src={chipSparc} alt="Sun UltraSPARC II processor" x={996} y={528} rot={1} d={1260} spot={8400} color="#B58CFF" rgb="181,140,255" vendor="SUN" name="UltraSPARC II" />
+      <ChipCard big src={chipPa8000} alt="HP PA-8000 PA-RISC processor" x={1434} y={528} rot={-1.5} d={1420} spot={9500} color="#FF8A4C" rgb="255,138,76" vendor="HP" name="PA-8000" />
+      <Wafer src={wafer12} alt="12-inch silicon wafer" x={1555} y={72} size={110} d={1600} />
+      <Wafer src={wafer2} alt="Silicon wafer with finished chips" x={1690} y={72} size={110} d={1760} reverse />
+      <div
+        className="tc-a"
+        style={{ position: 'absolute', left: 1555, top: 190, width: 245, textAlign: 'center', fontFamily: mono, fontSize: 16, letterSpacing: '0.14em', color: C.dim, ...rise(active, 1900) }}
+      >
+        SILICON WAFERS
+      </div>
+      <Board src={mobo1} alt="A computer motherboard" x={1440} y={262} d={2000} label="MOTHERBOARD" />
+      <Board src={mobo486} alt="A VIA 486 motherboard with its CPU" x={1440} y={386} d={2200} label="MOTHERBOARD · VIA 486" />
+      <Credit>
+        Photos via Wikimedia Commons: Henriok, K. Kaiser (CC0) · L. Szalai (public domain) · K. Lanzet, A. Nunome, Architekt1024 (CC BY) · Peellden, S. Fararano (CC BY-SA)
+      </Credit>
+    </Frame>
+  );
+};
+ShowTell.transition = settle;
+
+/* ───────────────────────── 15 back to learning ───────────────────────── */
+
+const UvmCard = () => {
+  const active = useIsActivePage();
+  return (
+    <div
+      className="tc-a tc-row"
+      style={{
+        position: 'relative',
+        display: 'inline-flex',
+        overflow: 'hidden',
+        padding: '28px 36px',
+        borderRadius: 24,
+        background: '#FFFFFF',
+        boxShadow: '0 0 80px rgba(47,158,107,0.5)',
+      }}
+    >
+      <img src={uvmLogo} alt="University of Vermont logo" style={{ display: 'block', width: 720, height: 229 }} />
+      <div
+        aria-hidden="true"
+        className="tc-a"
+        style={{
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          width: '22%',
+          background: 'linear-gradient(90deg, rgba(47,158,107,0), rgba(47,158,107,0.28), rgba(47,158,107,0))',
+          animation: active ? 'tc-shimmer 4s ease-in-out 1200ms infinite' : undefined,
+        }}
+      />
+    </div>
+  );
+};
+
+/** A graduate in cap and gown, waving a diploma. */
+const GradGuy = () => (
+  <div className="tc-a tc-row" style={{ position: 'relative', width: 250, height: 330, flex: 'none' }}>
+    <svg width={250} height={330} viewBox="0 0 250 330" role="img" aria-label="A graduate in a cap and gown waving a diploma">
+      {/* legs + shoes */}
+      <line x1={108} y1={266} x2={102} y2={314} stroke="#A9B7D9" strokeWidth={11} strokeLinecap="round" />
+      <line x1={142} y1={266} x2={148} y2={314} stroke="#A9B7D9" strokeWidth={11} strokeLinecap="round" />
+      <ellipse cx={98} cy={321} rx={17} ry={7} fill="#FF5D6C" />
+      <ellipse cx={152} cy={321} rx={17} ry={7} fill="#FF5D6C" />
+      {/* gown, shirt, stole */}
+      <path d="M125 142 C 100 144, 86 152, 82 164 L 60 272 L 190 272 L 168 164 C 164 152, 150 144, 125 142 Z" fill="#2F9E6B" />
+      <path d="M108 146 L125 188 L142 146 Z" fill="#F3F6FC" />
+      <path d="M104 148 L116 268" stroke={C.gold} strokeWidth={9} strokeLinecap="round" fill="none" />
+      <path d="M146 148 L134 268" stroke={C.gold} strokeWidth={9} strokeLinecap="round" fill="none" />
+      {/* resting arm */}
+      <line x1={84} y1={164} x2={70} y2={222} stroke="#2F9E6B" strokeWidth={18} strokeLinecap="round" />
+      <circle cx={68} cy={228} r={9} fill="#FFD9B3" />
+      {/* head + face */}
+      <circle cx={125} cy={96} r={44} fill="#FFD9B3" />
+      <circle cx={98} cy={112} r={7} fill="rgba(255,93,108,0.35)" />
+      <circle cx={152} cy={112} r={7} fill="rgba(255,93,108,0.35)" />
+      <circle cx={110} cy={100} r={5.5} fill="#03050C" />
+      <circle cx={140} cy={100} r={5.5} fill="#03050C" />
+      <path d="M107 114 Q125 134 143 114" stroke="#03050C" strokeWidth={4} strokeLinecap="round" fill="none" />
+      {/* cap */}
+      <path d="M90 74 C 90 56, 160 56, 160 74 L 160 82 C 142 90, 108 90, 90 82 Z" fill="#1B6B47" />
+      <polygon points="125,28 200,50 125,72 50,50" fill="#23805A" stroke="#1B6B47" strokeWidth={3} strokeLinejoin="round" />
+      <circle cx={125} cy={50} r={5} fill={C.gold} />
+      <g className="tc-a tc-sway" style={{ transformOrigin: '176px 56px' }}>
+        <path d="M125 50 L176 56" stroke={C.gold} strokeWidth={3} strokeLinecap="round" fill="none" />
+        <line x1={176} y1={56} x2={176} y2={86} stroke={C.gold} strokeWidth={4} strokeLinecap="round" />
+        <ellipse cx={176} cy={94} rx={5.5} ry={10} fill={C.gold} />
+      </g>
+      {/* raised arm with diploma */}
+      <g className="tc-a tc-dipwave" style={{ transformOrigin: '166px 164px' }}>
+        <line x1={166} y1={164} x2={206} y2={126} stroke="#2F9E6B" strokeWidth={18} strokeLinecap="round" />
+        <g transform="rotate(28 214 112)">
+          <rect x={202} y={66} width={24} height={92} rx={12} fill="#F5E9C8" />
+          <rect x={202} y={104} width={24} height={9} fill="#FF5D6C" />
+        </g>
+        <circle cx={209} cy={121} r={10} fill="#FFD9B3" />
+      </g>
+    </svg>
+    <Sparkle x={196} y={4} size={30} d="0ms" />
+    <Sparkle x={14} y={40} size={26} d="700ms" />
+    <Sparkle x={214} y={196} size={22} d="1200ms" />
+  </div>
+);
+
+const Dollar = ({ x, y, size, d, rot, children }: { x: number; y: number; size: number; d: string; rot: string; children: ReactNode }) => (
+  <span
+    aria-hidden="true"
+    className="tc-a tc-usd"
+    style={
+      {
+        '--d': d,
+        '--rot': rot,
+        position: 'absolute',
+        left: x,
+        top: y,
+        fontSize: size,
+        fontWeight: 900,
+        lineHeight: 1,
+        color: C.green,
+        textShadow: '0 0 18px rgba(91,228,155,0.6)',
+      } as CSSProperties
+    }
+  >
+    {children}
+  </span>
+);
+
+/** A student with glasses, hard at work with pencil and paper. A light bulb pops over her head. */
+const StudyGal = () => (
+  <div className="tc-a tc-row" style={{ position: 'relative', width: 330, height: 310, flex: 'none' }}>
+    <div
+      aria-hidden="true"
+      className="tc-a tc-bulbglow"
+      style={{
+        position: 'absolute',
+        left: 168,
+        top: -28,
+        width: 130,
+        height: 130,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(255,197,107,0.8), rgba(255,197,107,0) 70%)',
+      }}
+    />
+    <svg width={330} height={310} viewBox="0 0 330 310" role="img" aria-label="A student with glasses studying with pencil and paper">
+      {/* desk */}
+      <rect x={30} y={248} width={12} height={58} rx={4} fill="#C98A2E" />
+      <rect x={288} y={248} width={12} height={58} rx={4} fill="#C98A2E" />
+      {/* torso */}
+      <line x1={122} y1={156} x2={122} y2={238} stroke="#4DA6FF" strokeWidth={30} strokeLinecap="round" />
+      <rect x={10} y={232} width={310} height={16} rx={6} fill={C.amber} />
+      {/* head */}
+      <circle cx={122} cy={100} r={42} fill="#FFD9B3" />
+      <path d="M78 100 C 74 62, 100 54, 122 54 C 146 54, 170 64, 166 100 C 152 80, 100 78, 78 100 Z" fill="#7A4B2A" />
+      <circle cx={92} cy={52} r={15} fill="#7A4B2A" />
+      <circle cx={106} cy={110} r={4.5} fill="#03050C" />
+      <circle cx={138} cy={110} r={4.5} fill="#03050C" />
+      <circle cx={106} cy={106} r={13} fill="rgba(255,255,255,0.12)" stroke="#F3F6FC" strokeWidth={3.5} />
+      <circle cx={138} cy={106} r={13} fill="rgba(255,255,255,0.12)" stroke="#F3F6FC" strokeWidth={3.5} />
+      <line x1={119} y1={104} x2={125} y2={104} stroke="#F3F6FC" strokeWidth={3.5} />
+      <path d="M114 130 Q122 134 130 130" stroke="#03050C" strokeWidth={3.5} strokeLinecap="round" fill="none" />
+      {/* thought dots up to the bulb */}
+      <circle cx={174} cy={78} r={4} fill="#F3F6FC" opacity={0.7} />
+      <circle cx={188} cy={68} r={6} fill="#F3F6FC" opacity={0.7} />
+      {/* books */}
+      <rect x={24} y={216} width={76} height={16} rx={3} fill={C.red} />
+      <rect x={30} y={200} width={66} height={16} rx={3} fill={C.green} />
+      <rect x={26} y={184} width={70} height={16} rx={3} fill="#4DA6FF" />
+      {/* paper */}
+      <polygon points="190,232 310,232 322,214 202,214" fill="#F3F6FC" />
+      <line x1={210} y1={220} x2={304} y2={220} stroke={C.dim} strokeWidth={2} />
+      <line x1={206} y1={226} x2={300} y2={226} stroke={C.dim} strokeWidth={2} />
+      {/* writing arm */}
+      <line x1={122} y1={164} x2={170} y2={202} stroke="#4DA6FF" strokeWidth={15} strokeLinecap="round" />
+      <g className="tc-a tc-writearm" style={{ transformOrigin: '170px 202px' }}>
+        <line x1={170} y1={202} x2={224} y2={214} stroke="#4DA6FF" strokeWidth={14} strokeLinecap="round" />
+        <line x1={214} y1={200} x2={254} y2={226} stroke={C.gold} strokeWidth={7} strokeLinecap="round" />
+        <circle cx={212} cy={198} r={4.5} fill={C.red} />
+        <path d="M250 222 L260 231 L247 229 Z" fill="#03050C" />
+        <circle cx={226} cy={215} r={8.5} fill="#FFD9B3" />
+      </g>
+    </svg>
+    <div
+      className="tc-a tc-bulbpop"
+      style={{ position: 'absolute', left: 190, top: -4, fontSize: 72, lineHeight: 1 }}
+    >
+      💡
+    </div>
+  </div>
+);
+
+const Learning: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="15 · BACK TO LEARNING"
+      title={
+        <span style={{ display: 'block', fontSize: 72, whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          Next up, time to get back to <span style={{ color: 'var(--osd-accent)' }}>learning!</span>
+        </span>
+      }
+    >
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        {/* click 1 — the big UVM logo */}
+        <div style={{ position: 'absolute', top: 245, left: 120, width: 800, height: 340, display: 'flex', alignItems: 'center' }}>
+          <Steps>
+            <Step duration={200}>
+              <UvmCard />
+            </Step>
+          </Steps>
+        </div>
+        {/* click 2 — the Master’s degree */}
+        <div style={{ position: 'absolute', top: 245, left: 1000, width: 800, height: 340, display: 'flex', alignItems: 'center' }}>
+          <Steps>
+            <Step duration={200}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 30 }}>
+                <GradGuy />
+                <div
+                  className="tc-a tc-in"
+                  style={{ '--d': '500ms', width: 520, fontSize: 46, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.03em' } as CSSProperties}
+                >
+                  I earned a <span style={{ color: 'var(--osd-accent)' }}>Master’s degree</span> in{' '}
+                  <span style={{ color: C.gold }}>Electrical Engineering.</span>
+                </div>
+              </div>
+            </Step>
+          </Steps>
+        </div>
+        {/* click 3 — free, and Cha-Ching */}
+        <div style={{ position: 'absolute', top: 610, left: 120, width: 800, height: 320 }}>
+          <Steps>
+            <Step duration={200}>
+              <div style={{ position: 'relative', width: 800, height: 320 }}>
+                <div
+                  className="tc-a tc-in"
+                  style={{ '--d': '0ms', fontSize: 50, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.03em' } as CSSProperties}
+                >
+                  And it was{' '}
+                  <span
+                    className="tc-a tc-passion"
+                    style={{ background: 'linear-gradient(90deg,#5BE49B,#FFC56B,#4FD1C5,#5BE49B)', backgroundSize: '300% 100%', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}
+                  >
+                    FREE
+                  </span>{' '}
+                  <span style={{ fontSize: 56 }}>🆓</span>, I got <span style={{ color: '#4DA6FF' }}>IBM</span> to pay for it.
+                </div>
+                <div
+                  className="tc-a tc-ching"
+                  style={{ position: 'absolute', left: 0, top: 160, whiteSpace: 'nowrap', fontSize: 100, lineHeight: 1, fontWeight: 900, letterSpacing: '-0.04em' }}
+                >
+                  Cha-Ching!
+                </div>
+                <Dollar x={600} y={200} size={56} d="0ms" rot="-12deg">
+                  $
+                </Dollar>
+                <Dollar x={655} y={226} size={44} d="500ms" rot="10deg">
+                  💵
+                </Dollar>
+                <Dollar x={705} y={196} size={64} d="1000ms" rot="-8deg">
+                  $
+                </Dollar>
+                <Dollar x={750} y={230} size={44} d="1500ms" rot="14deg">
+                  💰
+                </Dollar>
+                <Dollar x={560} y={236} size={40} d="2000ms" rot="-10deg">
+                  $
+                </Dollar>
+              </div>
+            </Step>
+          </Steps>
+        </div>
+        {/* click 4 — never stop learning */}
+        <div style={{ position: 'absolute', top: 612, left: 1000, width: 800, height: 320, display: 'flex', alignItems: 'center' }}>
+          <Steps>
+            <Step duration={200}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 30 }}>
+                <StudyGal />
+                <div style={{ width: 440 }}>
+                  <div
+                    className="tc-a tc-in"
+                    style={{ '--d': '400ms', fontSize: 58, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.04em' } as CSSProperties}
+                  >
+                    Never stop <span className="tc-a tc-passion">learning.</span>
+                  </div>
+                  <div
+                    className="tc-a tc-in"
+                    style={{ '--d': '900ms', marginTop: 18, fontSize: 34, lineHeight: 1.25, fontWeight: 700, color: C.muted } as CSSProperties}
+                  >
+                    Either formally or on your own.
+                  </div>
+                </div>
+              </div>
+            </Step>
+          </Steps>
+        </div>
+      </div>
+    </Frame>
+  );
+};
+Learning.transition = settle;
+
 export const meta: SlideMeta = {
   title: 'What a career in technology looks like & how AI changes everything',
   createdAt: '2026-11-07T16:09:51.435Z',
 };
-export default [Cover, Agenda, Powers, Hello, College, Winlab, Internship, Tru64, Luck, WalkHome, IbmJob, IbmMore, MareNostrum] satisfies Page[];
+export default [Cover, Agenda, Powers, Hello, College, Winlab, Internship, Tru64, Luck, WalkHome, IbmJob, IbmMore, MareNostrum, ShowTell, Learning] satisfies Page[];
