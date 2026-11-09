@@ -10,6 +10,7 @@ import {
 } from '@open-slide/core';
 import { type CSSProperties, type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import chipAlpha from './assets/chip-alpha.jpg';
+import einsteinPatent from './assets/einstein-patent.jpg';
 import chipMpc750 from './assets/chip-mpc750.jpg';
 import chipOpteron from './assets/chip-opteron.jpg';
 import chipPa8000 from './assets/chip-pa8000.jpg';
@@ -31,8 +32,23 @@ import mobo486 from './assets/mobo-486.jpg';
 import marenostrumA from './assets/marenostrum-a.jpg';
 import marenostrumD from './assets/marenostrum-d.jpg';
 import mareRacks from './assets/mare.jpg';
+import mapsysPhoto from './assets/mapsys.png';
+import kingstonLogo from './assets/customers/kingston.png';
+import mitLogo from './assets/customers/mit.svg';
+import oclcLogo from './assets/customers/oclc.svg';
+import ohioHealthLogo from './assets/customers/ohiohealth.png';
+import upmcLogo from './assets/customers/upmc.svg';
+import vsLogo from './assets/customers/victorias-secret.svg';
+import db2Logo from './assets/ibm/db2.svg';
+import ibmZ9 from './assets/ibm/ibm-z9.jpg';
+import powerSystemsLogo from './assets/ibm/power-systems.svg';
+import redHatLogo from './assets/ibm/redhat.svg';
+import wallStreetSign from './assets/ibm/wall-street-sign.jpg';
+import watsonxLogo from './assets/ibm/watsonx.svg';
+import wasserstromLogo from './assets/customers/wasserstrom.png';
 import power7Badge from './assets/power7-badge.svg';
 import powerpcLogo from './assets/powerpc-logo.svg';
+import steveJobs from './assets/steve-jobs-stage.jpg';
 import tru64Login from './assets/tru64.png';
 import uvmLogo from './assets/uvm-logo.svg';
 import wafer12 from './assets/wafer-12in.jpg';
@@ -41,6 +57,10 @@ import winlabBuilding from './assets/winlab-building.jpg';
 import winlabLogo from './assets/winlab-logo.jpg';
 import xbox360Pro from './assets/xbox360-pro.jpg';
 import xbox360S from './assets/xbox360-s.jpg';
+import aixLogo from './assets/aix-logo.svg';
+import ibmILogo from './assets/ibm-i-logo.svg';
+import power5I5515 from './assets/power5-i5-515.jpg';
+import power5I5570 from './assets/power5-i5-570.jpg';
 
 /* ───────────────────────── design ───────────────────────── */
 
@@ -2806,7 +2826,7 @@ const PartyEmoji = ({ children }: { children: ReactNode }) => {
   );
 };
 
-const PhotoCard = ({ src, alt, h, d, glow }: { src: string; alt: string; h: number; d: number; glow: string }) => (
+const PhotoCard = ({ src, alt, h, w, d, glow }: { src: string; alt: string; h: number; w?: number; d: number; glow: string }) => (
   <span
     className="tc-a tc-plq"
     style={
@@ -2820,7 +2840,7 @@ const PhotoCard = ({ src, alt, h, d, glow }: { src: string; alt: string; h: numb
       } as CSSProperties
     }
   >
-    <img src={src} alt={alt} style={{ display: 'block', height: h, width: 'auto' }} />
+    <img src={src} alt={alt} style={{ display: 'block', height: h, width: w ?? 'auto' }} />
   </span>
 );
 
@@ -3965,8 +3985,2327 @@ const Learning: Page = () => {
 };
 Learning.transition = settle;
 
+/* ───────────────────────── 16 patents ───────────────────────── */
+
+const PATENT_CSS = `
+@keyframes pt-stamp { 0% { opacity: 0; transform: scale(2.6) rotate(-40deg); } 60% { opacity: 1; transform: scale(0.92) rotate(-12deg); } 100% { opacity: 1; transform: scale(1) rotate(-14deg); } }
+@keyframes pt-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,93,108,0.0); } 50% { box-shadow: 0 0 36px 4px rgba(255,93,108,0.45); } }
+.tc-active [data-osd-step="revealed"] .pt-stamp { animation: pt-stamp 650ms cubic-bezier(0.34, 1.2, 0.64, 1) 1300ms both, pt-pulse 2.4s ease-in-out 2000ms infinite; }
+`;
+
+/** One granted patent: number + issue date on the left, title on the right. */
+const PatentRow = ({ num, date, title, d }: { num: string; date: string; title: string; d: string }) => (
+  <div
+    className="tc-a tc-in"
+    style={
+      {
+        '--d': d,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 30,
+        height: 80,
+        padding: '0 28px',
+        borderRadius: 14,
+        borderLeft: '5px solid var(--osd-accent)',
+        background: C.panel,
+      } as CSSProperties
+    }
+  >
+    <div style={{ width: 250, flex: 'none' }}>
+      <div style={{ fontFamily: mono, fontSize: 28, lineHeight: 1.2, color: 'var(--osd-accent)' }}>US {num}</div>
+      <div style={{ fontFamily: mono, fontSize: 22, lineHeight: 1.3, color: C.muted }}>{date}</div>
+    </div>
+    <div style={{ fontSize: 30, lineHeight: 1.2, fontWeight: 700 }}>{title}</div>
+  </div>
+);
+
+/** A slowly turning gear — teeth are a dashed stroke. */
+const Gear = ({ x, y, size, dur, reverse }: { x: number; y: number; size: number; dur: number; reverse?: boolean }) => {
+  const active = useIsActivePage();
+  return (
+    <svg
+      aria-hidden="true"
+      className="tc-a"
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        animation: active ? `tc-spin ${dur}s linear infinite ${reverse ? 'reverse' : 'normal'}` : undefined,
+      }}
+    >
+      <circle cx={50} cy={50} r={41} fill="none" stroke={C.gold} strokeWidth={12} strokeDasharray="11.7 11.7" />
+      <circle cx={50} cy={50} r={34} fill="none" stroke={C.gold} strokeWidth={8} />
+      <line x1={50} y1={16} x2={50} y2={84} stroke={C.gold} strokeWidth={5} />
+      <line x1={16} y1={50} x2={84} y2={50} stroke={C.gold} strokeWidth={5} />
+      <circle cx={50} cy={50} r={11} fill={C.gold} />
+      <circle cx={50} cy={50} r={4.5} fill="#03050C" />
+    </svg>
+  );
+};
+
+/** A floating light bulb with a pulsing glow. */
+const Bulb = ({ x, y, size, delay }: { x: number; y: number; size: number; delay: number }) => {
+  const active = useIsActivePage();
+  return (
+    <div
+      aria-hidden="true"
+      className="tc-a"
+      style={{
+        position: 'absolute',
+        left: x,
+        top: y,
+        width: size,
+        height: size,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: size * 0.8,
+        lineHeight: 1,
+        animation: active ? `tc-float 4s ease-in-out ${delay}ms infinite` : undefined,
+      }}
+    >
+      <div
+        className="tc-a"
+        style={{
+          position: 'absolute',
+          inset: -size * 0.3,
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(255,197,107,0.55), rgba(255,197,107,0) 68%)',
+          animation: active ? `tc-bulbglow 1.8s ease-in-out ${delay}ms infinite` : undefined,
+        }}
+      />
+      <span style={{ position: 'relative' }}>💡</span>
+    </div>
+  );
+};
+
+const Patents: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="16 · PATENTS"
+      title={
+        <span style={{ display: 'block', fontSize: 160, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          <span className="tc-passion">
+            <Wave text="Patents!" delay={500} />
+          </span>
+        </span>
+      }
+    >
+      <style>{PATENT_CSS}</style>
+      {/* always-on: intro + ambient fun */}
+      <div style={{ position: 'absolute', top: 322, left: 120, width: 1220 }}>
+        <div className="tc-a" style={{ fontSize: 38, lineHeight: 1.3, fontWeight: 700, ...rise(active, 500) }}>
+          I joined a <span style={{ color: 'var(--osd-accent)' }}>patent group</span> at IBM & found a{' '}
+          <span style={{ color: C.gold }}>patent mentor.</span>
+        </div>
+        <div className="tc-a" style={{ marginTop: 14, fontSize: 34, lineHeight: 1.3, fontWeight: 700, color: C.muted, whiteSpace: 'nowrap', ...rise(active, 900) }}>
+          In addition to my design job →{' '}
+          <span style={{ color: C.green }}>filed 6+ patents</span> + <span style={{ color: '#4DA6FF' }}>published several papers</span>
+        </div>
+      </div>
+      <Bulb x={1000} y={140} size={96} delay={0} />
+      <Bulb x={1200} y={236} size={64} delay={900} />
+      <Gear x={1452} y={835} size={110} dur={9} reverse />
+      <Gear x={1545} y={795} size={190} dur={14} />
+      {/* click 1 — the patents, Einstein, the stamp */}
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', top: 520, left: 120, width: 1220, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                <PatentRow num="9,043,889" date="May 26, 2015" title="Method and apparatus for secure and reliable computing" d="0ms" />
+                <PatentRow num="8,595,468" date="Nov 26, 2013" title="Reverse simultaneous multi-threading" d="180ms" />
+                <PatentRow num="8,424,071" date="Apr 16, 2013" title="Method and apparatus for secure and reliable computing" d="360ms" />
+                <PatentRow num="7,865,862" date="Jan 4, 2011" title="Design structure for dynamically selecting compiled instructions" d="540ms" />
+                <PatentRow num="7,761,690" date="Jul 20, 2010" title="Method, apparatus and computer program product for dynamically selecting compiled instructions" d="720ms" />
+              </div>
+              {/* Einstein — patent clerk, Bern */}
+              <div className="tc-a tc-in" style={{ '--d': '300ms', position: 'absolute', left: 1404, top: 130, width: 396 } as CSSProperties}>
+                <div
+                  className="tc-a"
+                  style={{
+                    padding: '14px 14px 20px',
+                    background: '#F3EEE2',
+                    borderRadius: 6,
+                    transform: 'rotate(3deg)',
+                    boxShadow: '0 0 70px rgba(255,197,107,0.35)',
+                    animation: active ? 'tc-smug 5s ease-in-out infinite' : undefined,
+                  }}
+                >
+                  <img
+                    src={einsteinPatent}
+                    alt="Albert Einstein, patent examiner"
+                    style={{ display: 'block', width: 368, height: 483, objectFit: 'cover', borderRadius: 2 }}
+                  />
+                  <div style={{ marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 20, lineHeight: 1.3, color: '#2A2418' }}>
+                    Albert Einstein · patent examiner, Bern
+                  </div>
+                </div>
+              </div>
+              <Sparkle x={1372} y={150} size={34} d="900ms" />
+              <Sparkle x={1770} y={110} size={28} d="1500ms" />
+              <Sparkle x={1790} y={560} size={30} d="2100ms" />
+              <div
+                className="tc-a tc-in"
+                style={{ '--d': '1000ms', position: 'absolute', left: 1426, top: 40, fontFamily: mono, fontSize: 44, color: C.gold, textShadow: '0 0 24px rgba(255,197,107,0.6)' } as CSSProperties}
+              >
+                E = mc²
+              </div>
+              {/* PATENTED stamp */}
+              <div style={{ position: 'absolute', left: 1640, top: 30, width: 200, height: 200 }}>
+                <div
+                  className="tc-a pt-stamp"
+                  style={{
+                    width: 200,
+                    height: 200,
+                    boxSizing: 'border-box',
+                    borderRadius: '50%',
+                    border: `8px double ${C.red}`,
+                    background: 'rgba(3,5,12,0.62)',
+                    color: C.red,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontFamily: mono,
+                    textAlign: 'center',
+                  }}
+                >
+                  <div style={{ fontSize: 20, letterSpacing: '0.2em' }}>★ ★ ★</div>
+                  <div style={{ fontSize: 34, fontWeight: 900, lineHeight: 1.1, letterSpacing: '0.04em' }}>PATENTED</div>
+                  <div style={{ fontSize: 20, letterSpacing: '0.2em' }}>★ ★ ★</div>
+                </div>
+              </div>
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+Patents.transition = settle;
+
+/* ───────────────────────── 17 third point ───────────────────────── */
+
+const THINK_CSS = `
+@keyframes th-nod { from { transform: rotate(-2.5deg); } to { transform: rotate(4deg); } }
+@keyframes th-breathe { from { transform: translateY(0); } to { transform: translateY(3px); } }
+@keyframes th-cloud { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-8px) scale(1.03); } }
+@keyframes th-dot { 0%, 100% { opacity: 0.25; transform: scale(0.7); } 50% { opacity: 1; transform: scale(1.15); } }
+@keyframes th-q { 0% { opacity: 0; transform: translateY(14px) rotate(-8deg); } 30%, 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-40px) rotate(8deg); } }
+.tc-active [data-osd-step="revealed"] .th-bulb { animation: tc-popin 700ms cubic-bezier(0.34, 1.56, 0.64, 1) 700ms both; }
+.tc-active [data-osd-step="revealed"] .th-bulbglow { animation: tc-bulbglow 1.6s ease-in-out 1200ms infinite both; }
+`;
+
+/** A tiny gear that turns inside the thought cloud. */
+const ThinkGear = ({ cx, cy, r, dur, reverse }: { cx: number; cy: number; r: number; dur: number; reverse?: boolean }) => {
+  const active = useIsActivePage();
+  return (
+    <g
+      className="tc-a"
+      style={{
+        transformBox: 'fill-box',
+        transformOrigin: 'center',
+        animation: active ? `tc-spin ${dur}s linear infinite ${reverse ? 'reverse' : 'normal'}` : undefined,
+      }}
+    >
+      <circle cx={cx} cy={cy} r={r} fill="none" stroke={C.gold} strokeWidth={r * 0.28} strokeDasharray={`${r * 0.46} ${r * 0.46}`} />
+      <circle cx={cx} cy={cy} r={r * 0.72} fill="none" stroke={C.gold} strokeWidth={r * 0.16} />
+      <line x1={cx - r * 0.72} y1={cy} x2={cx + r * 0.72} y2={cy} stroke={C.gold} strokeWidth={r * 0.1} />
+      <line x1={cx} y1={cy - r * 0.72} x2={cx} y2={cy + r * 0.72} stroke={C.gold} strokeWidth={r * 0.1} />
+      <circle cx={cx} cy={cy} r={r * 0.2} fill={C.gold} />
+    </g>
+  );
+};
+
+/** A bronze "Thinker" on a rock: head nods, chest breathes, a thought cloud full of gears floats beside him. */
+const Thinker = () => {
+  const active = useIsActivePage();
+  const bronze = '#C98A2E';
+  const light = '#E8B45A';
+  const dark = '#8A5A1C';
+  return (
+    <div className="tc-a" style={{ position: 'relative', width: 600, height: 540 }}>
+      <svg width={600} height={540} viewBox="0 0 600 540" role="img" aria-label="A bronze statue of The Thinker, chin on fist, lost in thought" style={{ overflow: 'visible', filter: 'drop-shadow(0 0 40px rgba(255,197,107,0.25))' }}>
+        {/* rock */}
+        <path d="M30 520 L70 400 L150 372 L300 366 L390 388 L430 456 L452 520 Z" fill="#2A3350" />
+        <path d="M70 400 L150 372 L300 366 L390 388 L330 404 L150 410 Z" fill="#3A4670" />
+        <path d="M150 410 L330 404 L390 388 L430 456 L452 520 L300 520 Z" fill="#222A44" />
+        {/* body — breathes */}
+        <g className="tc-a" style={{ animation: active ? 'th-breathe 2.4s ease-in-out infinite alternate' : undefined }}>
+          {/* lower leg + foot */}
+          <line x1={330} y1={360} x2={316} y2={452} stroke={dark} strokeWidth={36} strokeLinecap="round" />
+          <line x1={330} y1={360} x2={316} y2={452} stroke={bronze} strokeWidth={28} strokeLinecap="round" />
+          <ellipse cx={304} cy={462} rx={34} ry={12} fill={bronze} />
+          {/* thigh */}
+          <line x1={176} y1={366} x2={330} y2={356} stroke={dark} strokeWidth={52} strokeLinecap="round" />
+          <line x1={176} y1={366} x2={330} y2={356} stroke={bronze} strokeWidth={44} strokeLinecap="round" />
+          <line x1={186} y1={354} x2={320} y2={346} stroke={light} strokeWidth={10} strokeLinecap="round" opacity={0.7} />
+          {/* torso, hunched forward */}
+          <line x1={178} y1={350} x2={262} y2={236} stroke={dark} strokeWidth={78} strokeLinecap="round" />
+          <line x1={178} y1={350} x2={262} y2={236} stroke={bronze} strokeWidth={70} strokeLinecap="round" />
+          <line x1={196} y1={330} x2={258} y2={246} stroke={light} strokeWidth={14} strokeLinecap="round" opacity={0.6} />
+          {/* resting arm */}
+          <line x1={238} y1={262} x2={226} y2={344} stroke={dark} strokeWidth={30} strokeLinecap="round" />
+          <line x1={238} y1={262} x2={226} y2={344} stroke={bronze} strokeWidth={24} strokeLinecap="round" />
+          {/* thinking arm: shoulder → elbow on knee → fist at chin */}
+          <line x1={286} y1={246} x2={342} y2={336} stroke={dark} strokeWidth={36} strokeLinecap="round" />
+          <line x1={286} y1={246} x2={342} y2={336} stroke={bronze} strokeWidth={30} strokeLinecap="round" />
+          <line x1={342} y1={336} x2={338} y2={236} stroke={dark} strokeWidth={30} strokeLinecap="round" />
+          <line x1={342} y1={336} x2={338} y2={236} stroke={bronze} strokeWidth={24} strokeLinecap="round" />
+          <line x1={348} y1={320} x2={345} y2={250} stroke={light} strokeWidth={7} strokeLinecap="round" opacity={0.7} />
+          {/* head — nods */}
+          <g className="tc-a" style={{ transformBox: 'view-box', transformOrigin: '288px 232px', animation: active ? 'th-nod 2.8s ease-in-out infinite alternate' : undefined }}>
+            <circle cx={316} cy={170} r={50} fill={dark} />
+            <circle cx={316} cy={170} r={46} fill={bronze} />
+            <path d="M274 160 C 276 124, 310 116, 340 126 C 362 134, 364 156, 360 166 C 346 146, 300 142, 274 160 Z" fill={dark} />
+            <path d="M290 178 Q 304 172 318 180" stroke={dark} strokeWidth={5} strokeLinecap="round" fill="none" />
+            <path d="M330 174 Q 340 168 350 174" stroke={dark} strokeWidth={5} strokeLinecap="round" fill="none" />
+            <ellipse cx={340} cy={226} rx={20} ry={17} fill={light} stroke={dark} strokeWidth={3} />
+            <ellipse cx={298} cy={146} rx={10} ry={6} fill={light} opacity={0.6} />
+          </g>
+        </g>
+        {/* thought trail */}
+        <circle className="tc-a" cx={402} cy={122} r={8} fill="#F3F6FC" style={{ transformBox: 'fill-box', transformOrigin: 'center', animation: active ? 'th-dot 1.8s ease-in-out 0ms infinite' : undefined }} />
+        <circle className="tc-a" cx={426} cy={96} r={13} fill="#F3F6FC" style={{ transformBox: 'fill-box', transformOrigin: 'center', animation: active ? 'th-dot 1.8s ease-in-out 300ms infinite' : undefined }} />
+        {/* thought cloud with gears */}
+        <g className="tc-a" style={{ animation: active ? 'th-cloud 4s ease-in-out infinite' : undefined }}>
+          <g fill="rgba(243,246,252,0.1)" stroke="#F3F6FC" strokeWidth={4}>
+            <ellipse cx={470} cy={52} rx={88} ry={42} />
+            <circle cx={410} cy={56} r={36} />
+            <circle cx={530} cy={50} r={36} />
+            <circle cx={470} cy={26} r={32} />
+          </g>
+          <ellipse cx={470} cy={52} rx={86} ry={40} fill="#0B1020" />
+          <circle cx={412} cy={56} r={32} fill="#0B1020" />
+          <circle cx={528} cy={50} r={32} fill="#0B1020" />
+          <circle cx={470} cy={28} r={28} fill="#0B1020" />
+          <ThinkGear cx={444} cy={50} r={26} dur={6} />
+          <ThinkGear cx={492} cy={62} r={20} dur={4.6} reverse />
+          <ThinkGear cx={512} cy={30} r={13} dur={3.2} />
+        </g>
+      </svg>
+      {/* drifting question marks */}
+      <span aria-hidden="true" className="tc-a" style={{ position: 'absolute', left: 380, top: 150, fontSize: 54, fontWeight: 900, color: C.gold, opacity: 0, animation: active ? 'th-q 3.6s ease-out 0ms infinite' : undefined }}>?</span>
+      <span aria-hidden="true" className="tc-a" style={{ position: 'absolute', left: 470, top: 170, fontSize: 40, fontWeight: 900, color: C.teal, opacity: 0, animation: active ? 'th-q 3.6s ease-out 1200ms infinite' : undefined }}>?</span>
+      <span aria-hidden="true" className="tc-a" style={{ position: 'absolute', left: 330, top: 100, fontSize: 44, fontWeight: 900, color: 'var(--osd-accent)', opacity: 0, animation: active ? 'th-q 3.6s ease-out 2400ms infinite' : undefined }}>?</span>
+    </div>
+  );
+};
+
+const ThirdPoint: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="17 · THE THIRD POINT"
+      title={
+        <span style={{ display: 'block', fontSize: 112, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          Here’s a <span style={{ color: 'var(--osd-accent)' }}>third point</span>{' '}
+          <span className="tc-a" style={{ display: 'inline-block', color: C.gold, animation: active ? 'tc-nudge 1.2s ease-in-out infinite' : undefined }}>
+            →
+          </span>
+        </span>
+      }
+    >
+      <style>{THINK_CSS}</style>
+      {/* always-on: the thinker, thinking */}
+      <div style={{ position: 'absolute', left: 1240, top: 320 }}>
+        <Thinker />
+      </div>
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — prepared */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', top: 330, left: 120, width: 1060 }}>
+                <div className="tc-a tc-in" style={{ '--d': '0ms', fontSize: 136, lineHeight: 1.05, fontWeight: 900, letterSpacing: '-0.045em' } as CSSProperties}>
+                  I was <span className="tc-a tc-passion">prepared.</span>
+                </div>
+                <div className="tc-a tc-in" style={{ '--d': '450ms', marginTop: 18, fontSize: 72, lineHeight: 1.1, fontWeight: 800, letterSpacing: '-0.03em', color: C.gold } as CSSProperties}>
+                  I put in the work!
+                </div>
+              </div>
+            </div>
+          </Step>
+          {/* click 2 — never stop */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div
+                className="tc-a tc-in"
+                style={{ '--d': '0ms', position: 'absolute', top: 690, left: 120, width: 1060, fontSize: 44, lineHeight: 1.3, fontWeight: 800, letterSpacing: '-0.02em' } as CSSProperties}
+              >
+                Never stop <span style={{ color: C.green }}>learning</span>, never stop <span style={{ color: '#4DA6FF' }}>achieving</span>, never stop{' '}
+                <span style={{ color: 'var(--osd-accent)' }}>designing</span> & reaching for{' '}
+                <span style={{ color: C.gold }}>what comes next!</span>
+              </div>
+              <div
+                aria-hidden="true"
+                className="tc-a th-bulbglow"
+                style={{ position: 'absolute', left: 1672, top: 640, width: 150, height: 150, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,197,107,0.8), rgba(255,197,107,0) 70%)' }}
+              />
+              <div className="tc-a th-bulb" style={{ position: 'absolute', left: 1690, top: 665, fontSize: 96, lineHeight: 1 }}>
+                💡
+              </div>
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+ThirdPoint.transition = settle;
+
+/* ───────────────────────── 18 tragedy strikes ───────────────────────── */
+
+const TRAGEDY_CSS = `
+@keyframes tp-fall { 0% { transform: translateY(-440px) rotate(-8deg); opacity: 1; } 99% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(0); opacity: 0; } }
+@keyframes tp-flash { 0% { opacity: 0; } 6% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes tp-ball { 0% { transform: scale(0); opacity: 1; } 60% { opacity: 1; } 100% { transform: scale(1); opacity: 0.85; } }
+@keyframes tp-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes tp-cap { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes tp-ring { 0% { transform: scale(0.1); opacity: 0.9; } 100% { transform: scale(3.2); opacity: 0; } }
+@keyframes tp-skirt { from { transform: scaleX(0); opacity: 0.9; } to { transform: scaleX(1); opacity: 0.55; } }
+@keyframes tp-glow { from { opacity: 0; } to { opacity: 1; } }
+@keyframes tp-shake { 0%, 100% { transform: translate(0, 0); } 15% { transform: translate(-9px, 5px); } 30% { transform: translate(8px, -6px); } 45% { transform: translate(-6px, -4px); } 60% { transform: translate(5px, 5px); } 80% { transform: translate(-3px, 2px); } }
+@keyframes tp-boil { from { transform: scale(1); } to { transform: scale(1.07); } }
+@keyframes tp-sweat { 0% { transform: translateY(0); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateY(46px); opacity: 0; } }
+@keyframes tp-panic { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(-4px, 0) rotate(-1.5deg); } 75% { transform: translate(4px, 0) rotate(1.5deg); } }
+@keyframes tp-q { 0% { opacity: 0; transform: translateY(10px) rotate(-8deg); } 30%, 70% { opacity: 1; } 100% { opacity: 0; transform: translateY(-46px) rotate(8deg); } }
+.tp-o { transform-box: fill-box; transform-origin: 50% 50%; }
+.tp-base { transform-box: fill-box; transform-origin: 50% 100%; }
+.tc-active [data-osd-step="revealed"] .tp-fall { animation: tp-fall 700ms cubic-bezier(0.55, 0, 1, 0.6) both; }
+.tc-active [data-osd-step="revealed"] .tp-flash { animation: tp-flash 1200ms ease-out 700ms both; }
+.tc-active [data-osd-step="revealed"] .tp-ball { animation: tp-ball 600ms ease-out 700ms both; }
+.tc-active [data-osd-step="revealed"] .tp-stem { animation: tp-grow 900ms cubic-bezier(0.2, 0.7, 0.3, 1) 800ms both; }
+.tc-active [data-osd-step="revealed"] .tp-cap { animation: tp-cap 1000ms cubic-bezier(0.34, 1.4, 0.64, 1) 1300ms both; }
+.tc-active [data-osd-step="revealed"] .tp-ring { animation: tp-ring 1400ms ease-out 750ms both; }
+.tc-active [data-osd-step="revealed"] .tp-skirt { animation: tp-skirt 900ms ease-out 850ms both; }
+.tc-active [data-osd-step="revealed"] .tp-glow { animation: tp-glow 1400ms ease-out 800ms both; }
+.tc-active [data-osd-step="revealed"] .tp-shake { animation: tp-shake 800ms linear 700ms both; }
+.tc-active [data-osd-step="revealed"] .tp-boil1 { animation: tp-boil 1.5s ease-in-out 2300ms infinite alternate; }
+.tc-active [data-osd-step="revealed"] .tp-boil2 { animation: tp-boil 1.9s ease-in-out 2700ms infinite alternate-reverse; }
+.tc-active [data-osd-step="revealed"] .tp-boom { animation: tc-chip 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 1100ms both; }
+.tc-active [data-osd-step="revealed"] .tp-panic { animation: tp-panic 0.5s ease-in-out 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .tp-sweat1 { animation: tp-sweat 1.3s ease-in 800ms infinite; }
+.tc-active [data-osd-step="revealed"] .tp-sweat2 { animation: tp-sweat 1.3s ease-in 1450ms infinite; }
+.tc-active [data-osd-step="revealed"] .tp-q1 { animation: tp-q 2.8s ease-out 900ms infinite; }
+.tc-active [data-osd-step="revealed"] .tp-q2 { animation: tp-q 2.8s ease-out 2100ms infinite; }
+`;
+
+/** A cartoon nuke drops, flashes, and blooms into a mushroom cloud over a night skyline. */
+const BombScene = () => (
+  <div
+    className="tc-a tp-shake"
+    style={{
+      position: 'relative',
+      width: 740,
+      height: 430,
+      overflow: 'hidden',
+      borderRadius: 22,
+      border: `2px solid ${C.line}`,
+      boxShadow: '0 0 70px rgba(255,93,108,0.35)',
+    }}
+  >
+    <svg width={740} height={430} viewBox="0 0 740 430" role="img" aria-label="A thermonuclear bomb falling and exploding into a mushroom cloud over a city skyline">
+      <defs>
+        <linearGradient id="tp-sky-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#0E0A1C" />
+          <stop offset="1" stopColor="#3A1A1A" />
+        </linearGradient>
+        <radialGradient id="tp-glow-g" cx="370" cy="300" r="380" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="#FF8A4C" stopOpacity="0.65" />
+          <stop offset="1" stopColor="#FF5D6C" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="tp-ball-g">
+          <stop offset="0" stopColor="#FFFFFF" />
+          <stop offset="0.35" stopColor="#FFE9A0" />
+          <stop offset="0.75" stopColor="#FF8A4C" />
+          <stop offset="1" stopColor="#FF5D6C" stopOpacity="0" />
+        </radialGradient>
+        <radialGradient id="tp-puff-g">
+          <stop offset="0" stopColor="#FFE9A0" />
+          <stop offset="0.55" stopColor="#FF9A4C" />
+          <stop offset="1" stopColor="#B8342C" />
+        </radialGradient>
+        <linearGradient id="tp-stem-g" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FF9A4C" />
+          <stop offset="1" stopColor="#7A1F1F" />
+        </linearGradient>
+      </defs>
+      <rect width={740} height={430} fill="url(#tp-sky-g)" />
+      <rect className="tc-a tp-glow" width={740} height={430} fill="url(#tp-glow-g)" />
+      {/* skyline */}
+      <g fill="#080C18">
+        <rect x={0} y={352} width={52} height={60} />
+        <rect x={52} y={326} width={40} height={90} />
+        <rect x={96} y={362} width={62} height={50} />
+        <rect x={160} y={318} width={36} height={100} />
+        <rect x={200} y={346} width={48} height={70} />
+        <rect x={250} y={366} width={58} height={50} />
+        <rect x={436} y={360} width={52} height={56} />
+        <rect x={490} y={330} width={38} height={90} />
+        <rect x={532} y={354} width={60} height={64} />
+        <rect x={596} y={312} width={42} height={110} />
+        <rect x={642} y={348} width={50} height={70} />
+        <rect x={694} y={332} width={46} height={90} />
+        <rect x={0} y={392} width={740} height={38} />
+      </g>
+      {/* cloud, back to front */}
+      <ellipse className="tc-a tp-o tp-skirt" cx={370} cy={388} rx={170} ry={30} fill="rgba(255,140,60,0.55)" />
+      <path className="tc-a tp-base tp-stem" d="M340 394 C 350 330, 346 260, 352 200 L 388 200 C 394 260, 390 330, 400 394 Z" fill="url(#tp-stem-g)" />
+      <g className="tc-a tp-o tp-cap">
+        <circle className="tc-a tp-o tp-boil1" cx={300} cy={190} r={52} fill="url(#tp-puff-g)" />
+        <circle className="tc-a tp-o tp-boil2" cx={440} cy={190} r={52} fill="url(#tp-puff-g)" />
+        <circle className="tc-a tp-o tp-boil2" cx={335} cy={130} r={44} fill="url(#tp-puff-g)" />
+        <circle className="tc-a tp-o tp-boil1" cx={405} cy={128} r={46} fill="url(#tp-puff-g)" />
+        <circle className="tc-a tp-o tp-boil1" cx={370} cy={150} r={64} fill="url(#tp-puff-g)" />
+        <circle className="tc-a tp-o tp-boil2" cx={370} cy={205} r={56} fill="url(#tp-puff-g)" />
+      </g>
+      <circle className="tc-a tp-o tp-ball" cx={370} cy={385} r={92} fill="url(#tp-ball-g)" />
+      <ellipse className="tc-a tp-o tp-ring" cx={370} cy={392} rx={60} ry={12} fill="none" stroke="#FFE9B0" strokeWidth={4} />
+      {/* the bomb */}
+      <g className="tc-a tp-o tp-fall">
+        <polygon points="348,276 326,246 348,258" fill="#8B96B8" />
+        <polygon points="392,276 414,246 392,258" fill="#8B96B8" />
+        <path d="M348 292 C 348 250, 392 250, 392 292 C 392 330, 378 358, 370 372 C 362 358, 348 330, 348 292 Z" fill="#5A6482" />
+        <path d="M356 282 C 356 262, 370 258, 376 262" stroke="#A9B7D9" strokeWidth={5} strokeLinecap="round" fill="none" />
+        <rect x={349} y={300} width={42} height={12} fill={C.amber} />
+        <circle cx={370} cy={306} r={5} fill="#03050C" />
+      </g>
+      <rect className="tc-a tp-flash" width={740} height={430} fill="#FFFFFF" />
+    </svg>
+    <div style={{ position: 'absolute', left: 26, top: 18 }}>
+      <div className="tc-a tp-boom" style={{ display: 'inline-block' }}>
+        <span
+          style={{ display: 'inline-block', transform: 'rotate(-6deg)', fontSize: 68, fontWeight: 900, letterSpacing: '-0.04em', color: C.gold, textShadow: '0 0 28px rgba(255,138,76,0.9)' }}
+        >
+          KA-BOOM!
+        </span>
+      </div>
+    </div>
+  </div>
+);
+
+/** A professional in a suit, both hands on their head, sweating and panicking. */
+const StressedPro = () => (
+  <div className="tc-a tp-panic" style={{ position: 'relative', width: 220, height: 220 }}>
+    <svg width={220} height={220} viewBox="0 0 220 220" role="img" aria-label="A professional in a suit with both hands on their head, panicking" style={{ overflow: 'visible' }}>
+      {/* suit, shirt, tie */}
+      <path d="M50 220 L58 152 C 72 134, 152 134, 166 152 L174 220 Z" fill="#2B3558" />
+      <rect x={100} y={122} width={24} height={20} fill="#FFD9B3" />
+      <polygon points="98,138 112,178 126,138" fill="#F3F6FC" />
+      <polygon points="108,150 116,150 120,196 112,208 104,196" fill={C.red} />
+      <path d="M98 138 L82 172 M126 138 L142 172" stroke="#1B2340" strokeWidth={4} strokeLinecap="round" fill="none" />
+      {/* head */}
+      <circle cx={112} cy={84} r={40} fill="#FFD9B3" />
+      <path d="M72 80 C 70 40, 154 38, 152 80 C 140 62, 92 62, 72 80 Z" fill="#3A2A20" />
+      <circle cx={96} cy={88} r={9} fill="#FFFFFF" />
+      <circle cx={128} cy={88} r={9} fill="#FFFFFF" />
+      <circle cx={97} cy={90} r={3.6} fill="#03050C" />
+      <circle cx={127} cy={90} r={3.6} fill="#03050C" />
+      <line x1={86} y1={76} x2={104} y2={68} stroke="#3A2A20" strokeWidth={4} strokeLinecap="round" />
+      <line x1={120} y1={68} x2={138} y2={76} stroke="#3A2A20" strokeWidth={4} strokeLinecap="round" />
+      <ellipse cx={112} cy={114} rx={11} ry={9} fill="#5A1F2A" />
+      <circle cx={84} cy={104} r={6} fill="rgba(255,93,108,0.35)" />
+      <circle cx={140} cy={104} r={6} fill="rgba(255,93,108,0.35)" />
+      {/* arms up, hands clutching the head */}
+      <polyline points="62,158 24,122 62,88" stroke="#2B3558" strokeWidth={22} strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <polyline points="162,158 200,122 162,88" stroke="#2B3558" strokeWidth={22} strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <circle cx={66} cy={78} r={12} fill="#FFD9B3" />
+      <circle cx={158} cy={78} r={12} fill="#FFD9B3" />
+      {/* sweat */}
+      <path className="tc-a tp-sweat1" d="M170 40 C 164 52, 164 58, 170 58 C 176 58, 176 52, 170 40 Z" fill="#7FD3FF" />
+      <path className="tc-a tp-sweat2" d="M54 36 C 48 48, 48 54, 54 54 C 60 54, 60 48, 54 36 Z" fill="#7FD3FF" />
+    </svg>
+    <span aria-hidden="true" className="tc-a tp-q1" style={{ position: 'absolute', left: 90, top: -34, fontSize: 48, fontWeight: 900, color: C.gold, opacity: 0 }}>?</span>
+    <span aria-hidden="true" className="tc-a tp-q2" style={{ position: 'absolute', left: 146, top: -22, fontSize: 38, fontWeight: 900, color: C.teal, opacity: 0 }}>?</span>
+  </div>
+);
+
+const FloatClover = ({ x, y, size, d }: { x: number; y: number; size: number; d: number }) => {
+  const active = useIsActivePage();
+  return (
+    <span
+      aria-hidden="true"
+      className="tc-a"
+      style={{ position: 'absolute', left: x, top: y, fontSize: size, lineHeight: 1, animation: active ? `tc-float 4s ease-in-out ${d}ms infinite` : undefined }}
+    >
+      🍀
+    </span>
+  );
+};
+
+const Tragedy: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="18 · TRAGEDY"
+      title={
+        <span style={{ display: 'block', fontSize: 128, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          <span style={{ color: C.red }}>Tragedy</span> Strikes!{' '}
+          <span className="tc-a" style={{ display: 'inline-block', animation: active ? 'tc-beat 1.4s ease-in-out infinite' : undefined }}>
+            ⚡
+          </span>
+        </span>
+      }
+    >
+      <style>{TRAGEDY_CSS}</style>
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — Jobs picks Intel */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div
+                className="tc-a tc-in"
+                style={{ '--d': '0ms', position: 'absolute', left: 120, top: 290, width: 900, fontSize: 60, lineHeight: 1.15, fontWeight: 800, letterSpacing: '-0.03em' } as CSSProperties}
+              >
+                <span style={{ color: C.gold }}>Steve Jobs</span> of Apple Computer decides to use <span style={{ color: '#4DA6FF' }}>Intel chips!</span>
+              </div>
+              <div className="tc-a tc-in" style={{ '--d': '200ms', position: 'absolute', left: 1130, top: 270 } as CSSProperties}>
+                <div style={{ padding: 10, background: '#FFFFFF', borderRadius: 14, transform: 'rotate(2deg)', boxShadow: '0 0 60px rgba(255,197,107,0.3)' }}>
+                  <img src={steveJobs} alt="Steve Jobs on stage pitching an Apple product" style={{ display: 'block', width: 631, height: 420, objectFit: 'cover', borderRadius: 6 }} />
+                </div>
+              </div>
+            </div>
+          </Step>
+          {/* click 2 — boom, panic */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', left: 120, top: 570 }}>
+                <BombScene />
+              </div>
+              <div
+                className="tc-a tc-in"
+                style={{ '--d': '1800ms', position: 'absolute', left: 960, top: 850, width: 600, textAlign: 'right', fontSize: 62, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.04em' } as CSSProperties}
+              >
+                What to do <span style={{ color: C.amber }}>next?</span>
+              </div>
+              <div className="tc-a tc-in" style={{ '--d': '1500ms', position: 'absolute', left: 1580, top: 780 } as CSSProperties}>
+                <StressedPro />
+              </div>
+            </div>
+          </Step>
+          {/* click 3 — but! lucky */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0, background: 'rgba(3,5,12,0.95)' }}>
+              <div style={{ position: 'absolute', top: 285, left: 120, width: 1680, textAlign: 'center' }}>
+                <div className="tc-a tc-in" style={{ '--d': '0ms', fontSize: 130, lineHeight: 1, fontWeight: 900, letterSpacing: '-0.05em' } as CSSProperties}>
+                  But!
+                </div>
+                <div className="tc-a tc-in" style={{ '--d': '500ms', marginTop: 10, fontSize: 54, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.03em', color: C.muted } as CSSProperties}>
+                  Remember, I told you I was
+                </div>
+                <div
+                  className="tc-a tc-lucky"
+                  style={{ marginTop: 6, fontSize: 200, lineHeight: 1, fontWeight: 900, letterSpacing: '-0.05em', color: C.green, textShadow: '0 0 60px rgba(91,228,155,0.55)' }}
+                >
+                  Lucky!
+                </div>
+              </div>
+              <FloatClover x={330} y={560} size={96} d={0} />
+              <FloatClover x={1480} y={470} size={80} d={700} />
+              <FloatClover x={1560} y={640} size={110} d={1400} />
+            </div>
+          </Step>
+          {/* click 4 — and prepared */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', top: 760, left: 120, width: 1680, textAlign: 'center' }}>
+                <div className="tc-a tc-in" style={{ '--d': '0ms', fontSize: 150, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.05em' } as CSSProperties}>
+                  And <span className="tc-a tc-passion">Prepared!</span>
+                </div>
+              </div>
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+Tragedy.transition = settle;
+
+/* ───────────────────────── 19 opportunity ───────────────────────── */
+
+const OPP_CSS = `
+@keyframes ib-sway { 0%, 100% { transform: rotate(-2.5deg) translateY(0); } 50% { transform: rotate(2.5deg) translateY(-8px); } }
+@keyframes ib-tie { 0%, 100% { transform: skewX(0deg); } 50% { transform: skewX(-5deg); } }
+@keyframes ib-glint { 0%, 70%, 100% { opacity: 0; transform: translateX(-30px); } 80% { opacity: 0.9; } 90% { opacity: 0; transform: translateX(30px); } }
+.tc-active [data-osd-step="revealed"] .ib-sway { animation: ib-sway 3.6s ease-in-out 1200ms infinite; }
+.tc-active [data-osd-step="revealed"] .ib-tie { transform-box: fill-box; transform-origin: 50% 0%; animation: ib-tie 2.4s ease-in-out infinite; }
+.tc-active [data-osd-step="revealed"] .ib-glint { animation: ib-glint 3.2s ease-in-out 1400ms infinite; }
+`;
+
+/** A typical IBMer, circa 1985: navy-blue suit, white shirt, red tie, big glasses, moustache. */
+const IbmerOf80s = () => (
+  <svg width={360} height={460} viewBox="0 0 360 460" role="img" aria-label="Illustration of a typical IBM employee from the 1980s in a blue suit, white shirt and red tie" style={{ display: 'block' }}>
+    <rect width={360} height={460} fill="#DCE6F5" />
+    {/* suit */}
+    <path d="M30 460 L50 340 C 80 306, 280 306, 310 340 L330 460 Z" fill="#1F4FA8" />
+    <path d="M148 312 L96 410 L150 384 Z" fill="#173C82" />
+    <path d="M212 312 L264 410 L210 384 Z" fill="#173C82" />
+    {/* shirt, tie */}
+    <polygon points="148,312 180,396 212,312" fill="#F7F9FD" />
+    <g className="ib-tie">
+      <polygon points="170,330 190,330 196,424 180,446 164,424" fill="#D0202F" />
+      <polygon points="168,322 192,322 188,340 172,340" fill="#A8141F" />
+    </g>
+    {/* pocket square */}
+    <polygon points="86,372 112,368 114,382 88,386" fill="#F7F9FD" />
+    {/* neck, head */}
+    <rect x={160} y={262} width={40} height={54} fill="#E8B98C" />
+    <ellipse cx={116} cy={196} rx={10} ry={20} fill="#EDC298" />
+    <ellipse cx={244} cy={196} rx={10} ry={20} fill="#EDC298" />
+    <ellipse cx={180} cy={190} rx={62} ry={74} fill="#F2C9A0" />
+    {/* neat side-parted hair */}
+    <path d="M116 188 C 106 100, 254 96, 244 188 C 236 150, 214 138, 190 136 C 160 134, 128 152, 116 188 Z" fill="#3A2A20" />
+    {/* big 80s glasses */}
+    <rect x={126} y={176} width={50} height={40} rx={9} fill="rgba(170,215,255,0.28)" stroke="#2B2B33" strokeWidth={5} />
+    <rect x={184} y={176} width={50} height={40} rx={9} fill="rgba(170,215,255,0.28)" stroke="#2B2B33" strokeWidth={5} />
+    <line x1={176} y1={188} x2={184} y2={188} stroke="#2B2B33" strokeWidth={5} />
+    <circle cx={151} cy={198} r={5} fill="#1B1B22" />
+    <circle cx={209} cy={198} r={5} fill="#1B1B22" />
+    <rect className="ib-glint" x={132} y={180} width={10} height={32} rx={4} fill="#FFFFFF" />
+    {/* nose, moustache, smile */}
+    <path d="M180 204 C 176 222, 176 226, 184 228" stroke="#C99A72" strokeWidth={4} strokeLinecap="round" fill="none" />
+    <path d="M142 240 C 160 228, 200 228, 218 240 C 200 248, 190 244, 180 246 C 170 244, 160 248, 142 240 Z" fill="#3A2A20" />
+    <path d="M156 258 C 170 270, 192 270, 206 258" stroke="#8C4A3A" strokeWidth={5} strokeLinecap="round" fill="none" />
+  </svg>
+);
+
+const IbmerPolaroid = () => (
+  <div style={{ padding: '14px 14px 18px', background: '#FFFFFF', borderRadius: 14, transform: 'rotate(3deg)', boxShadow: '0 0 60px rgba(77,166,255,0.35)' }}>
+    <div className="tc-a ib-sway">
+      <IbmerOf80s />
+    </div>
+    <div style={{ marginTop: 14, textAlign: 'center', fontFamily: mono, fontSize: 26, letterSpacing: '0.06em', color: '#1F4FA8' }}>
+      IBM · circa 1985
+    </div>
+  </div>
+);
+
+const AgainText = () => (
+  <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+    {Array.from('AGAIN!').map((ch, i) => (
+      <span key={i} className="tc-a tc-int-g" style={{ '--i': i } as CSSProperties}>
+        <span className="tc-a tc-int-w" style={{ '--i': i } as CSSProperties}>
+          {ch}
+        </span>
+      </span>
+    ))}
+  </span>
+);
+
+const Opportunity: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="19 · OPPORTUNITY"
+      title={
+        <span style={{ display: 'block', fontSize: 128, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          <span style={{ color: C.green }}>Opportunity!</span>
+        </span>
+      }
+    >
+      <style>{OPP_CSS}</style>
+      {/* always-on subtitle */}
+      <div
+        className="tc-a"
+        style={{ position: 'absolute', left: 120, top: 305, fontSize: 60, lineHeight: 1.15, fontWeight: 800, letterSpacing: '-0.03em', color: C.muted, ...rise(active, 450) }}
+      >
+        <span style={{ color: '#4DA6FF' }}>IBM</span> Back to the Field Initiative
+      </div>
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — back to school AGAIN */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', left: 120, top: 450, width: 1180 }}>
+                <div className="tc-a tc-in" style={{ '--d': '0ms', fontSize: 76, lineHeight: 1.1, fontWeight: 800, letterSpacing: '-0.03em' } as CSSProperties}>
+                  I was going back to school
+                </div>
+                <div style={{ marginTop: 6, fontSize: 190, lineHeight: 1.05, fontWeight: 900, letterSpacing: '-0.05em' }}>
+                  <AgainText />
+                </div>
+              </div>
+            </div>
+          </Step>
+          {/* click 2 — IBM Global Sales School + the typical IBMer */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', left: 120, top: 800, width: 1180, fontSize: 80, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.04em' } as CSSProperties}>
+                <span style={{ color: '#4DA6FF' }}>IBM</span> <span style={{ color: C.gold }}>Global Sales School</span>
+              </div>
+              <div className="tc-a tc-in" style={{ '--d': '300ms', position: 'absolute', left: 1390, top: 340 } as CSSProperties}>
+                <IbmerPolaroid />
+              </div>
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+Opportunity.transition = settle;
+
+/* ───────────────────────── 20 fourth point ───────────────────────── */
+
+const FOURTH_CSS = `
+@keyframes fp-strike { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes fp-shake { 0%, 100% { transform: translateX(0) rotate(0deg); } 20% { transform: translateX(-10px) rotate(-1deg); } 40% { transform: translateX(9px) rotate(1deg); } 60% { transform: translateX(-6px); } 80% { transform: translateX(4px); } }
+@keyframes fp-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+@keyframes fp-nod { 0%, 100% { transform: rotate(-2deg) translateY(0); } 50% { transform: rotate(3deg) translateY(4px); } }
+@keyframes fp-bubble { 0% { opacity: 0; transform: scale(0.3) translateY(30px); } 100% { opacity: 1; transform: none; } }
+.tc-active [data-osd-step="revealed"] .fp-strike { transform-origin: left center; animation: fp-strike 600ms cubic-bezier(0, 0, 0.2, 1) 500ms both; }
+.tc-active [data-osd-step="revealed"] .fp-shake { animation: fp-shake 700ms ease-in-out 100ms both; }
+.tc-active [data-osd-step="revealed"] .fp-check-circle { transform-box: fill-box; transform-origin: center; animation: tc-chip 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 100ms both; }
+.tc-active [data-osd-step="revealed"] .fp-check-path { animation: fp-draw 700ms cubic-bezier(0.4, 0, 0.2, 1) 500ms both; }
+.tc-active [data-osd-step="revealed"] .fp-nod { transform-origin: 50% 100%; animation: fp-nod 1.6s ease-in-out 1200ms infinite; }
+.tc-active [data-osd-step="revealed"] .fp-bubble { transform-origin: 20% 100%; animation: fp-bubble 600ms cubic-bezier(0.34, 1.56, 0.64, 1) 700ms both; }
+`;
+
+const EQ: CSSProperties = { fontSize: 72, lineHeight: 1.2, fontWeight: 900, letterSpacing: '-0.04em', whiteSpace: 'nowrap' };
+
+/** A satisfied professional: hand on chin, nodding along. */
+const SatisfiedPro = () => (
+  <div className="tc-a fp-nod" style={{ width: 220, height: 220 }}>
+    <svg width={220} height={220} viewBox="0 0 220 220" role="img" aria-label="A professional in a suit, hand on chin, nodding in agreement" style={{ overflow: 'visible' }}>
+      <path d="M50 220 L58 152 C 72 134, 152 134, 166 152 L174 220 Z" fill="#2B3558" />
+      <rect x={100} y={122} width={24} height={20} fill="#FFD9B3" />
+      <polygon points="98,138 112,178 126,138" fill="#F3F6FC" />
+      <polygon points="108,150 116,150 120,196 112,208 104,196" fill={C.green} />
+      <path d="M98 138 L82 172 M126 138 L142 172" stroke="#1B2340" strokeWidth={4} strokeLinecap="round" fill="none" />
+      <circle cx={112} cy={84} r={40} fill="#FFD9B3" />
+      <path d="M72 80 C 70 40, 154 38, 152 80 C 140 62, 92 62, 72 80 Z" fill="#3A2A20" />
+      <circle cx={96} cy={88} r={8} fill="#FFFFFF" />
+      <circle cx={128} cy={88} r={8} fill="#FFFFFF" />
+      <circle cx={99} cy={86} r={3.6} fill="#03050C" />
+      <circle cx={131} cy={86} r={3.6} fill="#03050C" />
+      <line x1={86} y1={74} x2={106} y2={72} stroke="#3A2A20" strokeWidth={4} strokeLinecap="round" />
+      <line x1={120} y1={70} x2={138} y2={64} stroke="#3A2A20" strokeWidth={4} strokeLinecap="round" />
+      <path d="M96 106 C 106 116, 122 116, 130 104" stroke="#8C4A3A" strokeWidth={4.5} strokeLinecap="round" fill="none" />
+      {/* arm folded up, hand on chin */}
+      <polyline points="164,160 180,132 142,128" stroke="#2B3558" strokeWidth={22} strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <circle cx={136} cy={124} r={12} fill="#FFD9B3" />
+      <polyline points="60,160 50,205" stroke="#2B3558" strokeWidth={22} strokeLinecap="round" fill="none" />
+    </svg>
+  </div>
+);
+
+const GreenCheck = () => (
+  <svg width={150} height={150} viewBox="0 0 150 150" role="img" aria-label="Animated green check mark" style={{ overflow: 'visible' }}>
+    <circle className="tc-a fp-check-circle" cx={75} cy={75} r={68} fill="rgba(91,228,155,0.16)" stroke={C.green} strokeWidth={8} />
+    <path className="tc-a fp-check-path" pathLength={1} strokeDasharray={1} d="M42 78 L66 102 L110 52" fill="none" stroke={C.green} strokeWidth={14} strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+const FourthPoint: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="20 · THE FOURTH POINT"
+      title={
+        <span style={{ display: 'block', fontSize: 112, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          Here’s a <span style={{ color: 'var(--osd-accent)' }}>fourth point</span>{' '}
+          <span className="tc-a" style={{ display: 'inline-block', color: C.gold, animation: active ? 'tc-nudge 1.2s ease-in-out infinite' : undefined }}>
+            →
+          </span>
+        </span>
+      }
+    >
+      <style>{FOURTH_CSS}</style>
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — Seneca */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', left: 120, top: 270, width: 1680, fontSize: 54, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.03em' } as CSSProperties}>
+                “<span style={{ color: C.green }}>Luck</span> is what happens when <span style={{ color: C.teal }}>preparation</span> meets <span style={{ color: C.gold }}>opportunity</span>”
+              </div>
+              <div className="tc-a tc-in" style={{ '--d': '350ms', position: 'absolute', left: 120, top: 408, fontSize: 34, lineHeight: 1.2, fontWeight: 600, color: C.muted } as CSSProperties}>
+                — Seneca, Roman philosopher
+              </div>
+            </div>
+          </Step>
+          {/* click 2 — a little maths */}
+          <Step duration={200}>
+            <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', left: 120, top: 500, fontSize: 52, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.03em', color: C.muted } as CSSProperties}>
+              How about a little bit of <span style={{ color: 'var(--osd-accent)' }}>maths</span>:
+            </div>
+          </Step>
+          {/* click 3 — Luck = Preparation + Opportunity */}
+          <Step duration={200}>
+            <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', left: 120, top: 590, ...EQ } as CSSProperties}>
+              <span style={{ color: C.green }}>Luck</span> <span style={{ color: C.dim }}>=</span> <span style={{ color: C.teal }}>Preparation</span> <span style={{ color: C.dim }}>+</span> <span style={{ color: C.gold }}>Opportunity</span>
+            </div>
+          </Step>
+          {/* click 4 — no, no, that can't be right */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div aria-hidden="true" style={{ position: 'absolute', left: 120, top: 590, visibility: 'hidden', ...EQ }}>
+                <span style={{ position: 'relative', display: 'inline-block' }}>
+                  Luck = Preparation + Opportunity
+                  <span
+                    className="tc-a fp-strike"
+                    style={{ position: 'absolute', left: -8, right: -8, top: '50%', height: 8, marginTop: -4, borderRadius: 4, background: C.red, boxShadow: '0 0 24px rgba(255,93,108,0.7)', visibility: 'visible' }}
+                  />
+                </span>
+              </div>
+              <div className="tc-a tc-in fp-shake" style={{ '--d': '0ms', position: 'absolute', left: 120, top: 695, fontSize: 52, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.03em', color: C.red } as CSSProperties}>
+                No, no, that can’t be right…
+              </div>
+            </div>
+          </Step>
+          {/* click 5 — Opportunity = Luck + Preparation */}
+          <Step duration={200}>
+            <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', left: 120, top: 785, ...EQ } as CSSProperties}>
+              <span style={{ color: C.gold }}>Opportunity</span> <span style={{ color: C.dim }}>=</span> <span style={{ color: C.green }}>Luck</span> <span style={{ color: C.dim }}>+</span> <span style={{ color: C.teal }}>Preparation</span>
+            </div>
+          </Step>
+          {/* click 6 — yeah, that checks out */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div className="tc-a fp-bubble" style={{ position: 'absolute', left: 1440, top: 520, width: 400, boxSizing: 'border-box', padding: '24px 30px', borderRadius: 44, background: '#F3F6FC', color: '#03050C', fontSize: 40, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.02em', textAlign: 'center', boxShadow: '0 0 50px rgba(243,246,252,0.25)' }}>
+                “Yeah, that checks out.”
+              </div>
+              <div aria-hidden="true" className="tc-a fp-bubble" style={{ position: 'absolute', left: 1566, top: 692, width: 34, height: 34, borderRadius: '50%', background: '#F3F6FC', animationDelay: '900ms' }} />
+              <div aria-hidden="true" className="tc-a fp-bubble" style={{ position: 'absolute', left: 1548, top: 738, width: 20, height: 20, borderRadius: '50%', background: '#F3F6FC', animationDelay: '1000ms' }} />
+              <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', left: 1480, top: 770 } as CSSProperties}>
+                <SatisfiedPro />
+              </div>
+              <div style={{ position: 'absolute', left: 1700, top: 800 }}>
+                <GreenCheck />
+              </div>
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+FourthPoint.transition = settle;
+
+/* ───────────────────────── 21 IBM sales ───────────────────────── */
+
+const SALES_ROUTE = 'M1371 173 C 1250 90, 1090 330, 900 240 S 520 120, 292 312';
+const SALES_BLUE = '#4DA6FF';
+
+const SALES_CSS = `
+@keyframes sl-arm { from { transform: rotate(-16deg); } to { transform: rotate(16deg); } }
+.sl-walker { position: absolute; left: 0; top: 0; width: 120px; height: 150px; offset-path: path('${SALES_ROUTE}'); offset-rotate: 0deg; offset-anchor: 50% 100%; }
+.tc-active [data-osd-step="revealed"] .sl-walker { animation: tc-walk 12s linear 600ms infinite both; }
+.tc-active [data-osd-step="revealed"] .sl-b1 { animation: tc-say1 12s linear 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .sl-b2 { animation: tc-say2 12s linear 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .sl-b3 { animation: tc-say3 12s linear 600ms infinite; }
+`;
+
+const SalesText = () => {
+  const active = useIsActivePage();
+  return (
+    <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+      {Array.from('IBM SALES').map((ch, i) =>
+        ch === ' ' ? (
+          <span key={i} style={{ display: 'inline-block', width: '0.3em' }} />
+        ) : (
+          <span
+            key={i}
+            className="tc-a"
+            style={{
+              display: 'inline-block',
+              color: i < 3 ? SALES_BLUE : C.gold,
+              textShadow: i < 3 ? '0 0 70px rgba(77,166,255,0.55)' : '0 0 70px rgba(255,197,107,0.5)',
+              animation: active ? `tc-drop 750ms ${SPRING} ${200 + i * 70}ms both` : undefined,
+            }}
+          >
+            {ch}
+          </span>
+        ),
+      )}
+    </span>
+  );
+};
+
+const SalesBubble = ({ cls, children }: { cls: string; children: ReactNode }) => (
+  <div
+    className={`tc-a ${cls}`}
+    style={{
+      position: 'absolute',
+      right: 110,
+      top: -40,
+      padding: '8px 16px',
+      borderRadius: 16,
+      background: '#F3F6FC',
+      color: '#03050C',
+      fontFamily: mono,
+      fontSize: 20,
+      fontWeight: 700,
+      whiteSpace: 'nowrap',
+      opacity: 0,
+      transformOrigin: 'right bottom',
+    }}
+  >
+    {children}
+  </div>
+);
+
+/** A professional in a blue suit with a briefcase, striding west (flipped to face left). */
+const SalesWalker = () => {
+  const active = useIsActivePage();
+  const limb = (reverse: boolean, origin: string, anim = 'tc-swing'): CSSProperties => ({
+    transformOrigin: origin,
+    transformBox: 'view-box',
+    animation: active ? `${anim} 0.7s ease-in-out infinite ${reverse ? 'alternate-reverse' : 'alternate'}` : undefined,
+  });
+  return (
+    <div className="tc-a sl-walker">
+      <div
+        className="tc-a"
+        style={{ width: 120, height: 150, transformOrigin: '50% 100%', animation: active ? 'tc-bob 0.36s ease-in-out infinite alternate' : undefined }}
+      >
+        <svg width={120} height={150} viewBox="0 0 120 150" role="img" aria-label="A professional in a blue suit carrying a briefcase" style={{ transform: 'scaleX(-1)' }}>
+          {/* back arm + back leg */}
+          <g className="tc-a" style={limb(true, '62px 62px', 'sl-arm')}>
+            <line x1={62} y1={62} x2={62} y2={94} stroke="#173C82" strokeWidth={8} strokeLinecap="round" />
+            <circle cx={62} cy={96} r={5} fill="#F2C9A0" />
+          </g>
+          <g className="tc-a" style={limb(true, '60px 100px')}>
+            <line x1={60} y1={100} x2={60} y2={132} stroke="#173C82" strokeWidth={9} strokeLinecap="round" />
+            <ellipse cx={68} cy={137} rx={12} ry={6} fill="#1B1B22" />
+          </g>
+          {/* torso: suit, shirt, tie */}
+          <rect x={49} y={52} width={26} height={54} rx={9} fill="#1F4FA8" />
+          <polygon points="56,52 68,52 62,68" fill="#F7F9FD" />
+          <polygon points="60,58 64,58 65,86 62,92 59,86" fill="#D0202F" />
+          {/* front leg */}
+          <g className="tc-a" style={limb(false, '60px 100px')}>
+            <line x1={60} y1={100} x2={60} y2={132} stroke="#1F4FA8" strokeWidth={9} strokeLinecap="round" />
+            <ellipse cx={68} cy={137} rx={12} ry={6} fill="#1B1B22" />
+          </g>
+          {/* head: side-parted hair, glasses */}
+          <circle cx={64} cy={34} r={18} fill="#F2C9A0" />
+          <path d="M45 32 C 44 12, 84 10, 83 32 C 78 22, 62 20, 54 26 Z" fill="#3A2A20" />
+          <rect x={64} y={29} width={13} height={10} rx={3} fill="none" stroke="#2B2B33" strokeWidth={2.5} />
+          <circle cx={71} cy={34} r={2.4} fill="#03050C" />
+          <path d="M68 45 Q74 50 80 44" fill="none" stroke="#8C4A3A" strokeWidth={2.5} strokeLinecap="round" />
+          {/* front arm + briefcase */}
+          <g className="tc-a" style={limb(false, '62px 62px', 'sl-arm')}>
+            <line x1={62} y1={62} x2={62} y2={94} stroke="#1F4FA8" strokeWidth={8} strokeLinecap="round" />
+            <circle cx={62} cy={96} r={5} fill="#F2C9A0" />
+            <path d="M54 100 L54 94 L70 94 L70 100" fill="none" stroke="#5E3A1A" strokeWidth={3} strokeLinejoin="round" />
+            <rect x={44} y={100} width={36} height={24} rx={4} fill="#8B5A2B" stroke="#5E3A1A" strokeWidth={2} />
+            <rect x={58} y={108} width={8} height={5} rx={1} fill={C.gold} />
+          </g>
+        </svg>
+      </div>
+      <SalesBubble cls="sl-b1">Ohio, here I come!</SalesBubble>
+      <SalesBubble cls="sl-b2">…is that a quota?</SalesBubble>
+      <SalesBubble cls="sl-b3">SALES!</SalesBubble>
+    </div>
+  );
+};
+
+const SalesJourney = () => {
+  const active = useIsActivePage();
+  const ring = (delay: string): CSSProperties => ({
+    transformBox: 'fill-box',
+    transformOrigin: 'center',
+    animation: active ? `tc-ring 1.8s ease-out ${delay} infinite` : undefined,
+  });
+  return (
+    <div style={{ position: 'absolute', top: 450, left: 120, width: 1680, height: 500 }}>
+      <style>{SALES_CSS}</style>
+      <svg width={1680} height={500} viewBox="0 0 1680 500" role="img" aria-label="Stylized map: Burlington, Vermont to Columbus, Ohio">
+        {/* Ohio */}
+        <g transform="translate(150 150)">
+          <polygon
+            points="15,35 95,28 150,45 215,28 292,0 292,95 262,140 240,195 205,250 175,262 130,268 80,285 40,280 22,255 18,150"
+            fill="rgba(79,209,197,0.10)"
+            stroke={C.teal}
+            strokeWidth={3}
+            strokeLinejoin="round"
+          />
+        </g>
+        <SvgLabel x={300} y={469} fill={C.teal}>
+          OHIO
+        </SvgLabel>
+        {/* Vermont */}
+        <g transform="translate(1340 90)">
+          <polygon
+            points="17,6 215,6 201,44 158,106 156,167 129,217 120,268 112,336 25,334 27,210 8,210 16,152 13,94"
+            fill="rgba(91,228,155,0.10)"
+            stroke={C.green}
+            strokeWidth={3}
+            strokeLinejoin="round"
+          />
+        </g>
+        <SvgLabel x={1455} y={458} fill={C.green}>
+          VERMONT
+        </SvgLabel>
+        {/* the long way west */}
+        <path
+          d={SALES_ROUTE}
+          fill="none"
+          stroke={C.gold}
+          strokeOpacity={0.85}
+          strokeWidth={5}
+          strokeLinecap="round"
+          strokeDasharray="10 14"
+          className="tc-a"
+          style={{ animation: active ? 'tc-flow 1.1s linear infinite reverse' : undefined }}
+        />
+        <SvgLabel x={820} y={350} fill={C.dim}>
+          ~700 miles, no big deal
+        </SvgLabel>
+        {/* Burlington */}
+        <circle className="tc-a" cx={1371} cy={173} r={9} fill="none" stroke={C.green} strokeWidth={3} style={ring('0s')} />
+        <circle cx={1371} cy={173} r={9} fill={C.green} stroke="#03050C" strokeWidth={3} />
+        <SvgLabel x={1352} y={222} anchor="end" fill="#F3F6FC">
+          BURLINGTON, VT
+        </SvgLabel>
+        <SvgLabel x={1352} y={246} anchor="end" size={18} fill={C.dim}>
+          (IBM)
+        </SvgLabel>
+        {/* Columbus */}
+        <circle className="tc-a" cx={292} cy={312} r={9} fill="none" stroke={SALES_BLUE} strokeWidth={3} style={ring('0.9s')} />
+        <circle cx={292} cy={312} r={9} fill={SALES_BLUE} stroke="#F3F6FC" strokeWidth={3} />
+        <line x1={292} y1={303} x2={292} y2={258} stroke="#F3F6FC" strokeWidth={3} strokeLinecap="round" />
+        <path d="M292 258 L326 269 L292 280 Z" fill={SALES_BLUE} />
+        <SvgLabel x={314} y={340} anchor="start" fill="#F3F6FC">
+          COLUMBUS, OH
+        </SvgLabel>
+        <SvgLabel x={314} y={364} anchor="start" size={18} fill={C.dim}>
+          (IBM Sales)
+        </SvgLabel>
+      </svg>
+      <SalesWalker />
+    </div>
+  );
+};
+
+const IbmSales: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame eyebrow="21 · IBM SALES">
+      <div
+        style={{ position: 'absolute', left: 120, top: 150, fontSize: 250, lineHeight: 1, fontWeight: 900, letterSpacing: '-0.045em' }}
+      >
+        <SalesText />
+      </div>
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — the move: Burlington, VT → Columbus, OH */}
+          <Step duration={200}>
+            <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', inset: 0 } as CSSProperties}>
+              <SalesJourney />
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+IbmSales.transition = settle;
+
+/* ───────────────────────── 22 selling what I designed ───────────────────────── */
+
+const ServerShot = ({ src, alt, h, w, d, label }: { src: string; alt: string; h: number; w: number; d: number; label: string }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
+    <PhotoCard src={src} alt={alt} h={h} w={w} d={d} glow="rgba(77,166,255,0.35)" />
+    <div className="tc-a tc-in" style={{ '--d': `${d + 250}ms`, fontFamily: mono, fontSize: 22, letterSpacing: '0.06em', color: C.muted } as CSSProperties}>
+      {label}
+    </div>
+  </div>
+);
+
+const OsLogo = ({ src, alt, d, label }: { src: string; alt: string; d: number; label: string }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
+    <PhotoCard src={src} alt={alt} h={190} w={190} d={d} glow="rgba(255,197,107,0.35)" />
+    <div className="tc-a tc-in" style={{ '--d': `${d + 250}ms`, fontFamily: mono, fontSize: 26, letterSpacing: '0.06em', color: C.gold } as CSSProperties}>
+      {label}
+    </div>
+  </div>
+);
+
+const SellingDesigned: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="22 · SELLING WHAT I DESIGNED"
+      title={
+        <span style={{ display: 'block', fontSize: 96, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          I was <span style={{ color: C.gold }}>selling</span> all the stuff
+          <br />I just finished <span className="tc-a tc-passion">designing!</span>
+        </span>
+      }
+    >
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — POWER5 servers */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', left: 120, top: 440, display: 'flex', gap: 40 }}>
+                <ServerShot src={power5I5570} alt="IBM eServer i5 570 POWER5 servers mounted in a rack" h={380} w={508} d={0} label="POWER5 · eServer i5 570" />
+                <ServerShot src={power5I5515} alt="IBM System i5 515 POWER5 tower server with a green-screen terminal" h={380} w={502} d={200} label="POWER5 · System i5 515" />
+              </div>
+            </div>
+          </Step>
+          {/* click 2 — AIX and IBM i logos */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', left: 1330, top: 520, display: 'flex', gap: 40 }}>
+                <OsLogo src={aixLogo} alt="IBM AIX logo" d={0} label="AIX" />
+                <OsLogo src={ibmILogo} alt="IBM i logo" d={200} label="IBM i" />
+              </div>
+              <Credit>
+                Wikimedia Commons · i5 570: CarstenSchulz (CC BY-SA 3.0) · i5 515: C. &amp; H. Graf (CC BY 2.0) · AIX, IBM i logos (public domain)
+              </Credit>
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+SellingDesigned.transition = settle;
+
+/* ───────────────────────── 23 entrepreneurship ───────────────────────── */
+
+const ENT_CSS = `
+@keyframes en-bar { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes en-point { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(9deg); } }
+@keyframes en-bulb { 0%, 100% { opacity: 0.55; transform: scale(1); } 50% { opacity: 1; transform: scale(1.18); } }
+@keyframes en-nod { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+@keyframes en-fly { 0% { opacity: 0; transform: translate(0, 40px) scale(0.4) rotate(-10deg); } 25% { opacity: 1; } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(70px, -80px) scale(1.05) rotate(14deg); } }
+@keyframes en-badge { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg) scale(1.04); } }
+@keyframes en-acorn { 0%, 100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-14px) rotate(6deg); } }
+@keyframes en-stamp { 0% { opacity: 0; transform: scale(3.4) rotate(-26deg); } 60% { opacity: 1; transform: scale(0.9) rotate(-8deg); } 80% { transform: scale(1.06) rotate(-8deg); } 100% { opacity: 1; transform: scale(1) rotate(-8deg); } }
+.en-o { transform-box: fill-box; transform-origin: 50% 50%; }
+.en-base { transform-box: fill-box; transform-origin: 50% 100%; }
+.en-point { transform-box: view-box; transform-origin: 100px 160px; }
+.tc-active [data-osd-step="revealed"] .en-bar { animation: en-bar 900ms cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+.tc-active [data-osd-step="revealed"] .en-point { animation: en-point 1.8s ease-in-out 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .en-bulb { animation: en-bulb 1.6s ease-in-out 1200ms infinite both; }
+.tc-active [data-osd-step="revealed"] .en-nod { animation: en-nod 1.4s ease-in-out 900ms infinite; }
+.tc-active [data-osd-step="revealed"] .en-fly { animation: en-fly 2.6s ease-out infinite; }
+.tc-active [data-osd-step="revealed"] .en-badge { animation: en-badge 3s ease-in-out 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .en-acorn { animation: en-acorn 2.2s ease-in-out 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .en-stamp { animation: en-stamp 700ms cubic-bezier(0.2, 0.9, 0.3, 1) 900ms both; }
+`;
+
+/** A consultant at a flipchart, helping a client see the answer (bars rise, lightbulb switches on). */
+const ConsultantScene = () => (
+  <svg width={420} height={300} viewBox="0 0 400 300" role="img" aria-label="A consultant presenting a rising bar chart to a client whose lightbulb lights up" style={{ overflow: 'visible' }}>
+    <line x1={10} y1={262} x2={390} y2={262} stroke={C.dim} strokeWidth={4} strokeLinecap="round" />
+    {/* flipchart */}
+    <line x1={225} y1={160} x2={200} y2={262} stroke={C.dim} strokeWidth={6} strokeLinecap="round" />
+    <line x1={225} y1={160} x2={250} y2={262} stroke={C.dim} strokeWidth={6} strokeLinecap="round" />
+    <rect x={160} y={30} width={130} height={130} rx={8} fill="#F3F6FC" />
+    <g>
+      <rect className="tc-a en-o en-base en-bar" x={178} y={110} width={24} height={30} rx={3} fill={C.teal} style={{ animationDelay: '300ms' }} />
+      <rect className="tc-a en-o en-base en-bar" x={213} y={85} width={24} height={55} rx={3} fill={C.gold} style={{ animationDelay: '600ms' }} />
+      <rect className="tc-a en-o en-base en-bar" x={248} y={55} width={24} height={85} rx={3} fill={C.green} style={{ animationDelay: '900ms' }} />
+    </g>
+    <line x1={172} y1={142} x2={278} y2={142} stroke="#9AA5C0" strokeWidth={3} strokeLinecap="round" />
+    {/* consultant */}
+    <rect x={56} y={146} width={48} height={116} rx={14} fill="#2B3558" />
+    <polygon points="70,146 90,146 80,168" fill="#F3F6FC" />
+    <polygon points="77,152 83,152 85,190 80,198 75,190" fill={C.green} />
+    <circle cx={80} cy={118} r={24} fill="#FFD9B3" />
+    <path d="M56 114 C 54 88, 108 86, 104 114 C 96 102, 68 100, 56 114 Z" fill="#3A2A20" />
+    <circle cx={89} cy={120} r={3.4} fill="#03050C" />
+    <path d="M82 131 Q90 137 98 130" fill="none" stroke="#8C4A3A" strokeWidth={3} strokeLinecap="round" />
+    <g className="tc-a en-point">
+      <line x1={100} y1={160} x2={150} y2={134} stroke="#2B3558" strokeWidth={14} strokeLinecap="round" />
+      <circle cx={153} cy={132} r={8} fill="#FFD9B3" />
+    </g>
+    {/* client */}
+    <g className="tc-a en-nod">
+      <rect x={316} y={170} width={50} height={92} rx={14} fill="#7C5CD8" />
+      <circle cx={341} cy={140} r={24} fill="#FFD9B3" />
+      <path d="M317 136 C 318 112, 366 112, 365 136 C 356 124, 328 124, 317 136 Z" fill="#6B3E26" />
+      <circle cx={333} cy={142} r={3.4} fill="#03050C" />
+      <circle cx={350} cy={142} r={3.4} fill="#03050C" />
+      <path d="M331 152 Q341 160 352 152" fill="none" stroke="#8C4A3A" strokeWidth={3} strokeLinecap="round" />
+    </g>
+    {/* lightbulb: the client gets it */}
+    <g className="tc-a en-o en-bulb">
+      <circle cx={341} cy={70} r={20} fill={C.gold} />
+      <rect x={333} y={88} width={16} height={9} rx={2} fill="#9AA5C0" />
+      <g stroke={C.gold} strokeWidth={4} strokeLinecap="round">
+        <line x1={341} y1={34} x2={341} y2={24} />
+        <line x1={310} y1={52} x2={302} y2={46} />
+        <line x1={372} y1={52} x2={380} y2={46} />
+        <line x1={304} y1={74} x2={294} y2={74} />
+        <line x1={378} y1={74} x2={388} y2={74} />
+      </g>
+    </g>
+  </svg>
+);
+
+/** An @ email badge with a letter flying out of it. */
+const EmailBadge = () => (
+  <svg width={260} height={260} viewBox="0 0 260 260" role="img" aria-label="An at-sign email logo with a letter flying out" style={{ overflow: 'visible' }}>
+    <g className="tc-a en-o en-badge">
+      <rect x={20} y={30} width={200} height={200} rx={44} fill="#4DA6FF" />
+      <text x={120} y={178} textAnchor="middle" fontSize={150} fontWeight={900} fill="#FFFFFF" style={{ fontFamily: mono }}>
+        @
+      </text>
+    </g>
+    <g className="tc-a en-o en-fly">
+      <rect x={150} y={60} width={78} height={54} rx={7} fill="#F3F6FC" stroke="#1F4FA8" strokeWidth={4} />
+      <polyline points="152,64 189,92 226,64" fill="none" stroke="#1F4FA8" strokeWidth={4} strokeLinejoin="round" />
+    </g>
+  </svg>
+);
+
+const AcornIcon = () => (
+  <svg width={110} height={122} viewBox="0 0 90 100" role="img" aria-label="An acorn" style={{ overflow: 'visible' }}>
+    <g className="tc-a en-o en-acorn">
+      <rect x={42} y={0} width={7} height={14} rx={3} fill="#6B3E1A" />
+      <path d="M14 42 C 14 82, 40 96, 45 98 C 50 96, 76 82, 76 42 Z" fill="#C98B4A" />
+      <path d="M8 44 C 6 12, 84 12, 82 44 Z" fill="#8B5A2B" />
+      <path d="M24 28 C 34 20, 48 20, 58 26" fill="none" stroke="#B07A3E" strokeWidth={4} strokeLinecap="round" />
+    </g>
+  </svg>
+);
+
+const SoldText = () => (
+  <span style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+    {Array.from('Sold the company!').map((ch, i) =>
+      ch === ' ' ? (
+        <span key={i} style={{ display: 'inline-block', width: '0.3em' }} />
+      ) : (
+        <span key={i} className="tc-a tc-int-g" style={{ '--i': i } as CSSProperties}>
+          <span className="tc-a tc-int-w" style={{ '--i': i } as CSSProperties}>
+            {ch}
+          </span>
+        </span>
+      ),
+    )}
+  </span>
+);
+
+const Entrepreneurship: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="23 · ENTREPRENEURSHIP"
+      title={
+        <span style={{ display: 'block', fontSize: 128, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          <span style={{ color: C.gold }}>Entrepreneurship!</span>
+        </span>
+      }
+    >
+      <style>{ENT_CSS}</style>
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — two companies, CTO, consultant + email visuals */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', left: 120, top: 300, width: 1000 } as CSSProperties}>
+                <div style={{ fontSize: 54, lineHeight: 1.15, fontWeight: 800, letterSpacing: '-0.03em', color: C.muted }}>I built two companies:</div>
+                <div style={{ marginTop: 10, fontSize: 64, lineHeight: 1.12, fontWeight: 900, letterSpacing: '-0.04em', color: C.green }}>Fiddlehead Consultants</div>
+                <div style={{ fontSize: 64, lineHeight: 1.12, fontWeight: 900, letterSpacing: '-0.04em', color: '#4DA6FF' }}>+ Trigger Email Marketing</div>
+                <div style={{ marginTop: 6, fontSize: 44, lineHeight: 1.15, fontWeight: 800, letterSpacing: '-0.03em', color: C.muted }}>
+                  …and served as <span style={{ color: C.gold }}>CTO</span>
+                </div>
+              </div>
+              <div className="tc-a tc-in" style={{ '--d': '250ms', position: 'absolute', left: 1130, top: 300 } as CSSProperties}>
+                <ConsultantScene />
+              </div>
+              <div className="tc-a tc-in" style={{ '--d': '500ms', position: 'absolute', left: 1580, top: 320 } as CSSProperties}>
+                <EmailBadge />
+              </div>
+            </div>
+          </Step>
+          {/* click 2 — acornXA */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', left: 120, top: 650, width: 1450 } as CSSProperties}>
+                <div style={{ fontSize: 60, lineHeight: 1.12, fontWeight: 900, letterSpacing: '-0.04em' }}>
+                  I built <span style={{ color: C.gold }}>acornXA</span>
+                </div>
+                <div style={{ marginTop: 6, fontSize: 38, lineHeight: 1.25, fontWeight: 700, color: C.muted }}>
+                  a high-performance email &amp; analytics platform, modeled after the <span style={{ color: '#4DA6FF' }}>NetJets iJet2</span> application.
+                </div>
+              </div>
+              <div className="tc-a tc-in" style={{ '--d': '300ms', position: 'absolute', left: 1640, top: 650 } as CSSProperties}>
+                <AcornIcon />
+              </div>
+            </div>
+          </Step>
+          {/* click 3 — sold */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', left: 120, top: 835, fontSize: 118, lineHeight: 1.05, fontWeight: 900, letterSpacing: '-0.045em' }}>
+                <SoldText />
+              </div>
+              <div
+                aria-hidden="true"
+                className="tc-a en-o en-stamp"
+                style={{ position: 'absolute', left: 1440, top: 850, padding: '4px 30px', border: `10px solid ${C.red}`, borderRadius: 18, color: C.red, fontFamily: mono, fontSize: 84, lineHeight: 1.1, fontWeight: 900, letterSpacing: '0.08em', opacity: 0 }}
+              >
+                SOLD
+              </div>
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+Entrepreneurship.transition = settle;
+
+/* ───────────────────────── 24 MAPSYS ───────────────────────── */
+
+const MAP_CSS = `
+@keyframes mp-star { 0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; } 50% { transform: scale(1.3) rotate(18deg); opacity: 1; } }
+@keyframes mp-wob { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg) scale(1.04); } }
+.tc-active [data-osd-step="revealed"] .mp-star { display: inline-block; animation: mp-star 1.6s ease-in-out 1500ms infinite; }
+.tc-active [data-osd-step="revealed"] .mp-wob { animation: mp-wob 2.6s ease-in-out 1200ms infinite; }
+`;
+
+const MAP_RANKS: { title: string; color: string }[] = [
+  { title: 'Technical Specialist', color: '#4FD1C5' },
+  { title: 'Solutions Architect Manager', color: '#5BE49B' },
+  { title: 'Executive Director', color: '#FFC56B' },
+  { title: 'Chief Technologist', color: '#FF8A4C' },
+];
+
+const MAP_BADGES: { label: string; color: string }[] = [
+  { label: 'Solution Selling', color: '#4DA6FF' },
+  { label: 'Pipeline', color: '#5BE49B' },
+  { label: 'Quota', color: '#FFC56B' },
+];
+
+const RankBox = ({ title, color, index }: { title: string; color: string; index: number }) => {
+  const last = index === MAP_RANKS.length - 1;
+  return (
+    <div
+      className="tc-a tc-in"
+      style={
+        {
+          '--d': `${900 + index * 450}ms`,
+          position: 'absolute',
+          left: 120 + index * 440,
+          top: 830 - index * 20,
+          width: 360,
+          height: 110,
+          boxSizing: 'border-box',
+          padding: '0 24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+          gap: 12,
+          borderRadius: 20,
+          border: `4px solid ${color}`,
+          background: `${color}22`,
+          boxShadow: last ? `0 0 60px ${color}88` : `0 0 24px ${color}33`,
+          fontSize: 32,
+          lineHeight: 1.15,
+          fontWeight: 800,
+          letterSpacing: '-0.02em',
+          color: '#F3F6FC',
+        } as CSSProperties
+      }
+    >
+      {last ? <span className="tc-a mp-star">★</span> : null}
+      <span>{title}</span>
+    </div>
+  );
+};
+
+const RankArrow = ({ index }: { index: number }) => (
+  <div
+    aria-hidden="true"
+    className="tc-a tc-in"
+    style={
+      {
+        '--d': `${1150 + index * 450}ms`,
+        position: 'absolute',
+        left: 120 + index * 440 + 360,
+        top: 830 - index * 20 - 10,
+        width: 80,
+        textAlign: 'center',
+        fontSize: 56,
+        fontWeight: 900,
+        color: C.gold,
+      } as CSSProperties
+    }
+  >
+    ↗
+  </div>
+);
+
+const Mapsys: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="24 · MAPSYS"
+      title={
+        <>
+          <span style={{ display: 'block', fontSize: 52, fontWeight: 800, color: C.muted, whiteSpace: 'nowrap', ...rise(active, 100) }}>Next, I landed @</span>
+          <span style={{ display: 'block', fontSize: 104, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 250) }}>
+            <span style={{ color: '#4DA6FF' }}>MAPSYS</span> <span style={{ color: C.green }}>Systems &amp; Solutions</span>
+          </span>
+        </>
+      }
+    >
+      <style>{MAP_CSS}</style>
+      <div
+        className="tc-a"
+        style={{ position: 'absolute', left: 120, top: 330, width: 1060, fontSize: 38, lineHeight: 1.25, fontWeight: 700, color: C.muted, ...rise(active, 600) }}
+      >
+        A Columbus, OH based Technology and Consulting firm
+        <div style={{ marginTop: 6, color: C.gold }}>(Yay! I don’t have to move!)</div>
+      </div>
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — home for 17 years + the building */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', left: 120, top: 500, fontSize: 76, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.04em' } as CSSProperties}>
+                My home for <span style={{ color: C.gold }}>17 years!</span>
+              </div>
+              <div className="mp-wob" style={{ position: 'absolute', left: 1240, top: 330, transformOrigin: '50% 50%' }}>
+                <PhotoCard src={mapsysPhoto} alt="The MAPSYS office building in Columbus, Ohio" h={372} w={560} d={200} glow="rgba(77,166,255,0.35)" />
+              </div>
+            </div>
+          </Step>
+          {/* click 2 — sales, business acumen, rank progression, fun badges */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div className="tc-a tc-in" style={{ '--d': '0ms', position: 'absolute', left: 120, top: 615, width: 1060, fontSize: 46, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.03em' } as CSSProperties}>
+                Here I took <span style={{ color: C.green }}>sales</span> and my <span style={{ color: C.teal }}>business acumen</span> to a whole new level!
+              </div>
+              <div style={{ position: 'absolute', left: 120, top: 740, display: 'flex', gap: 20 }}>
+                {MAP_BADGES.map((b, i) => (
+                  <span
+                    key={b.label}
+                    className="tc-a tc-in"
+                    style={
+                      {
+                        '--d': `${350 + i * 200}ms`,
+                        padding: '8px 22px',
+                        borderRadius: 999,
+                        border: `3px solid ${b.color}`,
+                        background: `${b.color}22`,
+                        color: b.color,
+                        fontFamily: mono,
+                        fontSize: 26,
+                        letterSpacing: '0.04em',
+                        whiteSpace: 'nowrap',
+                      } as CSSProperties
+                    }
+                  >
+                    {b.label}
+                  </span>
+                ))}
+              </div>
+              {MAP_RANKS.map((r, i) => (
+                <RankBox key={r.title} title={r.title} color={r.color} index={i} />
+              ))}
+              {[0, 1, 2].map((i) => (
+                <RankArrow key={i} index={i} />
+              ))}
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+Mapsys.transition = settle;
+
+/* ───────────────────────── 25 some of my customers ───────────────────────── */
+
+const CUST_CSS = `
+@keyframes cu-splat { 0% { opacity: 0; transform: scale(2.8) rotate(calc(var(--r) + 35deg)); } 50% { opacity: 1; transform: scale(0.86) rotate(var(--r)); } 72% { transform: scale(1.08) rotate(var(--r)); } 100% { opacity: 1; transform: scale(1) rotate(var(--r)); } }
+@keyframes cu-ink { 0% { opacity: 0; transform: scale(0.2); } 55% { opacity: 0.55; } 100% { opacity: 0.28; transform: scale(1.35); } }
+@keyframes cu-bob { 0%, 100% { transform: translateY(0) rotate(var(--r)); } 50% { transform: translateY(-8px) rotate(calc(var(--r) + 1.2deg)); } }
+`;
+
+type Customer = { name: string; logo?: string; color: string; dx: number; dy: number; rot: number; order: number };
+
+const CUSTOMERS: Customer[] = [
+  { name: 'Nationwide Children’s Hospital', color: '#4DA6FF', dx: 6, dy: 4, rot: -4, order: 3 },
+  { name: 'Victoria’s Secret', logo: vsLogo, color: '#FF5D9E', dx: -8, dy: 14, rot: 3, order: 11 },
+  { name: 'HFA-AE.COM', color: '#4FD1C5', dx: 10, dy: -6, rot: -2, order: 7 },
+  { name: 'MIT', logo: mitLogo, color: '#FF5D6C', dx: -4, dy: 8, rot: 5, order: 0 },
+  { name: 'Ascena Retail', color: '#FF8A4C', dx: 0, dy: -2, rot: -5, order: 13 },
+  { name: 'Premium Brands', color: '#FFC56B', dx: 12, dy: 10, rot: 4, order: 5 },
+  { name: 'UPMC', logo: upmcLogo, color: '#B07AD0', dx: -10, dy: -4, rot: -3, order: 9 },
+  { name: 'Winn Supply', color: '#5BE49B', dx: 4, dy: 12, rot: 6, order: 1 },
+  { name: 'Racksquared', color: '#4DA6FF', dx: -6, dy: 0, rot: -6, order: 14 },
+  { name: 'Wasserstrom', logo: wasserstromLogo, color: '#4DA6FF', dx: 8, dy: 6, rot: 2, order: 4 },
+  { name: 'OCLC', logo: oclcLogo, color: '#F4811F', dx: -2, dy: 10, rot: -4, order: 10 },
+  { name: 'Encova Insurance', color: '#5BE49B', dx: 10, dy: -4, rot: 5, order: 2 },
+  { name: 'Kingston Memory', logo: kingstonLogo, color: '#FF5D6C', dx: -8, dy: 6, rot: -3, order: 12 },
+  { name: 'Richards Industries', color: '#FFC56B', dx: 2, dy: -6, rot: 4, order: 6 },
+  { name: 'Ohio Health', logo: ohioHealthLogo, color: '#4DA6FF', dx: -4, dy: 8, rot: -5, order: 8 },
+];
+
+const CUST_W = 310;
+const CUST_H = 150;
+
+const CustomerTile = ({ c, index }: { c: Customer; index: number }) => {
+  const active = useIsActivePage();
+  const col = index % 5;
+  const row = Math.floor(index / 5);
+  const delay = 500 + c.order * 170;
+  const left = 120 + col * 345 + c.dx;
+  const top = 290 + row * 235 + c.dy;
+  const vars = { '--r': `${c.rot}deg` } as CSSProperties;
+  return (
+    <div style={{ position: 'absolute', left, top, width: CUST_W, height: CUST_H }}>
+      <div
+        aria-hidden="true"
+        className="tc-a"
+        style={{
+          position: 'absolute',
+          left: -26,
+          top: -22,
+          right: -26,
+          bottom: -22,
+          background: c.color,
+          borderRadius: '58% 42% 63% 37% / 45% 58% 42% 55%',
+          filter: 'blur(2px)',
+          opacity: 0,
+          animation: active ? `cu-ink 900ms ease-out ${delay}ms both` : undefined,
+        }}
+      />
+      <div
+        className="tc-a"
+        style={{
+          ...vars,
+          position: 'absolute',
+          inset: 0,
+          boxSizing: 'border-box',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: c.logo ? '16px 22px' : '10px 18px',
+          borderRadius: 18,
+          textAlign: 'center',
+          opacity: 0,
+          ...(c.logo
+            ? { background: '#FFFFFF', boxShadow: `0 0 36px ${c.color}66` }
+            : { background: `${c.color}22`, border: `4px solid ${c.color}`, boxShadow: `0 0 28px ${c.color}44` }),
+          animation: active
+            ? `cu-splat 800ms cubic-bezier(0.2, 0.9, 0.3, 1) ${delay}ms both, cu-bob ${3 + (index % 4) * 0.5}s ease-in-out ${delay + 1600}ms infinite`
+            : undefined,
+        }}
+      >
+        {c.logo ? (
+          <img src={c.logo} alt={`${c.name} logo`} style={{ display: 'block', width: '100%', height: '100%', objectFit: 'contain' }} />
+        ) : (
+          <span style={{ fontSize: c.name.length > 16 ? 33 : 40, lineHeight: 1.12, fontWeight: 900, letterSpacing: '-0.03em', color: '#F3F6FC' }}>{c.name}</span>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const Customers: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="25 · CUSTOMERS"
+      title={
+        <span style={{ display: 'block', fontSize: 96, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          Some of my <span style={{ color: C.gold }}>Customers:</span>
+        </span>
+      }
+    >
+      <style>{CUST_CSS}</style>
+      {CUSTOMERS.map((c, i) => (
+        <CustomerTile key={c.name} c={c} index={i} />
+      ))}
+      <Credit>Logos: Wikimedia Commons · trademarks of their respective owners</Credit>
+    </Frame>
+  );
+};
+Customers.transition = settle;
+
+/* ───────────────────────── 26 speaking at conferences ───────────────────────── */
+
+const SPK_CSS = `
+@keyframes sp-wave { 0% { opacity: 0; transform: scale(0.5); } 30% { opacity: 0.9; } 100% { opacity: 0; transform: scale(1.7); } }
+@keyframes sp-mic { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg) translateY(-6px); } }
+.sp-o { transform-box: fill-box; transform-origin: 50% 50%; }
+.sp-active .sp-wave { animation: sp-wave 2.2s ease-out infinite; }
+.sp-active .sp-mic { transform-box: fill-box; transform-origin: 50% 100%; animation: sp-mic 2.8s ease-in-out infinite; }
+`;
+
+const SPEAKING: { label: string; sub?: string; color: string }[] = [
+  { label: 'IBM TechXchange', color: '#4DA6FF' },
+  { label: 'Common', color: '#5BE49B' },
+  { label: 'IBM Think', color: '#4FD1C5' },
+  { label: 'AI Rising', color: '#FFC56B' },
+  { label: 'YouTube: nextGenIT Series', sub: 'plus now the Daneyand@IBM series', color: '#FF5D6C' },
+];
+
+const MicStage = ({ active }: { active: boolean }) => (
+  <svg
+    className={active ? 'sp-active' : undefined}
+    width={340}
+    height={420}
+    viewBox="0 0 340 420"
+    role="img"
+    aria-label="A microphone on a stand with sound waves radiating outward"
+    style={{ overflow: 'visible' }}
+  >
+    {[0, 0.7, 1.4].map((d) => (
+      <circle
+        key={d}
+        className="tc-a sp-o sp-wave"
+        cx={170}
+        cy={120}
+        r={100}
+        fill="none"
+        stroke={C.gold}
+        strokeWidth={5}
+        style={{ animationDelay: `${d}s`, opacity: 0 }}
+      />
+    ))}
+    <line x1={170} y1={230} x2={170} y2={370} stroke={C.dim} strokeWidth={10} strokeLinecap="round" />
+    <line x1={100} y1={380} x2={240} y2={380} stroke={C.dim} strokeWidth={12} strokeLinecap="round" />
+    <g className="tc-a sp-mic">
+      <path d="M120 130 C 120 190, 220 190, 220 130" fill="none" stroke="#A9B7D9" strokeWidth={9} strokeLinecap="round" />
+      <rect x={134} y={30} width={72} height={130} rx={36} fill="#2B3558" stroke="#F3F6FC" strokeWidth={6} />
+      <g stroke="#6F7BA3" strokeWidth={4} strokeLinecap="round">
+        <line x1={142} y1={66} x2={198} y2={66} />
+        <line x1={142} y1={88} x2={198} y2={88} />
+        <line x1={142} y1={110} x2={198} y2={110} />
+      </g>
+    </g>
+  </svg>
+);
+
+const Speaking: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="26 · ON STAGE"
+      title={
+        <span style={{ display: 'block', fontSize: 96, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          Speaking at <span style={{ color: C.gold }}>conferences:</span>
+        </span>
+      }
+    >
+      <style>{SPK_CSS}</style>
+      <ul style={{ position: 'absolute', left: 120, top: 290, margin: 0, padding: 0, listStyle: 'none', width: 1250 }}>
+        {SPEAKING.map((s, i) => (
+          <li
+            key={s.label}
+            className="tc-a"
+            style={{ display: 'flex', alignItems: 'flex-start', gap: 28, marginBottom: 22, ...rise(active, 500 + i * 300) }}
+          >
+            <span aria-hidden="true" style={{ flex: '0 0 auto', width: 22, height: 22, marginTop: 28, borderRadius: 6, background: s.color, boxShadow: `0 0 20px ${s.color}` }} />
+            <span style={{ fontSize: 64, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.035em', color: '#F3F6FC' }}>
+              {s.label}
+              {s.sub ? (
+                <span style={{ display: 'block', marginTop: 4, fontSize: 38, fontWeight: 700, letterSpacing: '-0.02em', color: s.color }}>+ {s.sub}</span>
+              ) : null}
+            </span>
+          </li>
+        ))}
+      </ul>
+      <div className="tc-a" style={{ position: 'absolute', left: 1480, top: 300, ...rise(active, 700) }}>
+        <MicStage active={active} />
+      </div>
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — the teaser for what's next */}
+          <Step duration={200}>
+            <div
+              className="tc-a tc-in"
+              style={{ '--d': '0ms', position: 'absolute', left: 120, top: 905, fontSize: 56, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.035em', whiteSpace: 'nowrap' } as CSSProperties}
+            >
+              And now, after <span style={{ color: C.gold }}>17 years</span> @ <span style={{ color: '#4DA6FF' }}>MAPSYS</span>…
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+Speaking.transition = settle;
+
+/* ───────────────────────── 27 back at IBM ───────────────────────── */
+
+const IBM_CSS = `
+@keyframes bk-p { 0% { opacity: 0; transform: translate(0, 0) scale(0.4); } 4% { opacity: 1; } 38% { opacity: 1; transform: translate(var(--x), var(--y)) scale(1); } 62% { opacity: 0; transform: translate(var(--x), calc(var(--y) + 46px)) scale(0.6); } 100% { opacity: 0; transform: translate(var(--x), calc(var(--y) + 46px)) scale(0.6); } }
+@keyframes bk-core { 0%, 100% { opacity: 0; transform: scale(0.2); } 4% { opacity: 0.9; } 16% { opacity: 0; transform: scale(2.6); } }
+`;
+
+const FIREWORKS: { x: number; y: number; r: number; color: string; d: number }[] = [
+  { x: 210, y: 360, r: 170, color: '#FFC56B', d: 0 },
+  { x: 1000, y: 230, r: 150, color: '#4DA6FF', d: 700 },
+  { x: 1730, y: 330, r: 190, color: '#5BE49B', d: 1400 },
+  { x: 560, y: 820, r: 160, color: '#FF5D6C', d: 2100 },
+  { x: 1280, y: 700, r: 180, color: '#B07AD0', d: 400 },
+  { x: 1780, y: 880, r: 140, color: '#FFC56B', d: 1800 },
+  { x: 130, y: 880, r: 130, color: '#4FD1C5', d: 1100 },
+];
+
+const Fireworks = () => {
+  const active = useIsActivePage();
+  if (!active) return null;
+  return (
+    <div aria-hidden="true" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+      {FIREWORKS.map((f) => (
+        <div key={`${f.x}-${f.y}`}>
+          <div
+            className="tc-a"
+            style={{ position: 'absolute', left: f.x - 20, top: f.y - 20, width: 40, height: 40, borderRadius: '50%', background: '#FFFFFF', opacity: 0, animation: `bk-core 4s ease-out ${f.d}ms infinite` }}
+          />
+          {Array.from({ length: 18 }, (_, i) => {
+            const a = (i / 18) * Math.PI * 2;
+            const rr = f.r * (i % 2 === 0 ? 1 : 0.68);
+            return (
+              <div
+                key={i}
+                className="tc-a"
+                style={
+                  {
+                    '--x': `${Math.round(Math.cos(a) * rr)}px`,
+                    '--y': `${Math.round(Math.sin(a) * rr)}px`,
+                    position: 'absolute',
+                    left: f.x - 6,
+                    top: f.y - 6,
+                    width: 12,
+                    height: 12,
+                    borderRadius: '50%',
+                    background: i % 3 === 0 ? '#FFFFFF' : f.color,
+                    boxShadow: `0 0 16px 3px ${f.color}`,
+                    opacity: 0,
+                    animation: `bk-p 4s cubic-bezier(0.1, 0.7, 0.3, 1) ${f.d}ms infinite`,
+                  } as CSSProperties
+                }
+              />
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+type IbmTile = { label?: string; sub?: string; src?: string; alt?: string; span?: number; bleed?: boolean; color: string };
+
+const IBM_TILES: IbmTile[] = [
+  { src: powerSystemsLogo, alt: 'IBM Power Systems', span: 2, color: '#4DA6FF' },
+  { label: 'BAW', sub: 'Business Automation Workflow', color: '#4DA6FF' },
+  { label: 'BAI', sub: 'Business Automation Insights', color: '#4FD1C5' },
+  { src: ibmZ9, alt: 'IBM System z9 mainframe badge', span: 2, bleed: true, color: '#A9B7D9' },
+  { label: 'FileNet', sub: 'Content Manager', color: '#5BE49B' },
+  { src: db2Logo, alt: 'IBM Db2', color: '#5BE49B' },
+  { label: 'Netezza', sub: 'Data Warehouse', color: '#FFC56B' },
+  { src: watsonxLogo, alt: 'IBM watsonx', span: 2, color: '#4DA6FF' },
+  { label: 'IBM MQ', sub: 'Messaging', color: '#FF8A4C' },
+  { src: redHatLogo, alt: 'Red Hat', span: 2, color: '#FF5D6C' },
+  { label: 'Guardium', sub: 'Data Security', color: '#B07AD0' },
+];
+
+const IbmTileView = ({ t, index }: { t: IbmTile; index: number }) => (
+  <div
+    className="tc-a tc-in"
+    style={
+      {
+        '--d': `${index * 130}ms`,
+        gridColumn: t.span ? `span ${t.span}` : undefined,
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: 'center',
+        overflow: 'hidden',
+        borderRadius: 16,
+        padding: t.src ? (t.bleed ? 0 : '14px 20px') : '6px 10px',
+        ...(t.src
+          ? { background: t.bleed ? '#3A4046' : '#FFFFFF', boxShadow: `0 0 28px ${t.color}55` }
+          : { background: `${t.color}22`, border: `4px solid ${t.color}`, boxShadow: `0 0 22px ${t.color}33` }),
+      } as CSSProperties
+    }
+  >
+    {t.src ? (
+      <img src={t.src} alt={t.alt} style={{ display: 'block', width: '100%', height: '100%', objectFit: t.bleed ? 'cover' : 'contain' }} />
+    ) : (
+      <>
+        <span style={{ fontSize: 34, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.03em', color: '#F3F6FC' }}>{t.label}</span>
+        <span style={{ marginTop: 3, fontFamily: mono, fontSize: 15, lineHeight: 1.15, letterSpacing: '0.02em', color: t.color }}>{t.sub}</span>
+      </>
+    )}
+  </div>
+);
+
+const BackAtIbm: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="27 · BACK AT IBM"
+      title={
+        <span style={{ display: 'flex', alignItems: 'center', gap: 44, whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          <span style={{ fontSize: 128, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em' }}>I’m back at</span>
+          <img
+            className="tc-a"
+            src={ibmLogo}
+            alt="IBM"
+            style={{
+              display: 'block',
+              height: 200,
+              width: 'auto',
+              filter: 'drop-shadow(0 0 40px rgba(77,166,255,0.7))',
+              animation: active ? `tc-popin 800ms ${SPRING} 500ms both` : undefined,
+            }}
+          />
+        </span>
+      }
+    >
+      <style>{IBM_CSS}</style>
+      <Fireworks />
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — the role */}
+          <Step duration={200}>
+            <div
+              className="tc-a tc-in"
+              style={{ '--d': '0ms', position: 'absolute', left: 120, top: 385, width: 1680, fontSize: 58, lineHeight: 1.18, fontWeight: 800, letterSpacing: '-0.03em' } as CSSProperties}
+            >
+              I’m a <span style={{ color: '#4DA6FF' }}>Technical Leader</span> &amp; <span style={{ color: C.gold }}>Field CTO</span> in the{' '}
+              <span style={{ color: C.green }}>US Financial Services</span> Market.
+            </div>
+          </Step>
+          {/* click 2 — Wall Street + the IBM portfolio */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', left: 120, top: 570 }}>
+                <PhotoCard src={wallStreetSign} alt="A green Wall St street sign on a glass office tower in New York" h={310} w={443} d={0} glow="rgba(91,228,155,0.35)" />
+                <div className="tc-a tc-in" style={{ '--d': '300ms', marginTop: 12, fontFamily: mono, fontSize: 22, letterSpacing: '0.06em', color: C.gold } as CSSProperties}>
+                  WALL STREET · US FINANCIAL SERVICES
+                </div>
+              </div>
+              <div
+                style={{ position: 'absolute', left: 700, top: 570, width: 1100, display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gridAutoRows: 100, gridAutoFlow: 'dense', gap: 16 }}
+              >
+                {IBM_TILES.map((t, i) => (
+                  <IbmTileView key={t.alt ?? t.label} t={t} index={i} />
+                ))}
+              </div>
+              <Credit>Wikimedia Commons · Wall St sign: Acediscovery (CC BY 4.0) · IBM, Red Hat, System z9 logos (public domain)</Credit>
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+BackAtIbm.transition = settle;
+
+/* ───────────────────────── 28 fell into AI ───────────────────────── */
+
+const AI_CSS = `
+@keyframes ai-node { 0%, 100% { transform: scale(1); opacity: 0.45; } 50% { transform: scale(1.8); opacity: 1; } }
+@keyframes ai-rain { from { transform: translateY(-950px); } to { transform: translateY(1100px); } }
+@keyframes ai-float { 0%, 100% { transform: translate(0, 0) rotate(var(--r)); } 33% { transform: translate(16px, -24px) rotate(calc(var(--r) + 5deg)); } 66% { transform: translate(-14px, -8px) rotate(calc(var(--r) - 4deg)); } }
+@keyframes ai-spin { to { transform: rotate(360deg); } }
+@keyframes ai-spin-r { to { transform: rotate(-360deg); } }
+@keyframes ai-core { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.14); } }
+@keyframes ai-shine { to { background-position: 200% 0; } }
+@keyframes ai-type { from { width: 0; } to { width: var(--w); } }
+@keyframes ai-blink { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes ai-scan { from { transform: translateY(-120px); } to { transform: translateY(1200px); } }
+.ai-shine { background: linear-gradient(90deg, #4DA6FF, #5BE49B, #FFC56B, #FF5D6C, #B07AD0, #4DA6FF); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.ai-type { overflow: hidden; white-space: nowrap; width: 0; }
+.tc-active [data-osd-step="revealed"] .ai-shine { animation: ai-shine 3.5s linear infinite; }
+.tc-active [data-osd-step="revealed"] .ai-type { animation: ai-type 1s steps(var(--n)) var(--td) both; }
+.tc-active [data-osd-step="revealed"] .ai-cursor { animation: ai-blink 0.9s steps(1) 2.6s infinite; }
+.tc-active [data-osd-step="revealed"] .ai-glow { animation: tc-glow 2.4s ease-in-out 1s infinite; }
+`;
+
+const aiRand = (seed: number) => () => {
+  seed = (seed * 1664525 + 1013904223) % 4294967296;
+  return seed / 4294967296;
+};
+
+const AI_PALETTE = ['#4DA6FF', '#5BE49B', '#FFC56B', '#B07AD0', '#4FD1C5'];
+const AI_LAYERS = [4, 6, 5, 7, 5, 6, 4, 5];
+
+const AI_NET = (() => {
+  const rnd = aiRand(2016);
+  const nodes = AI_LAYERS.map((cnt, li) =>
+    Array.from({ length: cnt }, (_, j) => ({
+      x: 80 + li * (1760 / (AI_LAYERS.length - 1)) + (rnd() - 0.5) * 30,
+      y: 130 + (j + 0.5) * (870 / cnt) + (rnd() - 0.5) * 40,
+      r: 4 + rnd() * 4,
+    })),
+  );
+  const edges: { x1: number; y1: number; x2: number; y2: number }[] = [];
+  nodes.forEach((layer, li) => {
+    const next = nodes[li + 1];
+    if (!next) return;
+    layer.forEach((a, j) => {
+      const k = Math.min(next.length - 1, Math.round((j / Math.max(1, layer.length - 1)) * (next.length - 1)));
+      Array.from(new Set([k, Math.min(next.length - 1, k + 1)])).forEach((idx) => {
+        edges.push({ x1: a.x, y1: a.y, x2: next[idx].x, y2: next[idx].y });
+      });
+    });
+  });
+  return { nodes: nodes.flat(), edges };
+})();
+
+const AI_RAIN = Array.from({ length: 12 }, (_, i) => {
+  const rnd = aiRand(100 + i);
+  return {
+    x: 30 + i * 158 + (i % 3) * 18,
+    text: Array.from({ length: 34 }, () => (rnd() > 0.5 ? '1' : '0')).join('\n'),
+    dur: 9 + (i % 5) * 2.2,
+    delay: -(i * 1.9),
+  };
+});
+
+const AI_TOKENS: { t: string; x: number; y: number; c: string; s: number; r: number; dur: number }[] = [
+  { t: 'LLM', x: 1560, y: 90, c: '#4DA6FF', s: 34, r: -6, dur: 6 },
+  { t: 'tensor', x: 980, y: 40, c: '#5BE49B', s: 26, r: 4, dur: 7.5 },
+  { t: 'GPT', x: 1760, y: 560, c: '#FFC56B', s: 38, r: 8, dur: 5.5 },
+  { t: 'ML', x: 60, y: 560, c: '#4FD1C5', s: 40, r: -8, dur: 6.5 },
+  { t: 'embedding', x: 1500, y: 960, c: '#B07AD0', s: 24, r: 3, dur: 8 },
+  { t: 'agent', x: 1120, y: 880, c: '#5BE49B', s: 32, r: -4, dur: 7 },
+  { t: 'weights', x: 300, y: 980, c: '#FFC56B', s: 24, r: 5, dur: 6 },
+  { t: '0.97', x: 1830, y: 280, c: '#4DA6FF', s: 28, r: -10, dur: 5 },
+  { t: 'RAG', x: 760, y: 960, c: '#FF5D6C', s: 30, r: 6, dur: 7 },
+  { t: 'DL', x: 1640, y: 790, c: '#B07AD0', s: 36, r: -5, dur: 6.8 },
+  { t: '∑ w·x + b', x: 40, y: 330, c: '#4DA6FF', s: 24, r: 9, dur: 8.5 },
+  { t: 'inference', x: 1320, y: 40, c: '#4FD1C5', s: 26, r: -3, dur: 7.2 },
+  { t: '</>', x: 1000, y: 990, c: '#5BE49B', s: 34, r: 4, dur: 5.8 },
+  { t: 'prompt', x: 1790, y: 930, c: '#FFC56B', s: 26, r: -7, dur: 6.4 },
+  { t: 'GPU', x: 40, y: 800, c: '#FF8A4C', s: 32, r: 7, dur: 7.6 },
+  { t: 'transformer', x: 480, y: 30, c: '#B07AD0', s: 24, r: -4, dur: 8.2 },
+];
+
+const AiBackdrop = () => {
+  const active = useIsActivePage();
+  return (
+    <div aria-hidden="true" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+      {/* binary rain */}
+      {AI_RAIN.map((c) => (
+        <div
+          key={c.x}
+          className="tc-a"
+          style={{
+            position: 'absolute',
+            left: c.x,
+            top: 0,
+            fontFamily: mono,
+            fontSize: 22,
+            lineHeight: '28px',
+            whiteSpace: 'pre',
+            color: C.green,
+            opacity: 0.16,
+            animation: active ? `ai-rain ${c.dur}s linear ${c.delay}s infinite` : undefined,
+          }}
+        >
+          {c.text}
+        </div>
+      ))}
+      {/* the neural network, with signals travelling its edges */}
+      <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', left: 0, top: 0, opacity: 0.6 }}>
+        {AI_NET.edges.map((e, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: static generated geometry
+          <line key={`b${i}`} x1={e.x1} y1={e.y1} x2={e.x2} y2={e.y2} stroke="rgba(77,166,255,0.16)" strokeWidth={2} />
+        ))}
+        {AI_NET.edges.map((e, i) =>
+          i % 2 === 0 ? (
+            <line
+              // biome-ignore lint/suspicious/noArrayIndexKey: static generated geometry
+              key={`p${i}`}
+              className="tc-a"
+              x1={e.x1}
+              y1={e.y1}
+              x2={e.x2}
+              y2={e.y2}
+              stroke={AI_PALETTE[i % 5]}
+              strokeWidth={3}
+              strokeLinecap="round"
+              strokeDasharray="10 38"
+              style={{ opacity: 0.8, animation: active ? `tc-flow ${1.4 + (i % 5) * 0.35}s linear ${-(i % 7) * 0.3}s infinite` : undefined }}
+            />
+          ) : null,
+        )}
+        {AI_NET.nodes.map((n, i) => (
+          <circle
+            // biome-ignore lint/suspicious/noArrayIndexKey: static generated geometry
+            key={`n${i}`}
+            className="tc-a"
+            cx={n.x}
+            cy={n.y}
+            r={n.r}
+            fill={AI_PALETTE[i % 5]}
+            style={{
+              transformBox: 'fill-box',
+              transformOrigin: 'center',
+              animation: active ? `ai-node ${2 + (i % 5) * 0.5}s ease-in-out ${-(i % 9) * 0.4}s infinite` : undefined,
+            }}
+          />
+        ))}
+      </svg>
+      {/* floating AI vocabulary */}
+      {AI_TOKENS.map((k) => (
+        <div
+          key={k.t}
+          className="tc-a"
+          style={
+            {
+              '--r': `${k.r}deg`,
+              position: 'absolute',
+              left: k.x,
+              top: k.y,
+              fontFamily: mono,
+              fontSize: k.s,
+              letterSpacing: '0.04em',
+              color: k.c,
+              opacity: 0.4,
+              textShadow: `0 0 18px ${k.c}`,
+              whiteSpace: 'nowrap',
+              animation: active ? `ai-float ${k.dur}s ease-in-out infinite` : undefined,
+            } as CSSProperties
+          }
+        >
+          {k.t}
+        </div>
+      ))}
+      {/* a scanning beam sweeping the page */}
+      <div
+        className="tc-a"
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          height: 120,
+          background: 'linear-gradient(180deg, rgba(77,166,255,0), rgba(77,166,255,0.10), rgba(77,166,255,0))',
+          animation: active ? 'ai-scan 7s linear infinite' : undefined,
+        }}
+      />
+    </div>
+  );
+};
+
+/** A glowing "AI core": counter-rotating rings, orbiting sparks, pulsing heart. */
+const AiCore = () => {
+  const active = useIsActivePage();
+  const spin = (name: string, secs: number): CSSProperties => ({
+    transformBox: 'view-box',
+    transformOrigin: '110px 110px',
+    animation: active ? `${name} ${secs}s linear infinite` : undefined,
+  });
+  return (
+    <svg
+      className="tc-a"
+      width={220}
+      height={220}
+      viewBox="0 0 220 220"
+      role="img"
+      aria-label="A glowing AI core with rotating rings and orbiting sparks"
+      style={{ position: 'absolute', left: 1480, top: 215, overflow: 'visible', ...rise(active, 600) }}
+    >
+      <circle cx={110} cy={110} r={104} fill="none" stroke="#4DA6FF" strokeWidth={3} strokeDasharray="4 14" strokeLinecap="round" className="tc-a" style={spin('ai-spin', 18)} />
+      <g className="tc-a" style={spin('ai-spin-r', 11)}>
+        <circle cx={110} cy={110} r={84} fill="none" stroke="#5BE49B" strokeWidth={4} strokeDasharray="70 30 20 30" strokeLinecap="round" />
+        <circle cx={110} cy={26} r={8} fill="#FFC56B" />
+      </g>
+      <g className="tc-a" style={spin('ai-spin', 6)}>
+        <circle cx={110} cy={110} r={62} fill="none" stroke="#B07AD0" strokeWidth={3} strokeDasharray="30 22" strokeLinecap="round" />
+        <circle cx={172} cy={110} r={6} fill="#FF5D6C" />
+        <circle cx={48} cy={110} r={5} fill="#4FD1C5" />
+      </g>
+      <g className="tc-a" style={{ transformBox: 'view-box', transformOrigin: '110px 110px', animation: active ? 'ai-core 2.2s ease-in-out infinite' : undefined }}>
+        <circle cx={110} cy={110} r={40} fill="rgba(77,166,255,0.22)" stroke="#4DA6FF" strokeWidth={4} />
+        <text x={110} y={126} textAnchor="middle" fontSize={44} fontWeight={900} fill="#F3F6FC" style={{ fontFamily: mono }}>
+          AI
+        </text>
+      </g>
+    </svg>
+  );
+};
+
+const AiChip = ({ caption, color, glow, children, d }: { caption?: string; color: string; glow?: boolean; children: ReactNode; d: number }) => (
+  <div className="tc-a tc-in" style={{ '--d': `${d}ms` } as CSSProperties}>
+    <div style={{ height: 30, marginBottom: 6, fontFamily: mono, fontSize: 22, letterSpacing: '0.1em', color }}>{caption ?? ''}</div>
+    <div
+      className={glow ? 'tc-a ai-glow' : undefined}
+      style={
+        {
+          '--g0': `${color}00`,
+          '--g1': `${color}99`,
+          padding: '20px 30px',
+          borderRadius: 20,
+          border: `4px solid ${color}`,
+          background: `${color}22`,
+          fontSize: 40,
+          lineHeight: 1.1,
+          fontWeight: 900,
+          letterSpacing: '-0.03em',
+          color: '#F3F6FC',
+          whiteSpace: 'nowrap',
+        } as CSSProperties
+      }
+    >
+      {children}
+    </div>
+  </div>
+);
+
+const AiArrow = ({ d }: { d: number }) => (
+  <div aria-hidden="true" className="tc-a tc-in" style={{ '--d': `${d}ms`, alignSelf: 'flex-end', paddingBottom: 26, fontSize: 52, fontWeight: 900, color: C.gold } as CSSProperties}>
+    →
+  </div>
+);
+
+const AI_TERM: { text: string; color: string }[] = [
+  { text: '$ agent build my-idea', color: '#F3F6FC' },
+  { text: '> planning… writing code…', color: '#FFC56B' },
+  { text: '✓ app running on :3000', color: '#5BE49B' },
+];
+
+const AgenticTerminal = () => (
+  <div
+    className="tc-a tc-in"
+    style={
+      {
+        '--d': '600ms',
+        position: 'absolute',
+        left: 1400,
+        top: 772,
+        width: 420,
+        boxSizing: 'border-box',
+        padding: '38px 18px 14px',
+        borderRadius: 14,
+        background: '#070B16',
+        border: '3px solid #4DA6FF',
+        boxShadow: '0 0 40px rgba(77,166,255,0.4)',
+        fontFamily: mono,
+        fontSize: 19,
+        lineHeight: '30px',
+      } as CSSProperties
+    }
+  >
+    <span aria-hidden="true" style={{ position: 'absolute', left: 14, top: 12, display: 'flex', gap: 8 }}>
+      {['#FF5D6C', '#FFC56B', '#5BE49B'].map((c) => (
+        <span key={c} style={{ width: 12, height: 12, borderRadius: '50%', background: c }} />
+      ))}
+    </span>
+    {AI_TERM.map((l, i) => (
+      <div
+        key={l.text}
+        className="ai-type"
+        style={{ '--w': `${l.text.length}ch`, '--n': l.text.length, '--td': `${900 + i * 1000}ms`, color: l.color } as CSSProperties}
+      >
+        {l.text}
+      </div>
+    ))}
+    <span aria-hidden="true" className="ai-cursor" style={{ display: 'inline-block', width: 11, height: 20, marginTop: 4, background: '#F3F6FC', opacity: 0 }} />
+  </div>
+);
+
+const FellIntoAi: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="28 · A PRIMER ON AI"
+      title={
+        <span style={{ display: 'block', fontSize: 68, fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.04em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
+          Through my career path, I somehow fell into
+          <br />
+          <span className="ai-shine" style={{ animation: active ? 'ai-shine 3.5s linear infinite' : undefined }}>
+            AI
+          </span>{' '}
+          before it was even{' '}
+          <span className="ai-shine" style={{ animation: active ? 'ai-shine 3.5s linear 0.6s infinite' : undefined }}>
+            AI
+          </span>
+          .
+        </span>
+      }
+    >
+      <style>{AI_CSS}</style>
+      <AiBackdrop />
+      <AiCore />
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — since 2016 */}
+          <Step duration={200}>
+            <div
+              className="tc-a tc-in"
+              style={{ '--d': '0ms', position: 'absolute', left: 120, top: 310, width: 1300, fontSize: 46, lineHeight: 1.22, fontWeight: 800, letterSpacing: '-0.03em' } as CSSProperties}
+            >
+              From <span style={{ color: C.gold }}>2016</span> I’ve been <span style={{ color: '#4DA6FF' }}>educating</span>,{' '}
+              <span style={{ color: C.green }}>speaking</span>, <span style={{ color: C.teal }}>selling</span> and{' '}
+              <span style={{ color: '#B07AD0' }}>engineering</span> AI solutions:
+            </div>
+          </Step>
+          {/* click 2 — ML → DL → neural networks */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', left: 120, top: 460, display: 'flex', alignItems: 'flex-end', gap: 22 }}>
+              <div className="tc-a tc-in" style={{ '--d': '0ms', alignSelf: 'flex-end', paddingBottom: 26, fontSize: 40, fontWeight: 800, letterSpacing: '-0.03em', color: C.muted, whiteSpace: 'nowrap' } as CSSProperties}>
+                First with
+              </div>
+              <AiChip caption="2016" color={C.teal} d={250}>
+                machine learning
+              </AiChip>
+              <AiArrow d={450} />
+              <AiChip color={C.gold} d={650}>
+                deep learning
+              </AiChip>
+              <AiArrow d={850} />
+              <AiChip caption="NOW" color={C.green} glow d={1050}>
+                neural networks
+              </AiChip>
+            </div>
+          </Step>
+          {/* click 3 — the primer + the agentic demo */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', left: 120, top: 625, fontSize: 112, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.045em', whiteSpace: 'nowrap' }}>
+                {Array.from('& NOW, a Primer on AI.').map((ch, i) =>
+                  ch === ' ' ? (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: static text
+                    <span key={i} style={{ display: 'inline-block', width: '0.28em' }} />
+                  ) : (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: static text
+                    <span key={i} className="tc-a tc-in" style={{ '--d': `${i * 45}ms`, display: 'inline-block' } as CSSProperties}>
+                      <span className="ai-shine" style={{ display: 'inline-block' }}>
+                        {ch}
+                      </span>
+                    </span>
+                  ),
+                )}
+              </div>
+              <div
+                className="tc-a tc-in"
+                style={{ '--d': '700ms', position: 'absolute', left: 120, top: 775, width: 1180, fontSize: 36, lineHeight: 1.25, fontWeight: 700, color: C.muted } as CSSProperties}
+              >
+                (Plus a demo of how to use <span style={{ color: '#4DA6FF' }}>agentic AI</span> to bring your ideas to life —{' '}
+                <span style={{ color: C.gold }}>become a developer, a real coder!</span>)
+              </div>
+              <AgenticTerminal />
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+FellIntoAi.transition = settle;
+
 export const meta: SlideMeta = {
   title: 'What a career in technology looks like & how AI changes everything',
   createdAt: '2026-11-07T16:09:51.435Z',
 };
-export default [Cover, Agenda, Powers, Hello, College, Winlab, Internship, Tru64, Luck, WalkHome, IbmJob, IbmMore, MareNostrum, ShowTell, Learning] satisfies Page[];
+export default [Cover, Agenda, Powers, Hello, College, Winlab, Internship, Tru64, Luck, WalkHome, IbmJob, IbmMore, MareNostrum, ShowTell, Learning, Patents, ThirdPoint, Tragedy, Opportunity, FourthPoint, IbmSales, SellingDesigned, Entrepreneurship, Mapsys, Customers, Speaking, BackAtIbm, FellIntoAi] satisfies Page[];
