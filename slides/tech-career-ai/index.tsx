@@ -47,6 +47,15 @@ import wallStreetSign from './assets/ibm/wall-street-sign.jpg';
 import watsonxLogo from './assets/ibm/watsonx.svg';
 import akCover from './assets/ai101/cover.jpg';
 import akSpeaker from './assets/ai101/speaker.jpg';
+import coAmd from './assets/companies/amd.svg';
+import coAti from './assets/companies/ati.svg';
+import coBroadcom from './assets/companies/broadcom.svg';
+import coIntel from './assets/companies/intel.svg';
+import coMotorola from './assets/companies/motorola.svg';
+import coNvidia from './assets/companies/nvidia.svg';
+import coOracle from './assets/companies/oracle.svg';
+import coQualcomm from './assets/companies/qualcomm.svg';
+import coSun from './assets/companies/sun.svg';
 import wasserstromLogo from './assets/customers/wasserstrom.png';
 import power7Badge from './assets/power7-badge.svg';
 import powerpcLogo from './assets/powerpc-logo.svg';
@@ -632,9 +641,17 @@ const seeded = (seed: number) => () => {
 type DecodeChar = { ch: string; at: number };
 
 /** Per-character scramble, then lock — the cover's "decode" effect. Newlines start a new row. */
-const DecodeText = ({ text, delay = 200 }: { text: string; delay?: number }) => {
+const DecodeText = ({ text, delay = 200, replayMs }: { text: string; delay?: number; replayMs?: number }) => {
   const active = useIsActivePage();
   const [now, setNow] = useState<number>(active ? 0 : Number.POSITIVE_INFINITY);
+  const [cycle, setCycle] = useState(0);
+
+  // Optional: replay the decode every `replayMs` while this page is showing.
+  useEffect(() => {
+    if (!active || !replayMs) return;
+    const id = window.setInterval(() => setCycle((c) => c + 1), replayMs);
+    return () => window.clearInterval(id);
+  }, [active, replayMs]);
 
   const { rows, end, hash } = useMemo(() => {
     let h = 0;
@@ -673,7 +690,7 @@ const DecodeText = ({ text, delay = 200 }: { text: string; delay?: number }) => 
     setNow(0);
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [active, end]);
+  }, [active, end, cycle]);
 
   let idx = 0;
   return (
@@ -757,7 +774,7 @@ const Cover: Page = () => {
               letterSpacing: '-0.04em',
             }}
           >
-            <DecodeText text={'What a career in\ntechnology looks like\n& how AI changes\neverything'} delay={200} />
+            <DecodeText text={'What a career in\ntechnology looks like\n& how AI changes\neverything'} delay={200} replayMs={10000} />
           </h1>
           <div style={{ height: 4, width: 160, background: 'var(--osd-accent)', ...rise(active, 900) }} />
         </div>
@@ -1703,6 +1720,377 @@ const College: Page = () => {
 };
 College.transition = settle;
 
+/* ───────────────────────── 06 college life: major, swim team, degrees ───────────────────────── */
+
+const CL_CSS = `
+@keyframes cl-shake { 0% { transform: translate(0, 0); } 2% { transform: translate(-5px, 3px) rotate(-0.8deg); } 4% { transform: translate(5px, -3px) rotate(0.8deg); } 6% { transform: translate(-6px, -2px); } 8% { transform: translate(6px, 3px) rotate(0.6deg); } 10% { transform: translate(-4px, 2px); } 12% { transform: translate(4px, -2px); } 14% { transform: translate(-2px, 1px); } 16%, 100% { transform: translate(0, 0); } }
+@keyframes cl-glitch { 0%, 16%, 100% { transform: none; } 2% { transform: translateX(-7px); } 4% { transform: translateX(8px) skewX(8deg); } 6% { transform: translateX(-4px); } 8% { transform: translateX(5px) skewX(-6deg); } 10% { transform: translateX(-2px); } 12% { transform: none; } }
+@keyframes cl-bolt { 0%, 100% { opacity: 0; } 1% { opacity: 1; } 3% { opacity: 0; } 5% { opacity: 1; } 7% { opacity: 0.2; } 9% { opacity: 1; } 12% { opacity: 0; } }
+@keyframes cl-flash { 0%, 100% { opacity: 0; } 1% { opacity: 0.9; } 3% { opacity: 0.1; } 5% { opacity: 0.8; } 8% { opacity: 0; } 10% { opacity: 0.5; } 13% { opacity: 0; } }
+@keyframes cl-crack { 0%, 4% { opacity: 0; } 5%, 88% { opacity: 0.85; } 96%, 100% { opacity: 0; } }
+@keyframes cl-smoke { 0% { opacity: 0; transform: translateY(0) scale(0.4); } 15% { opacity: 0.8; } 100% { opacity: 0; transform: translateY(-130px) scale(2.4); } }
+@keyframes cl-key { 0%, 100% { opacity: 0; } 2%, 6% { opacity: 1; } 10% { opacity: 0; } }
+@keyframes cl-swim { from { transform: translateX(-110px); } to { transform: translateX(520px); } }
+@keyframes cl-bob2 { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
+@keyframes cl-wave { to { transform: translateX(-80px); } }
+@keyframes cl-bubble { 0%, 100% { opacity: 0.2; transform: scale(0.6); } 50% { opacity: 0.9; transform: scale(1); } }
+@keyframes cl-meetL { from { opacity: 0; transform: translateX(-190px) rotate(-14deg); } to { opacity: 1; transform: none; } }
+@keyframes cl-meetR { from { opacity: 0; transform: translateX(190px) rotate(14deg); } to { opacity: 1; transform: none; } }
+@keyframes cl-grip { 0%, 36%, 100% { transform: translateY(0); } 8% { transform: translateY(-10px); } 16% { transform: translateY(6px); } 24% { transform: translateY(-6px); } 32% { transform: translateY(0); } }
+@keyframes cl-ring { from { opacity: 0.9; transform: scale(0.3); } to { opacity: 0; transform: scale(3.4); } }
+@keyframes cl-layer { from { opacity: 0; transform: translateY(60px) scale(0.9); } to { opacity: 1; transform: none; } }
+@keyframes cl-cap { 0% { opacity: 0; transform: translateY(-80px) rotate(-30deg); } 60% { opacity: 1; transform: translateY(8px) rotate(10deg); } 100% { opacity: 1; transform: none; } }
+@keyframes cl-glow { 0%, 100% { text-shadow: 0 0 0 rgba(255,138,76,0); } 50% { text-shadow: 0 0 40px rgba(255,138,76,0.85); } }
+.cl-bolt, .cl-flash, .cl-crack, .cl-smoke, .cl-key { opacity: 0; }
+.cl-smoke, .cl-layer, .cl-cap, .cl-flash { transform-box: fill-box; transform-origin: center; }
+.tc-active [data-osd-step="revealed"] .cl-shake { animation: cl-shake 3.6s linear 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .cl-glitch { animation: cl-glitch 3.6s linear 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .cl-bolt { animation: cl-bolt 3.6s linear calc(600ms + var(--dl, 0ms)) infinite; }
+.tc-active [data-osd-step="revealed"] .cl-flash { animation: cl-flash 3.6s linear 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .cl-crack { animation: cl-crack 3.6s linear 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .cl-smoke { animation: cl-smoke 3.6s ease-out var(--dl, 0s) infinite; }
+.tc-active [data-osd-step="revealed"] .cl-key { animation: cl-key 3.6s linear calc(600ms + var(--dl, 0ms)) infinite; }
+.tc-active [data-osd-step="revealed"] .cl-swim { animation: cl-swim 5.5s linear infinite; }
+.tc-active [data-osd-step="revealed"] .cl-bob2 { animation: cl-bob2 1.1s ease-in-out infinite; }
+.tc-active [data-osd-step="revealed"] .cl-wave { animation: cl-wave var(--t, 2.4s) linear infinite; }
+.tc-active [data-osd-step="revealed"] .cl-bubble { animation: cl-bubble 0.9s ease-in-out var(--dl, 0s) infinite; }
+.tc-active [data-osd-step="revealed"] .cl-meetL { animation: cl-meetL 900ms cubic-bezier(0.34, 1.56, 0.64, 1) 150ms both; }
+.tc-active [data-osd-step="revealed"] .cl-meetR { animation: cl-meetR 900ms cubic-bezier(0.34, 1.56, 0.64, 1) 150ms both; }
+.tc-active [data-osd-step="revealed"] .cl-grip { animation: cl-grip 2.8s ease-in-out 1300ms infinite; }
+.tc-active [data-osd-step="revealed"] .cl-ring { animation: cl-ring 1.8s ease-out var(--dl, 900ms) infinite both; }
+.tc-active [data-osd-step="revealed"] .cl-layer { animation: cl-layer 800ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both; }
+.tc-active [data-osd-step="revealed"] .cl-cap { animation: cl-cap 900ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both, cl-bob2 3s ease-in-out calc(var(--d, 0ms) + 1000ms) infinite; }
+.tc-active [data-osd-step="revealed"] .cl-glow { animation: cl-glow 2.2s ease-in-out 1200ms infinite; }
+`;
+
+const clv = (o: Record<string, string | number>) => o as CSSProperties;
+
+const ClPanel = ({ x, accent, d }: { x: number; accent: string; d: number }) => (
+  <div
+    aria-hidden="true"
+    className="tc-a tc-in"
+    style={clv({
+      '--d': `${d}ms`,
+      position: 'absolute',
+      left: x,
+      top: 190,
+      width: 540,
+      height: 570,
+      boxSizing: 'border-box',
+      borderRadius: 'var(--osd-radius)',
+      border: `1px solid ${C.line}`,
+      borderTop: `6px solid ${accent}`,
+      background: C.panel,
+    })}
+  />
+);
+
+const CL_SMOKE: { x: number; y: number; r: number; c: string; dl: number }[] = [
+  { x: 150, y: 24, r: 20, c: '#8a93a8', dl: 0 },
+  { x: 200, y: 18, r: 16, c: '#c4cad8', dl: -0.6 },
+  { x: 246, y: 16, r: 22, c: '#5b6377', dl: -1.2 },
+  { x: 300, y: 18, r: 17, c: '#8a93a8', dl: -1.8 },
+  { x: 342, y: 24, r: 20, c: '#c4cad8', dl: -2.4 },
+  { x: 70, y: 248, r: 16, c: '#5b6377', dl: -0.3 },
+  { x: 420, y: 248, r: 16, c: '#8a93a8', dl: -1.5 },
+  { x: 246, y: 120, r: 18, c: '#c4cad8', dl: -3 },
+];
+const CL_BOLTS = [
+  { d: 'M258 120 L232 170 L258 170 L226 240', dl: 0 },
+  { d: 'M110 96 L76 118 L96 126 L60 158', dl: 60 },
+  { d: 'M382 70 L418 88 L398 98 L436 126', dl: 120 },
+  { d: 'M150 246 L140 228 L156 230 L146 212', dl: 30 },
+  { d: 'M340 246 L352 228 L338 230 L350 212', dl: 90 },
+];
+const CL_KEYS = [1, 4, 6, 9, 11, 3, 8, 12];
+
+/** A monitor + keyboard that zaps, glitches, cracks and smokes. */
+const ZappedComputer = () => (
+  <svg width={492} height={290} viewBox="0 0 492 290" style={{ position: 'absolute', left: 0, top: 0, overflow: 'visible' }}>
+    <defs>
+      <filter id="cl-blur" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="4" />
+      </filter>
+    </defs>
+    <g className="tc-a cl-shake">
+      {/* monitor */}
+      <rect x={96} y={16} width={300} height={180} rx={16} fill="#151c30" stroke="#3a4668" strokeWidth={3} />
+      <rect x={110} y={30} width={272} height={152} rx={8} fill="#07142a" />
+      <g className="tc-a cl-glitch">
+        {[
+          { y: 48, w: 180, c: C.teal },
+          { y: 70, w: 120, c: C.green },
+          { y: 92, w: 210, c: C.gold },
+          { y: 114, w: 90, c: '#4DA6FF' },
+          { y: 136, w: 150, c: C.teal },
+        ].map((l) => (
+          <rect key={l.y} x={126} y={l.y} width={l.w} height={9} rx={4.5} fill={l.c} opacity={0.85} />
+        ))}
+        <rect x={126} y={158} width={14} height={12} fill={C.green} />
+      </g>
+      <rect className="tc-a cl-flash" x={110} y={30} width={272} height={152} rx={8} fill="#ffffff" />
+      <polyline className="tc-a cl-crack" points="246,30 238,70 258,92 236,128 252,160 244,182" fill="none" stroke="#ffffff" strokeWidth={2.5} strokeLinejoin="round" />
+      <polyline className="tc-a cl-crack" points="258,92 290,104 304,132" fill="none" stroke="#ffffff" strokeWidth={2} strokeLinejoin="round" />
+      {/* stand */}
+      <rect x={226} y={196} width={40} height={28} fill="#1b2236" />
+      <rect x={186} y={222} width={120} height={10} rx={5} fill="#1b2236" stroke="#3a4668" strokeWidth={2} />
+      {/* keyboard */}
+      <rect x={56} y={244} width={380} height={40} rx={8} fill="#1b2236" stroke="#3a4668" strokeWidth={3} />
+      {[250, 264].map((y) =>
+        Array.from({ length: 14 }, (_, i) => <rect key={`${y}-${i}`} x={62 + i * 26} y={y} width={22} height={10} rx={2} fill="#2d3858" />),
+      )}
+      {CL_KEYS.map((k, i) => (
+        <rect key={`hot${k}-${i}`} className="tc-a cl-key" style={clv({ '--dl': `${i * 70}ms` })} x={62 + k * 26} y={i % 2 ? 264 : 250} width={22} height={10} rx={2} fill="#FFE066" />
+      ))}
+    </g>
+    {/* lightning */}
+    <g style={{ filter: 'drop-shadow(0 0 7px #FFD84D)' }}>
+      {CL_BOLTS.map((b) => (
+        <path
+          key={b.d}
+          className="tc-a cl-bolt"
+          style={clv({ '--dl': `${b.dl}ms` })}
+          d={b.d}
+          fill="none"
+          stroke="#FFE066"
+          strokeWidth={6}
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+      ))}
+    </g>
+    {/* smoke */}
+    <g filter="url(#cl-blur)">
+      {CL_SMOKE.map((s) => (
+        <circle key={`${s.x}-${s.y}`} className="tc-a cl-smoke" style={clv({ '--dl': `${s.dl}s` })} cx={s.x} cy={s.y} r={s.r} fill={s.c} />
+      ))}
+    </g>
+  </svg>
+);
+
+/** A lap pool: scrolling waves, lane ropes and a swimmer who keeps going. */
+const SwimPool = () => (
+  <div
+    style={{
+      position: 'relative',
+      width: 492,
+      height: 130,
+      overflow: 'hidden',
+      borderRadius: 18,
+      border: '2px solid rgba(77,166,255,0.45)',
+      background: 'linear-gradient(180deg, #0c5aa6, #08305e)',
+    }}
+  >
+    <svg width={640} height={130} viewBox="0 0 640 130" style={{ position: 'absolute', left: 0, top: 0 }}>
+      {[
+        { y: 18, t: '2.4s', o: 0.35 },
+        { y: 62, t: '3.4s', o: 0.25 },
+        { y: 112, t: '2.8s', o: 0.35 },
+      ].map((w) => (
+        <g key={w.y} className="tc-a cl-wave" style={clv({ '--t': w.t })}>
+          <path d={`M0 ${w.y} q 20 -12 40 0${' t 40 0'.repeat(15)}`} fill="none" stroke={`rgba(255,255,255,${w.o})`} strokeWidth={3} />
+        </g>
+      ))}
+    </svg>
+    <svg width={492} height={130} viewBox="0 0 492 130" style={{ position: 'absolute', left: 0, top: 0 }}>
+      {[30, 100].map((y) => (
+        <g key={y}>
+          <line x1={0} x2={492} y1={y} y2={y} stroke="#FF5D6C" strokeWidth={7} />
+          <line x1={0} x2={492} y1={y} y2={y} stroke="#FFFFFF" strokeWidth={7} strokeDasharray="16 16" />
+        </g>
+      ))}
+    </svg>
+    <div className="tc-a cl-swim" style={{ position: 'absolute', top: 36, left: 0, whiteSpace: 'nowrap' }}>
+      <span style={{ position: 'absolute', left: -44, top: 34, display: 'flex', gap: 8 }}>
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            className="tc-a cl-bubble"
+            style={clv({ '--dl': `${i * 0.18}s`, width: 10 - i * 2, height: 10 - i * 2, borderRadius: '50%', background: 'rgba(255,255,255,0.8)' })}
+          />
+        ))}
+      </span>
+      <span className="tc-a cl-bob2" style={{ display: 'inline-block', fontSize: 58, lineHeight: 1 }}>
+        🏊
+      </span>
+    </div>
+    <span
+      style={{
+        position: 'absolute',
+        right: 10,
+        top: 6,
+        padding: '3px 12px',
+        borderRadius: 999,
+        background: C.gold,
+        color: '#2A1C03',
+        fontFamily: mono,
+        fontSize: 16,
+        fontWeight: 700,
+        letterSpacing: '0.08em',
+      }}
+    >
+      DIVISION 1
+    </span>
+  </div>
+);
+
+const ClHand = ({ glyph, label, bg, fg, cls, left }: { glyph: string; label: string; bg: string; fg: string; cls: string; left: number }) => (
+  <span style={{ position: 'absolute', left, top: 0 }}>
+    <span className={`tc-a ${cls}`} style={{ position: 'relative', display: 'inline-block', fontSize: 140, lineHeight: 1 }}>
+      {glyph}
+      <span
+        style={{
+          position: 'absolute',
+          left: '50%',
+          bottom: 8,
+          transform: 'translateX(-50%)',
+          padding: '4px 12px',
+          borderRadius: 999,
+          background: bg,
+          color: fg,
+          border: '2px solid rgba(255,255,255,0.7)',
+          fontFamily: mono,
+          fontSize: 19,
+          fontWeight: 700,
+          letterSpacing: '0.06em',
+          whiteSpace: 'nowrap',
+          boxShadow: '0 4px 14px rgba(0,0,0,0.4)',
+        }}
+      >
+        {label}
+      </span>
+    </span>
+  </span>
+);
+
+const CL_LAYERS = [
+  { title: 'Graduate', subs: ['Master', 'Doctorate / PhD'], c: '#FF8A4C', poly: '171,86 321,86 371,196 121,196', ty: 128, d: 1800 },
+  { title: 'Undergraduate', subs: ['Associate · Bachelor'], c: '#FFC56B', poly: '121,196 371,196 421,306 71,306', ty: 242, d: 900 },
+  { title: 'High school', subs: ['diploma'], c: '#4DA6FF', poly: '71,306 421,306 471,416 21,416', ty: 352, d: 0 },
+];
+
+const DegreePyramid = () => (
+  <svg width={492} height={440} viewBox="0 0 492 440" style={{ position: 'absolute', left: 0, top: 0, overflow: 'visible' }}>
+    {CL_LAYERS.map((l) => (
+      <g key={l.title} className="tc-a cl-layer" style={clv({ '--d': `${l.d}ms` })}>
+        <polygon points={l.poly} fill={`${l.c}33`} stroke={l.c} strokeWidth={4} strokeLinejoin="round" />
+        <text x={246} y={l.ty} textAnchor="middle" fontSize={30} fontWeight={800} fill="#F3F6FC" style={{ letterSpacing: '-0.02em' }}>
+          {l.title}
+        </text>
+        {l.subs.map((s, i) => (
+          <text key={s} x={246} y={l.ty + 28 + i * 24} textAnchor="middle" fontSize={20} fill={l.c} style={{ fontFamily: mono }}>
+            {s}
+          </text>
+        ))}
+      </g>
+    ))}
+    <text className="tc-a cl-cap" style={clv({ '--d': '2700ms' })} x={246} y={66} textAnchor="middle" fontSize={56}>
+      🎓
+    </text>
+  </svg>
+);
+
+const CollegeLife: Page = () => {
+  const active = useIsActivePage();
+  const BROWN = '#C68642';
+  return (
+    <Frame eyebrow="06 · COLLEGE LIFE">
+      <style>{CL_CSS}</style>
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — the major */}
+          <Step duration={200}>
+            <div>
+              <ClPanel x={120} accent={C.teal} d={0} />
+              <p className="tc-a tc-in" style={clv({ '--d': '250ms', position: 'absolute', left: 144, top: 212, width: 492, margin: 0, fontSize: 30, lineHeight: 1.3, fontWeight: 700, color: C.muted })}>
+                I quickly settled in and declared my major as
+              </p>
+              <div className="tc-a tc-in" style={clv({ '--d': '500ms', position: 'absolute', left: 144, top: 296, width: 492, fontSize: 54, lineHeight: 1.05, fontWeight: 800, letterSpacing: '-0.04em', color: C.gold })}>
+                Computer
+                <br />
+                Engineering
+              </div>
+              <div style={{ position: 'absolute', left: 144, top: 440, width: 492, height: 290 }}>
+                <ZappedComputer />
+              </div>
+            </div>
+          </Step>
+          {/* click 2 — the swim team */}
+          <Step duration={200}>
+            <div>
+              <ClPanel x={690} accent="#4DA6FF" d={0} />
+              <div className="tc-a tc-in" style={clv({ '--d': '250ms', position: 'absolute', left: 714, top: 206, fontSize: 56, lineHeight: 1.1, fontWeight: 800, letterSpacing: '-0.04em' })}>
+                I swam too!
+              </div>
+              <p className="tc-a tc-in" style={clv({ '--d': '450ms', position: 'absolute', left: 714, top: 274, width: 492, margin: 0, fontSize: 26, lineHeight: 1.3, fontWeight: 700, color: C.muted })}>
+                On their Division 1 Men’s swim team.
+              </p>
+              <div className="tc-a tc-in" style={clv({ '--d': '650ms', position: 'absolute', left: 714, top: 350 })}>
+                <SwimPool />
+              </div>
+            </div>
+          </Step>
+          {/* click 3 — academics + athletics */}
+          <Step duration={200}>
+            <div>
+              <div className="tc-a cl-grip" style={{ position: 'absolute', left: 714, top: 498, width: 492, height: 150 }}>
+                <ClHand glyph="🫱" label="ACADEMICS" bg="#FFCC4D" fg="#2A1C03" cls="cl-meetL" left={84} />
+                <ClHand glyph="🫲🏾" label="ATHLETICS" bg="#8D5524" fg="#FFFFFF" cls="cl-meetR" left={244} />
+                <span
+                  aria-hidden="true"
+                  className="tc-a cl-ring"
+                  style={{ position: 'absolute', left: 226, top: 54, width: 40, height: 40, borderRadius: '50%', border: `3px solid ${C.gold}` }}
+                />
+              </div>
+              <p className="tc-a tc-in" style={clv({ '--d': '900ms', position: 'absolute', left: 714, top: 662, width: 492, margin: 0, fontSize: 26, lineHeight: 1.3, fontWeight: 700 })}>
+                <b style={{ color: '#FFCC4D' }}>Academics</b> and <b style={{ color: BROWN }}>athletics</b> going hand in hand.
+              </p>
+            </div>
+          </Step>
+          {/* click 4 — degree pyramid */}
+          <Step duration={200}>
+            <div>
+              <ClPanel x={1260} accent={C.gold} d={0} />
+              <div className="tc-a tc-in" style={clv({ '--d': '250ms', position: 'absolute', left: 1284, top: 208, width: 492, fontSize: 34, lineHeight: 1.15, fontWeight: 800, letterSpacing: '-0.03em' })}>
+                What do the degrees mean?
+              </div>
+              <div style={{ position: 'absolute', left: 1284, top: 268, width: 492, height: 440 }}>
+                <DegreePyramid />
+              </div>
+            </div>
+          </Step>
+          {/* click 5 — the punchline */}
+          <Step duration={200}>
+            <div>
+              <div className="tc-a tc-in" style={clv({ '--d': '0ms', position: 'absolute', left: 120, top: 786, fontSize: 38, lineHeight: 1.2, fontWeight: 700, color: C.muted, whiteSpace: 'nowrap' })}>
+                So, during my sophomore year, <b style={{ color: C.gold, textDecoration: 'underline wavy', textDecorationColor: C.gold, textUnderlineOffset: 8 }}>and this is important</b>,
+              </div>
+              <div style={{ position: 'absolute', left: 120, top: 838, display: 'flex', alignItems: 'baseline', gap: 28, whiteSpace: 'nowrap' }}>
+                <span className="tc-a tc-in" style={clv({ '--d': '500ms', fontSize: 52, fontWeight: 800, letterSpacing: '-0.03em' })}>
+                  I found my first
+                </span>
+                <span className="tc-a cl-glow" style={{ fontSize: 118, lineHeight: 1.05, fontWeight: 900, letterSpacing: '-0.04em', color: 'var(--osd-accent)' }}>
+                  {Array.from('INTERNSHIP!').map((ch, i) => (
+                    <span
+                      // biome-ignore lint/suspicious/noArrayIndexKey: static text, positions never reorder
+                      key={i}
+                      className="tc-a tc-in"
+                      style={clv({ '--d': `${900 + i * 70}ms`, display: 'inline-block' })}
+                    >
+                      {ch}
+                    </span>
+                  ))}
+                </span>
+              </div>
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+CollegeLife.transition = settle;
+
 /* ───────────────────────── 06 WINLAB ───────────────────────── */
 
 const WinCard = ({ accent, icon, children }: { accent: string; icon?: ReactNode; children: ReactNode }) => (
@@ -1765,7 +2153,7 @@ const Winlab: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="06 · WINLAB"
+      eyebrow="07 · WINLAB"
       title={
         <span style={{ display: 'block', fontSize: 176, lineHeight: '176px', fontWeight: 900, letterSpacing: '-0.05em' }}>
           <DecodeText text="WinLAB" delay={100} />
@@ -2019,7 +2407,7 @@ const Internship: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="07 · THE REAL POINT"
+      eyebrow="08 · THE REAL POINT"
       title={
         <span style={{ fontSize: 84 }}>
           And here’s the real point here{' '}
@@ -2110,9 +2498,20 @@ const Plaque = ({ src, alt, h, delay }: { src: string; alt: string; h: number; d
 const SecondTitle = () => {
   const active = useIsActivePage();
   return (
-    <span style={{ display: 'flex', alignItems: 'center', gap: 32, fontSize: 84, lineHeight: '100px', whiteSpace: 'nowrap' }}>
+    <span style={{ display: 'flex', alignItems: 'center', gap: 24, fontSize: 76, lineHeight: '100px', whiteSpace: 'nowrap' }}>
       <span style={{ ...rise(active, 100) }}>Second Internship:</span>
-      <Plaque src={compaqLogo} alt="Compaq" h={52} delay={500} />
+      <Plaque src={decLogo} alt="Digital Equipment Corporation" h={44} delay={400} />
+      <span
+        className="tc-a"
+        style={{
+          color: 'var(--osd-accent)',
+          fontWeight: 900,
+          animation: active ? 'tc-wave 2s ease-in-out 1000ms infinite' : undefined,
+        }}
+      >
+        /
+      </span>
+      <Plaque src={compaqLogo} alt="Compaq" h={48} delay={600} />
       <span
         className="tc-a"
         style={{
@@ -2123,7 +2522,7 @@ const SecondTitle = () => {
       >
         /
       </span>
-      <Plaque src={hpLogo} alt="HP" h={64} delay={700} />
+      <Plaque src={hpLogo} alt="HP" h={60} delay={800} />
     </span>
   );
 };
@@ -2243,7 +2642,7 @@ const ManalapanCard = () => (
 const Tru64: Page = () => {
   const active = useIsActivePage();
   return (
-    <Frame eyebrow="08 · SECOND INTERNSHIP" title={<SecondTitle />}>
+    <Frame eyebrow="09 · SECOND INTERNSHIP" title={<SecondTitle />}>
       <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
         <Steps>
           <Step duration={200}>
@@ -2316,6 +2715,226 @@ const Tru64: Page = () => {
   );
 };
 Tru64.transition = settle;
+
+/* ───────────────────────── 10 senior year: interviews ───────────────────────── */
+
+const IV_CSS = `
+@keyframes iv-calendar { from { opacity: 0; transform: translateY(40px) rotate(-6deg) scale(0.8); } to { opacity: 1; transform: none; } }
+@keyframes iv-mark { 0% { opacity: 0; transform: scale(2.6) rotate(-20deg); } 60% { opacity: 1; transform: scale(0.9) rotate(4deg); } 100% { opacity: 1; transform: none; } }
+@keyframes iv-pop { 0% { opacity: 0; transform: scale(0.2) rotate(-14deg); } 65% { opacity: 1; transform: scale(1.1) rotate(3deg); } 100% { opacity: 1; transform: none; } }
+@keyframes iv-emoji { 0%, 100% { transform: translateY(0) rotate(-6deg) scale(1); } 50% { transform: translateY(-18px) rotate(8deg) scale(1.12); } }
+@keyframes iv-tile { 0% { opacity: 0; transform: translateY(70px) scale(0.5) rotate(-8deg); } 70% { opacity: 1; transform: translateY(-6px) scale(1.06) rotate(1deg); } 100% { opacity: 1; transform: none; } }
+@keyframes iv-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@keyframes iv-dim { to { opacity: 0.16; filter: grayscale(1); transform: scale(0.92); } }
+@keyframes iv-hero { 0% { opacity: 0; transform: scale(0.3) rotate(-10deg); } 60% { opacity: 1; transform: scale(1.12) rotate(2deg); } 100% { opacity: 1; transform: scale(1); } }
+@keyframes iv-halo { 0%, 100% { box-shadow: 0 0 30px rgba(31,112,193,0.5), 0 0 0 0 rgba(31,112,193,0.55); } 50% { box-shadow: 0 0 70px rgba(31,112,193,0.95), 0 0 0 26px rgba(31,112,193,0); } }
+@keyframes iv-spot { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+@keyframes iv-drive { from { transform: translateX(-60px); opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } to { transform: translateX(1060px); opacity: 0; } }
+@keyframes iv-sweep { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+.tc-active [data-osd-step="revealed"] .iv-calendar { animation: iv-calendar 700ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both; }
+.tc-active [data-osd-step="revealed"] .iv-mark { animation: iv-mark 500ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both; }
+.tc-active [data-osd-step="revealed"] .iv-pop { animation: iv-pop 700ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both; }
+.tc-active [data-osd-step="revealed"] .iv-emoji { animation: iv-pop 700ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both, iv-emoji 2.4s ease-in-out calc(var(--d, 0ms) + 900ms) infinite; }
+.tc-active [data-osd-step="revealed"] .iv-tile { animation: iv-tile 800ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both, iv-bob 3.4s ease-in-out calc(var(--d, 0ms) + 1000ms) infinite; }
+.tc-active [data-osd-step="revealed"] .iv-dim { animation: iv-dim 700ms ease var(--d, 0ms) forwards; }
+.tc-active [data-osd-step="revealed"] .iv-hero { animation: iv-hero 900ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both; }
+.tc-active [data-osd-step="revealed"] .iv-halo { animation: iv-halo 2.4s ease-in-out 1200ms infinite; }
+.tc-active [data-osd-step="revealed"] .iv-spot { animation: iv-spot 2s ease-in-out infinite; }
+.tc-active [data-osd-step="revealed"] .iv-drive { animation: iv-drive 7s linear 600ms infinite; }
+.tc-active [data-osd-step="revealed"] .iv-sweep { background-size: 200% 100%; animation: iv-sweep 3.2s linear 900ms infinite; }
+`;
+
+const IV_LOGOS: { src: string; alt: string; bg: string; h: number }[] = [
+  { src: coMotorola, alt: 'Motorola', bg: '#FFFFFF', h: 64 },
+  { src: hpLogo, alt: 'HP', bg: '#FFFFFF', h: 72 },
+  { src: compaqLogo, alt: 'Compaq', bg: '#FFFFFF', h: 36 },
+  { src: ibmLogo, alt: 'IBM', bg: '#FFFFFF', h: 52 },
+  { src: coIntel, alt: 'Intel', bg: '#FFFFFF', h: 40 },
+  { src: coAmd, alt: 'AMD', bg: '#FFFFFF', h: 28 },
+  { src: coNvidia, alt: 'NVIDIA', bg: '#FFFFFF', h: 44 },
+  { src: coQualcomm, alt: 'Qualcomm', bg: '#FFFFFF', h: 64 },
+  { src: coBroadcom, alt: 'Broadcom', bg: '#FFFFFF', h: 60 },
+  { src: coAti, alt: 'ATI', bg: '#FFFFFF', h: 70 },
+  { src: coSun, alt: 'Sun Microsystems', bg: '#FFFFFF', h: 52 },
+  { src: coOracle, alt: 'Oracle', bg: '#FFFFFF', h: 34 },
+];
+
+const IV_EMOJI = [
+  { g: '😎', x: 1340, y: 380, s: 112, d: 1500 },
+  { g: '🤝', x: 1520, y: 330, s: 96, d: 1700 },
+  { g: '👔', x: 1420, y: 520, s: 84, d: 1900 },
+  { g: '💼', x: 1600, y: 500, s: 92, d: 2100 },
+  { g: '🔥', x: 1720, y: 380, s: 80, d: 2300 },
+];
+
+const Interviews: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame
+      eyebrow="10 · SENIOR YEAR"
+      title={
+        <span style={{ display: 'block', fontSize: 78, lineHeight: 1.1, fontWeight: 800, letterSpacing: '-0.04em', whiteSpace: 'nowrap' }}>
+          <span style={{ ...rise(active, 100) }}>Senior year @ University:</span>{' '}
+          <span className="tc-a" style={{ color: 'var(--osd-accent)', display: 'inline-block', ...(active ? { animation: `tc-up 700ms ${SPRING} 600ms both` } : {}) }}>
+            interviews!
+          </span>
+        </span>
+      }
+    >
+      <style>{IV_CSS}</style>
+      <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+        <Steps>
+          {/* click 1 — 3 a week */}
+          <Step duration={200}>
+            <div>
+              <p className="tc-a tc-in" style={clv({ '--d': '0ms', position: 'absolute', left: 120, top: 262, width: 1100, margin: 0, fontSize: 40, lineHeight: 1.3, fontWeight: 700, color: C.muted })}>
+                Using the university <b style={{ color: C.gold }}>career center</b> I interviewed with{' '}
+                <b style={{ color: '#F3F6FC' }}>every company I could!</b>
+              </p>
+              {/* week calendar: 3 interviews a week */}
+              <div style={{ position: 'absolute', left: 120, top: 420, display: 'flex', gap: 14 }}>
+                {['MON', 'TUE', 'WED', 'THU', 'FRI'].map((day, i) => {
+                  const booked = i === 0 || i === 2 || i === 4;
+                  const n = booked ? [0, 1, 2][[0, 2, 4].indexOf(i)] : -1;
+                  return (
+                    <div
+                      key={day}
+                      className="tc-a iv-calendar"
+                      style={clv({
+                        '--d': `${300 + i * 120}ms`,
+                        position: 'relative',
+                        width: 150,
+                        height: 150,
+                        boxSizing: 'border-box',
+                        borderRadius: 18,
+                        border: `2px solid ${booked ? C.gold : C.line}`,
+                        borderTop: `18px solid ${booked ? C.gold : C.line}`,
+                        background: booked ? 'rgba(255,197,107,0.12)' : C.panel,
+                        textAlign: 'center',
+                      })}
+                    >
+                      <div style={{ marginTop: 8, fontFamily: mono, fontSize: 22, letterSpacing: '0.1em', color: booked ? C.gold : C.dim }}>{day}</div>
+                      {booked ? (
+                        <span className="tc-a iv-mark" style={clv({ '--d': `${1100 + n * 350}ms`, display: 'inline-block', marginTop: 4, fontSize: 64, lineHeight: 1 })}>
+                          🤝
+                        </span>
+                      ) : (
+                        <div style={{ marginTop: 22, fontSize: 40, color: C.dim }}>·</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="tc-a iv-pop" style={clv({ '--d': '1500ms', position: 'absolute', left: 120, top: 620, fontSize: 150, lineHeight: 1, fontWeight: 900, letterSpacing: '-0.05em', whiteSpace: 'nowrap' })}>
+                <span style={{ color: 'var(--osd-accent)' }}>3×</span>
+                <span style={{ marginLeft: 26, fontSize: 64, fontWeight: 800, letterSpacing: '-0.03em' }}>interviews a week.</span>
+              </div>
+              <div className="tc-a tc-in" style={clv({ '--d': '2100ms', position: 'absolute', left: 120, top: 800, fontSize: 52, fontWeight: 800, letterSpacing: '-0.03em', whiteSpace: 'nowrap' })}>
+                NO kidding. <span style={{ color: C.green }}>I got good at it.</span>
+              </div>
+              {IV_EMOJI.map((e) => (
+                <span
+                  key={e.g}
+                  aria-hidden="true"
+                  className="tc-a iv-emoji"
+                  style={clv({ '--d': `${e.d}ms`, position: 'absolute', left: e.x, top: e.y, fontSize: e.s, lineHeight: 1 })}
+                >
+                  {e.g}
+                </span>
+              ))}
+            </div>
+          </Step>
+          {/* click 2 — everybody's logo */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(3,5,12,0.94), rgba(3,5,12,0.97))' }} />
+              <div className="tc-a tc-in" style={clv({ '--d': '0ms', position: 'absolute', left: 120, top: 262, fontFamily: mono, fontSize: 26, letterSpacing: '0.14em', color: C.gold })}>
+                EVERY COMPANY I COULD…
+              </div>
+              <div style={{ position: 'absolute', left: 120, top: 330, width: 1680, display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 30 }}>
+                {IV_LOGOS.map((l, i) => (
+                  <div
+                    key={l.alt}
+                    className="tc-a iv-tile"
+                    style={clv({
+                      '--d': `${150 + i * 130}ms`,
+                      height: 160,
+                      boxSizing: 'border-box',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: 20,
+                      background: l.bg,
+                      boxShadow: '0 0 36px rgba(255,255,255,0.08)',
+                    })}
+                  >
+                    <img src={l.src} alt={l.alt} style={{ display: 'block', height: l.h * 1.25, maxWidth: 300, width: 'auto' }} />
+                  </div>
+                ))}
+              </div>
+              <div className="tc-a tc-in" style={clv({ '--d': '1900ms', position: 'absolute', left: 120, top: 944, fontSize: 36, fontWeight: 700, color: C.muted })}>
+                …and the answer was always the same: <b style={{ color: '#F3F6FC' }}>more interviews.</b>
+              </div>
+            </div>
+          </Step>
+          {/* click 3 — then I found IBM */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', inset: 0, background: '#03050C' }} />
+              <div
+                aria-hidden="true"
+                className="tc-a iv-spot"
+                style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 45% 40% at 50% 46%, rgba(31,112,193,0.4), rgba(31,112,193,0) 70%)' }}
+              />
+              <div className="tc-a tc-in" style={clv({ '--d': '0ms', position: 'absolute', left: 0, right: 0, top: 262, textAlign: 'center', fontSize: 64, fontWeight: 800, letterSpacing: '-0.04em' })}>
+                Then I found
+              </div>
+              <div
+                className="tc-a iv-hero iv-halo"
+                style={clv({ '--d': '500ms', position: 'absolute', left: 560, top: 380, width: 800, height: 260, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 32, background: '#FFFFFF' })}
+              >
+                <img src={ibmLogo} alt="IBM" style={{ display: 'block', width: 560, height: 'auto' }} />
+              </div>
+              <div style={{ position: 'absolute', left: 0, top: 700, width: 1920, height: 120, overflow: 'hidden' }}>
+                <div className="tc-a iv-drive" style={{ position: 'absolute', left: 120, top: 14, fontSize: 90, lineHeight: 1, whiteSpace: 'nowrap' }}>
+                  🚗💨
+                </div>
+                <div style={{ position: 'absolute', left: 120, right: 120, top: 96, height: 6, borderRadius: 3, background: 'repeating-linear-gradient(90deg, rgba(243,246,252,0.7) 0 36px, transparent 36px 72px)' }} />
+              </div>
+            </div>
+          </Step>
+          {/* click 4 — PowerPC, Burlington, dad */}
+          <Step duration={200}>
+            <div style={{ position: 'absolute', inset: 0 }}>
+              <div style={{ position: 'absolute', left: 0, right: 0, top: 232, bottom: 0, background: '#03050C' }} />
+              <div className="tc-a tc-in" style={clv({ '--d': '0ms', position: 'absolute', left: 120, top: 268, display: 'flex', alignItems: 'center', gap: 36 })}>
+                <span style={{ display: 'inline-flex', padding: '12px 22px', borderRadius: 14, background: '#FFFFFF' }}>
+                  <img src={powerpcLogo} alt="PowerPC" style={{ display: 'block', height: 62, width: 'auto' }} />
+                </span>
+                <span style={{ fontSize: 58, fontWeight: 800, letterSpacing: '-0.04em' }}>Design Group</span>
+              </div>
+              <div className="tc-a tc-in" style={clv({ '--d': '500ms', position: 'absolute', left: 120, top: 380, fontSize: 46, fontWeight: 700, color: C.muted, letterSpacing: '-0.02em' })}>
+                out of <b style={{ color: C.green }}>Burlington, Vermont</b>
+              </div>
+              <div className="tc-a tc-in" style={clv({ '--d': '1100ms', position: 'absolute', left: 120, top: 520, width: 1100, fontSize: 56, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.03em' })}>
+                Where <span style={{ color: C.gold }}>my dad</span> had worked for
+              </div>
+              <div className="tc-a iv-pop" style={clv({ '--d': '1700ms', position: 'absolute', left: 120, top: 620, fontSize: 190, lineHeight: 1, fontWeight: 900, letterSpacing: '-0.05em', whiteSpace: 'nowrap' })}>
+                <span className="tc-a iv-sweep" style={{ backgroundImage: 'linear-gradient(90deg, #FF8A4C 0%, #FFC56B 25%, #FFFFFF 50%, #FFC56B 75%, #FF8A4C 100%)', WebkitBackgroundClip: 'text', backgroundClip: 'text', color: 'transparent' }}>
+                  30+ years!
+                </span>
+              </div>
+              <span aria-hidden="true" className="tc-a iv-emoji" style={clv({ '--d': '2300ms', position: 'absolute', left: 1330, top: 640, fontSize: 150, lineHeight: 1 })}>
+                👨‍👦
+              </span>
+            </div>
+          </Step>
+        </Steps>
+      </div>
+    </Frame>
+  );
+};
+Interviews.transition = settle;
 
 /* ───────────────────────── 09 second point: luck ───────────────────────── */
 
@@ -2615,7 +3234,7 @@ const Luck: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="09 · A SECOND POINT"
+      eyebrow="11 · A SECOND POINT"
       title={
         <span style={{ display: 'flex', alignItems: 'center', gap: 24, fontSize: 84, whiteSpace: 'nowrap' }}>
           <span style={{ ...rise(active, 100) }}>Here’s a second point</span>
@@ -2702,7 +3321,7 @@ const WalkHome: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="10 · THE WALK HOME"
+      eyebrow="12 · THE WALK HOME"
       title={
         <span style={{ fontSize: 84, whiteSpace: 'nowrap' }}>
           Rutgers <span style={{ color: 'var(--osd-accent)' }}>→</span> IBM Burlington
@@ -2856,7 +3475,7 @@ const IbmJob: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="11 · A REAL JOB"
+      eyebrow="13 · A REAL JOB"
       title={
         <IbmTitle
           tag={
@@ -3117,7 +3736,7 @@ const IbmMore: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="12 · MORE GREAT PROJECTS"
+      eyebrow="14 · MORE GREAT PROJECTS"
       title={
         <IbmTitle
           tag={
@@ -3426,7 +4045,7 @@ const YeahBubble = () => {
 const MareNostrum: Page = () => {
   const active = useIsActivePage();
   return (
-    <Frame eyebrow="13 · MARE NOSTRUM" title={<MareTitle />}>
+    <Frame eyebrow="15 · MARE NOSTRUM" title={<MareTitle />}>
       <Print src={marenostrumA} alt="MareNostrum supercomputer, Barcelona Supercomputing Center" x={120} y={372} w={770} h={520} rot={-2} d={400}>
         <Led x={30} d={0} />
         <Led x={52} d={140} />
@@ -3674,7 +4293,7 @@ const ShowTell: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="14 · SHOW AND TELL"
+      eyebrow="16 · SHOW AND TELL"
       title={
         <span style={{ display: 'block', fontSize: 112, lineHeight: 1.05, whiteSpace: 'nowrap', ...rise(active, 100) }}>
           Now — <span style={{ color: 'var(--osd-accent)' }}><Wave text="show and tell!" delay={600} /></span>
@@ -3881,7 +4500,7 @@ const Learning: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="15 · BACK TO LEARNING"
+      eyebrow="17 · BACK TO LEARNING"
       title={
         <span style={{ display: 'block', fontSize: 72, whiteSpace: 'nowrap', ...rise(active, 100) }}>
           Next up, time to get back to <span style={{ color: 'var(--osd-accent)' }}>learning!</span>
@@ -4088,7 +4707,7 @@ const Patents: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="16 · PATENTS"
+      eyebrow="18 · PATENTS"
       title={
         <span style={{ display: 'block', fontSize: 160, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
           <span className="tc-passion">
@@ -4303,7 +4922,7 @@ const ThirdPoint: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="17 · THE THIRD POINT"
+      eyebrow="19 · THE THIRD POINT"
       title={
         <span style={{ display: 'block', fontSize: 112, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
           Here’s a <span style={{ color: 'var(--osd-accent)' }}>third point</span>{' '}
@@ -4545,7 +5164,7 @@ const Tragedy: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="18 · TRAGEDY"
+      eyebrow="20 · TRAGEDY"
       title={
         <span style={{ display: 'block', fontSize: 128, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
           <span style={{ color: C.red }}>Tragedy</span> Strikes!{' '}
@@ -4705,7 +5324,7 @@ const Opportunity: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="19 · OPPORTUNITY"
+      eyebrow="21 · OPPORTUNITY"
       title={
         <span style={{ display: 'block', fontSize: 128, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
           <span style={{ color: C.green }}>Opportunity!</span>
@@ -4808,7 +5427,7 @@ const FourthPoint: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="20 · THE FOURTH POINT"
+      eyebrow="22 · THE FOURTH POINT"
       title={
         <span style={{ display: 'block', fontSize: 112, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.04em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
           Here’s a <span style={{ color: 'var(--osd-accent)' }}>fourth point</span>{' '}
@@ -5090,7 +5709,7 @@ const SalesJourney = () => {
 const IbmSales: Page = () => {
   const active = useIsActivePage();
   return (
-    <Frame eyebrow="21 · IBM SALES">
+    <Frame eyebrow="23 · IBM SALES">
       <div
         style={{ position: 'absolute', left: 120, top: 150, fontSize: 250, lineHeight: 1, fontWeight: 900, letterSpacing: '-0.045em' }}
       >
@@ -5135,7 +5754,7 @@ const SellingDesigned: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="22 · SELLING WHAT I DESIGNED"
+      eyebrow="24 · SELLING WHAT I DESIGNED"
       title={
         <span style={{ display: 'block', fontSize: 96, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
           I was <span style={{ color: C.gold }}>selling</span> all the stuff
@@ -5294,7 +5913,7 @@ const Entrepreneurship: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="23 · ENTREPRENEURSHIP"
+      eyebrow="25 · ENTREPRENEURSHIP"
       title={
         <span style={{ display: 'block', fontSize: 128, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
           <span style={{ color: C.gold }}>Entrepreneurship!</span>
@@ -5447,7 +6066,7 @@ const Mapsys: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="24 · MAPSYS"
+      eyebrow="26 · MAPSYS"
       title={
         <>
           <span style={{ display: 'block', fontSize: 52, fontWeight: 800, color: C.muted, whiteSpace: 'nowrap', ...rise(active, 100) }}>Next, I landed @</span>
@@ -5616,7 +6235,7 @@ const Customers: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="25 · CUSTOMERS"
+      eyebrow="27 · CUSTOMERS"
       title={
         <span style={{ display: 'block', fontSize: 96, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
           Some of my <span style={{ color: C.gold }}>Customers:</span>
@@ -5692,7 +6311,7 @@ const Speaking: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="26 · ON STAGE"
+      eyebrow="28 · ON STAGE"
       title={
         <span style={{ display: 'block', fontSize: 96, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
           Speaking at <span style={{ color: C.gold }}>conferences:</span>
@@ -5851,7 +6470,7 @@ const BackAtIbm: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="27 · BACK AT IBM"
+      eyebrow="29 · BACK AT IBM"
       title={
         <span style={{ display: 'flex', alignItems: 'center', gap: 44, whiteSpace: 'nowrap', ...rise(active, 100) }}>
           <span style={{ fontSize: 128, fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.045em' }}>I’m back at</span>
@@ -6220,7 +6839,7 @@ const FellIntoAi: Page = () => {
   const active = useIsActivePage();
   return (
     <Frame
-      eyebrow="28 · A PRIMER ON AI"
+      eyebrow="30 · A PRIMER ON AI"
       title={
         <span style={{ display: 'block', fontSize: 68, fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.04em', whiteSpace: 'nowrap', ...rise(active, 100) }}>
           Through my career path, I somehow fell into
@@ -6452,7 +7071,7 @@ const AK_SPARKS = (() => {
 const Ak1: Page = () => {
   const active = useIsActivePage();
   return (
-    <Frame eyebrow="29 · AI 101 · WELCOME">
+    <Frame eyebrow="31 · AI 101 · WELCOME">
       <style>
         {AI_CSS}
         {AK_CSS}
@@ -6562,7 +7181,7 @@ const akColTop = (l: number) => 530 - ((AK_LAYERS[l] - 1) / 2) * 62 - 34;
 
 const Ak2: Page = () => {
   return (
-    <Frame eyebrow="30 · AI 101 · DEEP LEARNING" title={<AkTitle>Building a model</AkTitle>}>
+    <Frame eyebrow="32 · AI 101 · DEEP LEARNING" title={<AkTitle>Building a model</AkTitle>}>
       <style>{AK_CSS}</style>
       <AkStage>
         {/* click 1 — the trained model box, the network, data flowing through */}
@@ -6830,7 +7449,7 @@ const AkMatrix = ({ vals, cols, color, d }: { vals: number[]; cols: number; colo
 
 const Ak3: Page = () => {
   return (
-    <Frame eyebrow="31 · AI 101 · DEEP LEARNING" title={<AkTitle size={60}>Building a model – and what’s a hyperparameter?</AkTitle>}>
+    <Frame eyebrow="33 · AI 101 · DEEP LEARNING" title={<AkTitle size={60}>Building a model – and what’s a hyperparameter?</AkTitle>}>
       <style>{AK_CSS}</style>
       <AkStage>
         {/* click 1 — inputs, the sum of weighted inputs */}
@@ -7063,7 +7682,7 @@ const AK_SAMPLES = ['Paris.', 'Paris, of course!', 'The capital is Paris.'];
 
 const Ak4: Page = () => {
   return (
-    <Frame eyebrow="32 · AI 101 · LLMs" title={<AkTitle size={84}>LLMs</AkTitle>}>
+    <Frame eyebrow="34 · AI 101 · LLMs" title={<AkTitle size={84}>LLMs</AkTitle>}>
       <style>{AK_CSS}</style>
       <AkStage>
         {/* click 1 — what is an LLM */}
@@ -7167,7 +7786,7 @@ const AK_TOKS = [
 
 const Ak5: Page = () => {
   return (
-    <Frame eyebrow="33 · AI 101 · TOKENS" title={<AkTitle size={64}>Tokens and the context window</AkTitle>}>
+    <Frame eyebrow="35 · AI 101 · TOKENS" title={<AkTitle size={64}>Tokens and the context window</AkTitle>}>
       <style>{AK_CSS}</style>
       <AkStage>
         {/* click 1 — tokens */}
@@ -7261,7 +7880,7 @@ const akArc = (i: number) => {
 
 const Ak6: Page = () => {
   return (
-    <Frame eyebrow="34 · AI 101 · ATTENTION" title={<AkTitle size={64}>Attention and the KV cache</AkTitle>}>
+    <Frame eyebrow="36 · AI 101 · ATTENTION" title={<AkTitle size={64}>Attention and the KV cache</AkTitle>}>
       <style>{AK_CSS}</style>
       <AkStage>
         {/* click 1 — the tokens */}
@@ -7352,7 +7971,7 @@ Ak6.transition = settle;
 const Ak7: Page = () => {
   const lbl = { fontFamily: mono } as CSSProperties;
   return (
-    <Frame eyebrow="35 · AI 101 · TERMS" title={<AkTitle size={58}>Generative AI, agentic AI, encoders &amp; decoders</AkTitle>}>
+    <Frame eyebrow="37 · AI 101 · TERMS" title={<AkTitle size={58}>Generative AI, agentic AI, encoders &amp; decoders</AkTitle>}>
       <style>{AK_CSS}</style>
       <AkStage>
         {/* click 1 — generative */}
@@ -7536,7 +8155,7 @@ const AkLink = ({ href, w, n, td = '300ms', size = 26 }: { href: string; w: numb
 
 const Ak8: Page = () => {
   return (
-    <Frame eyebrow="36 · AI 101 · STAY CURIOUS" title={<AkCuriousTitle />}>
+    <Frame eyebrow="38 · AI 101 · STAY CURIOUS" title={<AkCuriousTitle />}>
       <style>
         {AI_CSS}
         {AK_CSS}
@@ -7621,7 +8240,7 @@ Ak8.transition = settle;
 
 const Ak9: Page = () => {
   return (
-    <Frame eyebrow="37 · AI 101 · STAY CURIOUS" title={<AkCuriousTitle />}>
+    <Frame eyebrow="39 · AI 101 · STAY CURIOUS" title={<AkCuriousTitle />}>
       <style>
         {AI_CSS}
         {AK_CSS}
@@ -7700,7 +8319,7 @@ const AK_EXPERTS = Array.from({ length: 8 }, (_, i) => ({ x: 500 + (i % 2) * 150
 const Ak10: Page = () => {
   const lbl = { fontFamily: mono } as CSSProperties;
   return (
-    <Frame eyebrow="38 · AI 101 · STAY CURIOUS" title={<AkCuriousTitle />}>
+    <Frame eyebrow="40 · AI 101 · STAY CURIOUS" title={<AkCuriousTitle />}>
       <style>
         {AI_CSS}
         {AK_CSS}
@@ -7837,7 +8456,7 @@ const Ak11: Page = () => {
     },
   ];
   return (
-    <Frame eyebrow="39 · AI 101 · WRAP-UP" title={<AkTitle size={84}>This Concludes</AkTitle>}>
+    <Frame eyebrow="41 · AI 101 · WRAP-UP" title={<AkTitle size={84}>This Concludes</AkTitle>}>
       <style>
         {AI_CSS}
         {AK_CSS}
@@ -7905,7 +8524,7 @@ const AK_STATS = [
 
 const Ak12: Page = () => {
   return (
-    <Frame eyebrow="40 · AI 101 · ABOUT THE SPEAKER" title={<AkTitle size={72}>About the speaker:</AkTitle>}>
+    <Frame eyebrow="42 · AI 101 · ABOUT THE SPEAKER" title={<AkTitle size={72}>About the speaker:</AkTitle>}>
       <style>
         {AI_CSS}
         {AK_CSS}
@@ -7978,4 +8597,4 @@ export const meta: SlideMeta = {
   title: 'What a career in technology looks like & how AI changes everything',
   createdAt: '2026-11-07T16:09:51.435Z',
 };
-export default [Cover, Agenda, Powers, Hello, College, Winlab, Internship, Tru64, Luck, WalkHome, IbmJob, IbmMore, MareNostrum, ShowTell, Learning, Patents, ThirdPoint, Tragedy, Opportunity, FourthPoint, IbmSales, SellingDesigned, Entrepreneurship, Mapsys, Customers, Speaking, BackAtIbm, FellIntoAi, Ak1, Ak2, Ak3, Ak4, Ak5, Ak6, Ak7, Ak8, Ak9, Ak10, Ak11, Ak12] satisfies Page[];
+export default [Cover, Agenda, Powers, Hello, College, CollegeLife, Winlab, Internship, Tru64, Interviews, Luck, WalkHome, IbmJob, IbmMore, MareNostrum, ShowTell, Learning, Patents, ThirdPoint, Tragedy, Opportunity, FourthPoint, IbmSales, SellingDesigned, Entrepreneurship, Mapsys, Customers, Speaking, BackAtIbm, FellIntoAi, Ak1, Ak2, Ak3, Ak4, Ak5, Ak6, Ak7, Ak8, Ak9, Ak10, Ak11, Ak12] satisfies Page[];
