@@ -45,6 +45,8 @@ import powerSystemsLogo from './assets/ibm/power-systems.svg';
 import redHatLogo from './assets/ibm/redhat.svg';
 import wallStreetSign from './assets/ibm/wall-street-sign.jpg';
 import watsonxLogo from './assets/ibm/watsonx.svg';
+import akCover from './assets/ai101/cover.jpg';
+import akSpeaker from './assets/ai101/speaker.jpg';
 import wasserstromLogo from './assets/customers/wasserstrom.png';
 import power7Badge from './assets/power7-badge.svg';
 import powerpcLogo from './assets/powerpc-logo.svg';
@@ -6304,8 +6306,1676 @@ const FellIntoAi: Page = () => {
 };
 FellIntoAi.transition = settle;
 
+/* ═════════════════════ 29–40 · AI 101 — Models & Machines ═════════════════════ */
+
+const AK_CSS = `
+@keyframes ak-ken { from { transform: scale(1.04) translate(0, 0); } to { transform: scale(1.16) translate(-26px, -14px); } }
+@keyframes ak-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ak-drop { from { opacity: 0; transform: translateY(-44px); } to { opacity: 1; transform: none; } }
+@keyframes ak-draw { to { stroke-dashoffset: 0; } }
+@keyframes ak-flowr { to { stroke-dashoffset: 48; } }
+@keyframes ak-breathe { 0%, 100% { opacity: 0.35; } 50% { opacity: 1; } }
+@keyframes ak-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes ak-glowf { 0%, 100% { filter: drop-shadow(0 0 0 transparent); } 50% { filter: drop-shadow(0 0 16px var(--gc)); } }
+@keyframes ak-cycle { 0% { opacity: 0; transform: translateY(14px); } 5%, 28% { opacity: 1; transform: none; } 33%, 100% { opacity: 0; transform: translateY(-14px); } }
+@keyframes ak-cycle4 { 0% { opacity: 0; transform: scale(0.7); } 4%, 21% { opacity: 1; transform: none; } 25%, 100% { opacity: 0; transform: scale(1.15); } }
+@keyframes ak-knob { 0%, 100% { left: 0%; } 50% { left: calc(100% - 30px); } }
+@keyframes ak-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes ak-squeeze { 0%, 12% { width: var(--w0); } 60%, 85% { width: var(--w1); } 100% { width: var(--w0); } }
+@keyframes ak-blinkbox { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0; } }
+@keyframes ak-orbit { to { transform: rotate(360deg); } }
+@keyframes ak-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+.tc-active [data-osd-step="revealed"] .ak-wipe { animation: ak-wipe var(--t, 1200ms) cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0ms) both; }
+@keyframes ak-rocket { 0% { offset-distance: 0%; opacity: 0; } 6% { opacity: 1; } 94% { opacity: 1; } 100% { offset-distance: 100%; opacity: 0; } }
+@keyframes ak-tick { 0% { opacity: 0; transform: scale(0.2); } 10%, 82% { opacity: 1; transform: none; } 94%, 100% { opacity: 0; } }
+@keyframes ak-word { 0%, 100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-9px) scale(1.06); } }
+@keyframes ak-ripple { from { transform: scale(0.4); opacity: 0.8; } to { transform: scale(3); opacity: 0; } }
+@keyframes ak-expert { 0%, 100% { opacity: 0.25; transform: scale(0.92); } 20%, 45% { opacity: 1; transform: scale(1.12); } 65% { opacity: 0.25; transform: scale(0.92); } }
+.tc-active [data-osd-step="revealed"] .ak-pop { transform-box: fill-box; transform-origin: center; animation: tc-chip 600ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both; }
+.tc-active [data-osd-step="revealed"] .ak-fade { animation: ak-fade 700ms ease var(--d, 0ms) both; }
+.tc-active [data-osd-step="revealed"] .ak-drop { animation: ak-drop 700ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both; }
+.tc-active [data-osd-step="revealed"] .ak-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: ak-draw var(--t, 1200ms) cubic-bezier(0.4, 0, 0.2, 1) var(--d, 0ms) forwards; }
+.tc-active [data-osd-step="revealed"] .ak-flow { stroke-dasharray: 10 38; animation: tc-flow var(--t, 1.6s) linear var(--dl, 0s) infinite; }
+.tc-active [data-osd-step="revealed"] .ak-flowr { stroke-dasharray: 10 38; animation: ak-flowr var(--t, 1.4s) linear var(--dl, 0s) infinite; }
+.tc-active [data-osd-step="revealed"] .ak-breathe { animation: ak-breathe var(--t, 2.4s) ease-in-out var(--dl, 0s) infinite; }
+.tc-active [data-osd-step="revealed"] .ak-bob { animation: ak-bob var(--t, 3s) ease-in-out var(--dl, 0s) infinite; }
+.tc-active [data-osd-step="revealed"] .ak-glowf { animation: ak-glowf var(--t, 2.4s) ease-in-out var(--dl, 1s) infinite; }
+.tc-active [data-osd-step="revealed"] .ak-cycle { animation: ak-cycle 6s ease-in-out var(--dl, 0s) infinite both; }
+.tc-active [data-osd-step="revealed"] .ak-cycle4 { animation: ak-cycle4 8s ease-in-out var(--dl, 0s) infinite both; }
+.tc-active [data-osd-step="revealed"] .ak-knob { animation: ak-knob 4s ease-in-out infinite; }
+.tc-active [data-osd-step="revealed"] .ak-bar { transform-origin: left; animation: ak-grow var(--t, 1200ms) cubic-bezier(0.2, 0.8, 0.2, 1) var(--d, 0ms) both; }
+.tc-active [data-osd-step="revealed"] .ak-squeeze { animation: ak-squeeze 6s ease-in-out 1200ms infinite both; }
+.tc-active [data-osd-step="revealed"] .ak-orbit { animation: ak-orbit var(--t, 12s) linear infinite; }
+.tc-active [data-osd-step="revealed"] .ak-rocket { animation: ak-rocket 7s linear 800ms infinite both; }
+.tc-active [data-osd-step="revealed"] .ak-tick { animation: ak-tick 8s ease-in-out var(--dl, 0s) infinite both; }
+.tc-active [data-osd-step="revealed"] .ak-word { animation: tc-popin 700ms cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0ms) both, ak-word var(--t, 4s) ease-in-out calc(var(--d, 0ms) + 800ms) infinite; }
+.tc-active [data-osd-step="revealed"] .ak-ripple { animation: ak-ripple 3s ease-out var(--dl, 0s) infinite; }
+.tc-active [data-osd-step="revealed"] .ak-expert { transform-box: fill-box; transform-origin: center; animation: ak-expert 6s ease-in-out var(--dl, 0s) infinite; }
+.tc-active [data-osd-step="revealed"] .ak-wavebar { animation: tc-bars var(--t, 1.2s) ease-in-out var(--dl, 0s) infinite; }
+.ak-knob { position: absolute; top: -10px; width: 30px; height: 30px; border-radius: 50%; background: #FFC56B; box-shadow: 0 0 18px rgba(255,197,107,0.8); }
+`;
+
+const cv = (o: Record<string, string | number | undefined>) => o as CSSProperties;
+const akSvg: CSSProperties = { position: 'absolute', left: 0, top: 0, overflow: 'visible' };
+
+const AkTitle = ({ children, size = 66 }: { children: ReactNode; size?: number }) => {
+  const active = useIsActivePage();
+  return (
+    <span
+      style={{ display: 'block', fontSize: size, fontWeight: 900, lineHeight: 1.1, letterSpacing: '-0.04em', whiteSpace: 'nowrap', ...rise(active, 100) }}
+    >
+      {children}
+    </span>
+  );
+};
+
+/** Click-step host: `.tc-active` scopes the reveal animations to the visible page. */
+const AkStage = ({ children }: { children: ReactNode }) => {
+  const active = useIsActivePage();
+  return (
+    <div className={active ? 'tc-active' : undefined} style={{ position: 'absolute', inset: 0 }}>
+      <Steps>{children}</Steps>
+    </div>
+  );
+};
+
+const AkBullet = ({
+  x,
+  y,
+  w,
+  fs = 30,
+  color = C.gold,
+  d = 200,
+  children,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  fs?: number;
+  color?: string;
+  d?: number;
+  children: ReactNode;
+}) => (
+  <div
+    className="tc-a tc-in"
+    style={cv({ '--d': `${d}ms`, position: 'absolute', left: x, top: y, width: w, fontSize: fs, lineHeight: 1.3, fontWeight: 700, color: '#F3F6FC', paddingLeft: '1.1em', textIndent: '-1.1em' })}
+  >
+    <span style={{ color, marginRight: '0.35em' }}>▸</span>
+    {children}
+  </div>
+);
+
+const AkChip = ({ color, d, fs = 28, children }: { color: string; d: number; fs?: number; children: ReactNode }) => (
+  <span
+    className="tc-a tc-in"
+    style={cv({ '--d': `${d}ms`, display: 'inline-block', margin: '0 12px 12px 0', padding: '8px 18px', borderRadius: 999, border: `2px solid ${color}`, background: `${color}22`, fontSize: fs, fontWeight: 700, color: '#F3F6FC', whiteSpace: 'nowrap' })}
+  >
+    {children}
+  </span>
+);
+
+const AkCard = ({
+  x,
+  y,
+  w,
+  h,
+  color,
+  label,
+  d = 0,
+  children,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  color: string;
+  label: string;
+  d?: number;
+  children: ReactNode;
+}) => (
+  <div
+    className="tc-a tc-in"
+    style={cv({ '--d': `${d}ms`, position: 'absolute', left: x, top: y, width: w, height: h, boxSizing: 'border-box', padding: '26px 30px', borderRadius: 24, background: 'rgba(11,16,32,0.86)', border: `3px solid ${color}`, boxShadow: `0 0 44px ${color}33` })}
+  >
+    <div style={{ fontFamily: mono, fontSize: 24, letterSpacing: '0.14em', color, marginBottom: 14 }}>{label}</div>
+    {children}
+  </div>
+);
+
+/* ───────────────────────── 29 · AI 101 title ───────────────────────── */
+
+const AK_SPARKS = (() => {
+  const r = aiRand(101);
+  return Array.from({ length: 24 }, () => ({ x: 900 + r() * 960, y: 120 + r() * 840, s: 4 + r() * 8, d: r() * 3, c: AI_PALETTE[Math.floor(r() * 5)] }));
+})();
+
+const Ak1: Page = () => {
+  const active = useIsActivePage();
+  return (
+    <Frame eyebrow="29 · AI 101 · WELCOME">
+      <style>
+        {AI_CSS}
+        {AK_CSS}
+      </style>
+      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+        <img
+          src={akCover}
+          alt=""
+          className="tc-a"
+          style={{ position: 'absolute', left: 0, top: 0, width: 1920, height: 1080, objectFit: 'cover', opacity: 0.6, animation: active ? 'ak-ken 26s ease-in-out infinite alternate' : undefined }}
+        />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(90deg, rgba(3,5,12,0.93) 0%, rgba(3,5,12,0.6) 52%, rgba(3,5,12,0.15) 100%)' }} />
+        <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+          {AK_SPARKS.map((s, i) => (
+            <circle
+              // biome-ignore lint/suspicious/noArrayIndexKey: static generated geometry
+              key={i}
+              className="tc-a"
+              cx={s.x}
+              cy={s.y}
+              r={s.s}
+              fill={s.c}
+              style={{ transformBox: 'fill-box', transformOrigin: 'center', animation: active ? `tc-twinkle ${2 + (i % 4) * 0.5}s ease-in-out ${s.d}s infinite` : undefined }}
+            />
+          ))}
+        </svg>
+        <div
+          className="tc-a"
+          style={{ position: 'absolute', left: 0, right: 0, top: 0, height: 120, background: 'linear-gradient(180deg, rgba(77,166,255,0), rgba(77,166,255,0.12), rgba(77,166,255,0))', animation: active ? 'ai-scan 7s linear infinite' : undefined }}
+        />
+      </div>
+      <AkStage>
+        <Step duration={200}>
+          <div style={{ position: 'absolute', left: 110, top: 270, fontSize: 310, lineHeight: 1, fontWeight: 900, letterSpacing: '-0.05em', whiteSpace: 'nowrap' }}>
+            {Array.from('AI 101').map((ch, i) =>
+              ch === ' ' ? (
+                // biome-ignore lint/suspicious/noArrayIndexKey: static text
+                <span key={i} style={{ display: 'inline-block', width: '0.26em' }} />
+              ) : (
+                // biome-ignore lint/suspicious/noArrayIndexKey: static text
+                <span key={i} className="tc-a tc-in" style={cv({ '--d': `${i * 110}ms`, display: 'inline-block' })}>
+                  <span className="ai-shine" style={{ display: 'inline-block' }}>
+                    {ch}
+                  </span>
+                </span>
+              ),
+            )}
+          </div>
+        </Step>
+        <Step duration={200}>
+          <div style={{ position: 'absolute', left: 120, top: 620, fontSize: 96, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.04em', whiteSpace: 'nowrap' }}>
+            <span className="tc-a tc-in" style={cv({ '--d': '0ms', display: 'inline-block', marginRight: 26 })}>
+              Models
+            </span>
+            <span className="tc-a tc-in" style={cv({ '--d': '260ms', display: 'inline-block', marginRight: 26, color: C.gold })}>
+              &amp;
+            </span>
+            <span className="tc-a tc-in" style={cv({ '--d': '520ms', display: 'inline-block' })}>
+              Machines
+            </span>
+            <span className="tc-a tc-in ai-glow" style={cv({ '--d': '900ms', display: 'inline-block', color: '#4DA6FF' })}>
+              …
+            </span>
+          </div>
+        </Step>
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div
+              className="tc-a ak-bar"
+              style={cv({ '--t': '900ms', position: 'absolute', left: 120, top: 778, width: 180, height: 6, borderRadius: 3, background: 'var(--osd-accent)' })}
+            />
+            <div className="tc-a tc-in" style={cv({ '--d': '300ms', position: 'absolute', left: 120, top: 810, fontSize: 56, fontWeight: 800, letterSpacing: '-0.03em' })}>
+              Daneyand “DJ” Singley
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '650ms', position: 'absolute', left: 120, top: 888, fontSize: 38, fontWeight: 700, color: C.gold })}>
+              IBM Technical Leader &amp; Field CTO
+            </div>
+          </div>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak1.transition = settle;
+
+/* ───────────────────────── 30 · building a model ───────────────────────── */
+
+const AK_LAYERS = [5, 6, 6, 4];
+const AK_COLX = [310, 520, 730, 940];
+const AK_COLORS = [C.red, '#FF8A4C', '#FF8A4C', '#4DA6FF'];
+const akNode = (l: number, i: number) => ({ x: AK_COLX[l], y: 530 + (i - (AK_LAYERS[l] - 1) / 2) * 62 });
+const AK_EDGES = AK_LAYERS.slice(0, -1).flatMap((n, l) =>
+  Array.from({ length: n }, (_, a) => Array.from({ length: AK_LAYERS[l + 1] }, (_, b) => ({ l, a, b, p: akNode(l, a), q: akNode(l + 1, b) }))).flat(),
+);
+const AK_WLABELS = [
+  { l: 0, a: 0, b: 1, v: '0.82' },
+  { l: 0, a: 2, b: 3, v: '−0.31' },
+  { l: 0, a: 4, b: 4, v: '0.47' },
+  { l: 1, a: 1, b: 2, v: '1.20' },
+  { l: 1, a: 3, b: 0, v: '−0.64' },
+  { l: 1, a: 5, b: 4, v: '0.09' },
+  { l: 2, a: 0, b: 1, v: '0.75' },
+  { l: 2, a: 3, b: 3, v: '−0.18' },
+];
+const AK_NAMES = ['input · 5', 'dense · 6', 'dense · 6', 'output · 4'];
+const akColTop = (l: number) => 530 - ((AK_LAYERS[l] - 1) / 2) * 62 - 34;
+
+const Ak2: Page = () => {
+  return (
+    <Frame eyebrow="30 · AI 101 · DEEP LEARNING" title={<AkTitle>Building a model</AkTitle>}>
+      <style>{AK_CSS}</style>
+      <AkStage>
+        {/* click 1 — the trained model box, the network, data flowing through */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+              <rect className="tc-a ak-fade" style={cv({ '--d': '400ms' })} x={210} y={300} width={860} height={460} rx={28} fill="rgba(77,166,255,0.06)" />
+              <rect className="tc-a ak-draw" style={cv({ '--t': '1500ms' })} pathLength={1} x={210} y={300} width={860} height={460} rx={28} fill="none" stroke="#4DA6FF" strokeWidth={4} />
+              <g className="tc-a ak-drop" style={cv({ '--d': '300ms' })}>
+                <rect x={210} y={268} width={250} height={46} rx={14} fill="#4DA6FF" />
+                <text x={335} y={300} textAnchor="middle" fontSize={26} fontWeight={800} fill="#03050C" style={{ fontFamily: 'var(--osd-font-display)' }}>
+                  Trained model
+                </text>
+              </g>
+              <g stroke="rgba(169,183,217,0.26)" strokeWidth={1.6}>
+                {AK_EDGES.map((e) => (
+                  <line
+                    key={`e${e.l}-${e.a}-${e.b}`}
+                    className="tc-a ak-fade"
+                    style={cv({ '--d': `${700 + e.l * 350}ms` })}
+                    x1={e.p.x}
+                    y1={e.p.y}
+                    x2={e.q.x}
+                    y2={e.q.y}
+                  />
+                ))}
+              </g>
+              <g className="tc-a ak-fade" style={cv({ '--d': '1500ms' })}>
+                {AK_EDGES.filter((_, i) => i % 3 === 0).map((e, i) => (
+                  <line
+                    key={`f${e.l}-${e.a}-${e.b}`}
+                    className="tc-a ak-flow"
+                    style={cv({ '--t': `${1.3 + (i % 5) * 0.3}s`, '--dl': `${-(i % 7) * 0.25}s` })}
+                    x1={e.p.x}
+                    y1={e.p.y}
+                    x2={e.q.x}
+                    y2={e.q.y}
+                    stroke={AI_PALETTE[i % 5]}
+                    strokeWidth={3.5}
+                    strokeLinecap="round"
+                  />
+                ))}
+              </g>
+              {AK_LAYERS.map((n, l) =>
+                Array.from({ length: n }, (_, i) => {
+                  const p = akNode(l, i);
+                  return (
+                    <circle
+                      key={`n${l}-${i}`}
+                      className="tc-a ak-pop"
+                      style={cv({ '--d': `${500 + l * 350 + i * 70}ms` })}
+                      cx={p.x}
+                      cy={p.y}
+                      r={17}
+                      fill={`${AK_COLORS[l]}40`}
+                      stroke={AK_COLORS[l]}
+                      strokeWidth={4}
+                    />
+                  );
+                }),
+              )}
+              <g className="tc-a ak-fade" style={cv({ '--d': '200ms' })}>
+                <line x1={118} y1={530} x2={196} y2={530} stroke={C.red} strokeWidth={6} strokeLinecap="round" />
+                <polygon points="212,530 190,518 190,542" fill={C.red} />
+                <text x={164} y={496} textAnchor="middle" fontSize={22} fill={C.red} style={{ fontFamily: mono }}>
+                  input
+                </text>
+              </g>
+              <g className="tc-a ak-fade" style={cv({ '--d': '2200ms' })}>
+                <line x1={1086} y1={530} x2={1164} y2={530} stroke="#4DA6FF" strokeWidth={6} strokeLinecap="round" />
+                <polygon points="1182,530 1160,518 1160,542" fill="#4DA6FF" />
+                <text x={1126} y={496} textAnchor="middle" fontSize={22} fill="#4DA6FF" style={{ fontFamily: mono }}>
+                  prediction
+                </text>
+              </g>
+            </svg>
+            <div className="tc-a tc-in" style={cv({ '--d': '700ms', position: 'absolute', left: 1250, top: 300, width: 550, fontSize: 36, lineHeight: 1.25, fontWeight: 800, color: C.gold })}>
+              A trained model includes:
+            </div>
+          </div>
+        </Step>
+        {/* click 2 — the network definition */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+              {AK_LAYERS.map((n, l) => (
+                <g key={`d${l}`}>
+                  <line
+                    className="tc-a ak-draw"
+                    style={cv({ '--t': '700ms', '--d': `${300 + l * 150}ms` })}
+                    pathLength={1}
+                    x1={760}
+                    y1={296}
+                    x2={AK_COLX[l]}
+                    y2={akColTop(l)}
+                    stroke={C.gold}
+                    strokeWidth={2.5}
+                    strokeLinecap="round"
+                  />
+                  <g className="tc-a ak-breathe" style={cv({ '--dl': `${l * 0.3}s` })}>
+                    <rect
+                      className="tc-a ak-pop"
+                      style={cv({ '--d': `${200 + l * 180}ms` })}
+                      x={AK_COLX[l] - 32}
+                      y={akColTop(l)}
+                      width={64}
+                      height={(n - 1) * 62 + 68}
+                      rx={20}
+                      fill="none"
+                      stroke={C.gold}
+                      strokeWidth={3}
+                      strokeDasharray="10 8"
+                    />
+                  </g>
+                  <text className="tc-a ak-fade" style={{ ...cv({ '--d': `${800 + l * 150}ms` }), fontFamily: mono }} x={AK_COLX[l]} y={746} textAnchor="middle" fontSize={20} fill={C.muted}>
+                    {AK_NAMES[l]}
+                  </text>
+                </g>
+              ))}
+              <g className="tc-a ak-drop" style={cv({ '--d': '100ms' })}>
+                <rect x={590} y={250} width={340} height={46} rx={23} fill="rgba(255,197,107,0.18)" stroke={C.gold} strokeWidth={3} />
+                <text x={760} y={282} textAnchor="middle" fontSize={26} fontWeight={800} fill={C.gold} style={{ fontFamily: 'var(--osd-font-display)' }}>
+                  network definition
+                </text>
+              </g>
+            </svg>
+            <AkBullet x={1250} y={372} w={550} fs={34} d={500}>
+              a <span style={{ color: C.gold }}>network definition</span> file that describes the layers
+            </AkBullet>
+          </div>
+        </Step>
+        {/* click 3 — weights and biases */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+              <g className="tc-a ak-fade" style={cv({ '--d': '200ms' })} stroke={C.green} strokeWidth={2.4} opacity={0.6}>
+                {AK_EDGES.map((e) => (
+                  <line key={`g${e.l}-${e.a}-${e.b}`} x1={e.p.x} y1={e.p.y} x2={e.q.x} y2={e.q.y} />
+                ))}
+              </g>
+              {AK_WLABELS.map((w, i) => {
+                const p = akNode(w.l, w.a);
+                const q = akNode(w.l + 1, w.b);
+                const mx = (p.x + q.x) / 2;
+                const my = (p.y + q.y) / 2;
+                return (
+                  <g key={`w${i}`} className="tc-a ak-pop" style={cv({ '--d': `${400 + i * 110}ms` })}>
+                    <rect x={mx - 32} y={my - 14} width={64} height={28} rx={9} fill="#07140D" stroke={C.green} strokeWidth={2} />
+                    <text x={mx} y={my + 7} textAnchor="middle" fontSize={17} fontWeight={700} fill={C.green} style={{ fontFamily: mono }}>
+                      {w.v}
+                    </text>
+                  </g>
+                );
+              })}
+              {[1, 2, 3].map((l) =>
+                Array.from({ length: AK_LAYERS[l] }, (_, i) => {
+                  const p = akNode(l, i);
+                  return (
+                    <g key={`b${l}-${i}`} className="tc-a ak-drop" style={cv({ '--d': `${1300 + l * 200 + i * 60}ms` })}>
+                      <rect x={p.x + 10} y={p.y - 38} width={44} height={24} rx={7} fill="#B07AD0" />
+                      <text x={p.x + 32} y={p.y - 21} textAnchor="middle" fontSize={16} fontWeight={800} fill="#fff" style={{ fontFamily: mono }}>
+                        +b
+                      </text>
+                    </g>
+                  );
+                }),
+              )}
+              <g className="tc-a ak-fade" style={cv({ '--d': '700ms' })}>
+                <line x1={470} y1={800} x2={418} y2={640} stroke={C.green} strokeWidth={3} strokeDasharray="6 7" />
+                <rect x={375} y={800} width={190} height={46} rx={23} fill="rgba(91,228,155,0.16)" stroke={C.green} strokeWidth={3} />
+                <text x={470} y={832} textAnchor="middle" fontSize={26} fontWeight={800} fill={C.green} style={{ fontFamily: 'var(--osd-font-display)' }}>
+                  weights
+                </text>
+              </g>
+              <g className="tc-a ak-fade" style={cv({ '--d': '1700ms' })}>
+                <line x1={900} y1={800} x2={966} y2={616} stroke="#B07AD0" strokeWidth={3} strokeDasharray="6 7" />
+                <rect x={805} y={800} width={190} height={46} rx={23} fill="rgba(176,122,208,0.2)" stroke="#B07AD0" strokeWidth={3} />
+                <text x={900} y={832} textAnchor="middle" fontSize={26} fontWeight={800} fill="#D6B2EE" style={{ fontFamily: 'var(--osd-font-display)' }}>
+                  biases
+                </text>
+              </g>
+            </svg>
+            <AkBullet x={1250} y={560} w={550} fs={34} color={C.green} d={500}>
+              <span style={{ color: C.green }}>weights</span> and <span style={{ color: '#D6B2EE' }}>biases</span> for each layer within that network
+            </AkBullet>
+          </div>
+        </Step>
+        {/* click 4 — the assembly */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div style={{ position: 'absolute', left: 210, top: 888, display: 'flex', alignItems: 'center', gap: 22, fontSize: 32, fontWeight: 800, letterSpacing: '-0.02em' }}>
+              {[
+                { t: 'network definition', c: C.gold, d: 0 },
+                { t: '+', c: C.muted, d: 200 },
+                { t: 'weights', c: C.green, d: 400 },
+                { t: '+', c: C.muted, d: 600 },
+                { t: 'biases', c: '#D6B2EE', d: 800 },
+                { t: '=', c: C.muted, d: 1050 },
+              ].map((p) => (
+                <span
+                  key={`${p.t}${p.d}`}
+                  className="tc-a tc-in"
+                  style={cv({ '--d': `${p.d}ms`, color: p.c, ...(p.t.length > 1 ? { padding: '10px 22px', borderRadius: 16, border: `3px solid ${p.c}`, background: `${p.c}1f` } : { fontSize: 44 }) })}
+                >
+                  {p.t}
+                </span>
+              ))}
+              <span className="tc-a tc-in" style={cv({ '--d': '1300ms' })}>
+                <span
+                  className="tc-a ai-glow"
+                  style={cv({ '--g0': 'rgba(77,166,255,0)', '--g1': 'rgba(77,166,255,0.7)', display: 'inline-block', padding: '10px 26px', borderRadius: 16, background: '#4DA6FF', color: '#03050C' })}
+                >
+                  trained model
+                </span>
+              </span>
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '1600ms', position: 'absolute', left: 1250, top: 760, width: 550, fontFamily: mono, fontSize: 22, lineHeight: 1.4, color: C.muted })}>
+              Often called a deep learning algorithm or model.
+            </div>
+          </div>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak2.transition = settle;
+
+/* ───────────────────────── 31 · weights, biases, hyperparameters ───────────────────────── */
+
+const AK3_Y = [400, 540, 680];
+const AK3_T = [0.33, 0.5, 0.67];
+const AK3_PAIRS = [0, 1, 2].flatMap((i) => [0, 1, 2].map((j) => ({ i, j })));
+const AK3_W = [
+  [0.82, -0.31, 0.07],
+  [0.15, 0.64, -0.52],
+  [-0.4, 0.09, 0.77],
+];
+const AK3_B = [0.1, -0.05, 0.2];
+
+const AkSub = ({ x, y, base, sub, size = 22, fill, bold = true }: { x: number; y: number; base: string; sub: string; size?: number; fill: string; bold?: boolean }) => (
+  <text x={x} y={y} textAnchor="middle" fontSize={size} fontWeight={bold ? 800 : 500} fill={fill} style={{ fontFamily: mono }}>
+    {base}
+    <tspan fontSize={size * 0.68} dy={size * 0.22}>
+      {sub}
+    </tspan>
+  </text>
+);
+
+const AkMatrix = ({ vals, cols, color, d }: { vals: number[]; cols: number; color: string; d: number }) => (
+  <div
+    style={{ display: 'grid', gridTemplateColumns: `repeat(${cols}, 82px)`, gap: 6, padding: '6px 10px', borderLeft: `4px solid ${color}`, borderRight: `4px solid ${color}`, borderRadius: 10 }}
+  >
+    {vals.map((v, k) => (
+      <span
+        // biome-ignore lint/suspicious/noArrayIndexKey: static matrix cells
+        key={k}
+        className="tc-a tc-in"
+        style={cv({ '--d': `${d + k * 60}ms`, fontFamily: mono, fontSize: 22, textAlign: 'center', padding: '4px 0', borderRadius: 8, background: `${color}1f`, color: '#F3F6FC' })}
+      >
+        {v.toFixed(2)}
+      </span>
+    ))}
+  </div>
+);
+
+const Ak3: Page = () => {
+  return (
+    <Frame eyebrow="31 · AI 101 · DEEP LEARNING" title={<AkTitle size={60}>Building a model – and what’s a hyperparameter?</AkTitle>}>
+      <style>{AK_CSS}</style>
+      <AkStage>
+        {/* click 1 — inputs, the sum of weighted inputs */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+              <text className="tc-a ak-fade" style={{ ...cv({ '--d': '100ms' }), fontFamily: mono }} x={190} y={336} textAnchor="middle" fontSize={22} letterSpacing="0.14em" fill={C.teal}>
+                INPUTS
+              </text>
+              {AK3_PAIRS.map(({ i, j }) => (
+                <line
+                  key={`e${i}${j}`}
+                  className="tc-a ak-fade"
+                  style={cv({ '--d': `${300 + i * 120}ms` })}
+                  x1={224}
+                  y1={AK3_Y[i]}
+                  x2={730}
+                  y2={AK3_Y[j]}
+                  stroke="rgba(169,183,217,0.34)"
+                  strokeWidth={2}
+                />
+              ))}
+              <g className="tc-a ak-fade" style={cv({ '--d': '900ms' })}>
+                {AK3_PAIRS.map(({ i, j }, k) => (
+                  <line
+                    key={`f${i}${j}`}
+                    className="tc-a ak-flow"
+                    style={cv({ '--t': `${1.2 + (k % 4) * 0.3}s`, '--dl': `${-(k % 5) * 0.3}s` })}
+                    x1={224}
+                    y1={AK3_Y[i]}
+                    x2={730}
+                    y2={AK3_Y[j]}
+                    stroke={AI_PALETTE[k % 5]}
+                    strokeWidth={3.5}
+                    strokeLinecap="round"
+                  />
+                ))}
+              </g>
+              {AK3_Y.map((y, i) => (
+                <g key={`x${i}`} className="tc-a ak-pop" style={cv({ '--d': `${i * 140}ms` })}>
+                  <circle cx={190} cy={y} r={34} fill={`${C.teal}30`} stroke={C.teal} strokeWidth={4} />
+                  <AkSub x={190} y={y + 8} base="x" sub={String(i + 1)} size={28} fill="#F3F6FC" />
+                </g>
+              ))}
+              {AK3_Y.map((y, j) => (
+                <g key={`s${j}`} className="tc-a ak-pop" style={cv({ '--d': `${900 + j * 140}ms` })}>
+                  <circle cx={756} cy={y} r={26} fill="rgba(243,246,252,0.08)" stroke="#F3F6FC" strokeWidth={3} />
+                  <text x={756} y={y + 11} textAnchor="middle" fontSize={32} fontWeight={800} fill="#F3F6FC">
+                    Σ
+                  </text>
+                </g>
+              ))}
+            </svg>
+            <AkBullet x={1370} y={330} w={430} d={900}>
+              each layer has <span style={{ color: C.green }}>weights</span> and <span style={{ color: '#D6B2EE' }}>biases</span>
+            </AkBullet>
+          </div>
+        </Step>
+        {/* click 2 — the weights */}
+        <Step duration={200}>
+          <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+            <text className="tc-a ak-fade" style={{ ...cv({ '--d': '100ms' }), fontFamily: mono }} x={480} y={336} textAnchor="middle" fontSize={22} letterSpacing="0.14em" fill={C.green}>
+              WEIGHTS
+            </text>
+            {AK3_PAIRS.map(({ i, j }, k) => {
+              const t = AK3_T[i];
+              const cx = 224 + t * (730 - 224);
+              const cy = AK3_Y[i] + t * (AK3_Y[j] - AK3_Y[i]);
+              return (
+                <g key={`w${i}${j}`} className="tc-a ak-pop" style={cv({ '--d': `${200 + k * 110}ms` })}>
+                  <ellipse cx={cx} cy={cy} rx={44} ry={19} fill="#0B2A1A" stroke={C.green} strokeWidth={2.5} />
+                  <AkSub x={cx - 4} y={cy + 6} base="W" sub={`${i + 1},${j + 1}`} size={20} fill={C.green} />
+                </g>
+              );
+            })}
+          </svg>
+        </Step>
+        {/* click 3 — the biases, softmax and outputs */}
+        <Step duration={200}>
+          <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+            <text className="tc-a ak-fade" style={{ ...cv({ '--d': '100ms' }), fontFamily: mono }} x={856} y={336} textAnchor="middle" fontSize={22} letterSpacing="0.14em" fill="#D6B2EE">
+              BIASES
+            </text>
+            <text className="tc-a ak-fade" style={{ ...cv({ '--d': '900ms' }), fontFamily: mono }} x={1015} y={336} textAnchor="middle" fontSize={22} letterSpacing="0.14em" fill={C.gold}>
+              SOFTMAX
+            </text>
+            <text className="tc-a ak-fade" style={{ ...cv({ '--d': '1500ms' }), fontFamily: mono }} x={1210} y={336} textAnchor="middle" fontSize={22} letterSpacing="0.14em" fill="#4DA6FF">
+              OUTPUTS
+            </text>
+            {AK3_Y.map((y, j) => (
+              <g key={`b${j}`}>
+                <line x1={782} y1={y} x2={818} y2={y} stroke="#B07AD0" strokeWidth={3} className="tc-a ak-fade" style={cv({ '--d': `${200 + j * 150}ms` })} />
+                <g className="tc-a ak-drop" style={cv({ '--d': `${200 + j * 150}ms` })}>
+                  <rect x={818} y={y - 21} width={76} height={42} rx={10} fill="#B07AD0" />
+                  <AkSub x={856} y={y + 7} base="+b" sub={String(j + 1)} size={24} fill="#fff" />
+                </g>
+                <line className="tc-a ak-flow" style={cv({ '--t': '1.1s', '--dl': `${-j * 0.3}s` })} x1={894} y1={y} x2={960} y2={y} stroke={C.gold} strokeWidth={3.5} strokeLinecap="round" />
+                <line className="tc-a ak-flow" style={cv({ '--t': '1.1s', '--dl': `${-j * 0.2}s` })} x1={1070} y1={y} x2={1176} y2={y} stroke="#4DA6FF" strokeWidth={3.5} strokeLinecap="round" />
+                <g className="tc-a ak-pop" style={cv({ '--d': `${1600 + j * 150}ms` })}>
+                  <circle cx={1210} cy={y} r={34} fill="rgba(77,166,255,0.2)" stroke="#4DA6FF" strokeWidth={4} />
+                  <AkSub x={1210} y={y + 8} base="y" sub={String(j + 1)} size={28} fill="#F3F6FC" />
+                  <text x={1210} y={y + 66} textAnchor="middle" fontSize={22} fill="#4DA6FF" style={{ fontFamily: mono }}>
+                    {['0.70', '0.20', '0.10'][j]}
+                  </text>
+                </g>
+              </g>
+            ))}
+            <g className="tc-a ak-pop" style={cv({ '--d': '900ms' })}>
+              <rect x={960} y={350} width={110} height={380} rx={20} fill={C.gold} />
+              <text x={1015} y={540} textAnchor="middle" fontSize={40} fontWeight={900} fill="#2A1C03" transform="rotate(-90 1015 540)" dy={13} style={{ fontFamily: 'var(--osd-font-display)' }}>
+                softmax
+              </text>
+            </g>
+          </svg>
+        </Step>
+        {/* click 4 — training: back-propagation nudges W and b */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+              {AK3_PAIRS.map(({ i, j }, k) => (
+                <line
+                  key={`r${i}${j}`}
+                  className="tc-a ak-flowr"
+                  style={cv({ '--t': `${1.1 + (k % 4) * 0.25}s`, '--dl': `${-(k % 5) * 0.25}s` })}
+                  x1={224}
+                  y1={AK3_Y[i]}
+                  x2={730}
+                  y2={AK3_Y[j]}
+                  stroke={C.red}
+                  strokeWidth={4}
+                  strokeLinecap="round"
+                />
+              ))}
+              {AK3_Y.map((y, j) => (
+                <g key={`rb${j}`}>
+                  <line className="tc-a ak-flowr" style={cv({ '--t': '1.1s', '--dl': `${-j * 0.3}s` })} x1={894} y1={y} x2={960} y2={y} stroke={C.red} strokeWidth={4} strokeLinecap="round" />
+                  <line className="tc-a ak-flowr" style={cv({ '--t': '1.1s', '--dl': `${-j * 0.2}s` })} x1={1070} y1={y} x2={1176} y2={y} stroke={C.red} strokeWidth={4} strokeLinecap="round" />
+                </g>
+              ))}
+              {AK3_PAIRS.map(({ i, j }, k) => {
+                const t = AK3_T[i];
+                return (
+                  <g key={`fl${i}${j}`} className="tc-a ak-breathe" style={cv({ '--dl': `${(k % 5) * 0.2}s` })}>
+                    <ellipse cx={224 + t * 506} cy={AK3_Y[i] + t * (AK3_Y[j] - AK3_Y[i])} rx={50} ry={25} fill="none" stroke={C.gold} strokeWidth={3.5} />
+                  </g>
+                );
+              })}
+              <text className="tc-a ak-fade" style={{ ...cv({ '--d': '500ms' }), fontFamily: mono }} x={1210} y={800} textAnchor="middle" fontSize={24} fill={C.red}>
+                error ↩
+              </text>
+              <g className="tc-a ak-drop" style={cv({ '--d': '300ms' })}>
+                <rect x={330} y={768} width={560} height={46} rx={23} fill="rgba(255,93,108,0.16)" stroke={C.red} strokeWidth={3} />
+                <text x={610} y={800} textAnchor="middle" fontSize={25} fontWeight={800} fill={C.red} style={{ fontFamily: 'var(--osd-font-display)' }}>
+                  ◀ back propagation nudges W and b
+                </text>
+              </g>
+            </svg>
+            <AkBullet x={1370} y={430} w={430} d={500}>
+              they are <span style={{ color: C.red }}>modified</span> as the model is trained
+            </AkBullet>
+          </div>
+        </Step>
+        {/* click 5 — matrices */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div style={{ position: 'absolute', left: 120, top: 848, display: 'flex', alignItems: 'center', gap: 20, fontSize: 40, fontWeight: 900 }}>
+              <span className="tc-a tc-in" style={cv({ '--d': '0ms', color: C.green })}>
+                W =
+              </span>
+              <AkMatrix vals={AK3_W.flat()} cols={3} color={C.green} d={150} />
+              <span className="tc-a tc-in" style={cv({ '--d': '700ms', color: '#D6B2EE', marginLeft: 30 })}>
+                b =
+              </span>
+              <AkMatrix vals={AK3_B} cols={1} color="#B07AD0" d={850} />
+            </div>
+            <AkBullet x={1370} y={580} w={430} d={500}>
+              they are held in <span style={{ color: C.teal }}>matrices</span>
+            </AkBullet>
+          </div>
+        </Step>
+        {/* click 6 — the hyperparameter: learning rate */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div style={{ position: 'absolute', left: 860, top: 842, width: 940, display: 'flex', alignItems: 'center', gap: 30 }}>
+              <div className="tc-a ai-shine tc-in" style={cv({ '--d': '0ms', fontSize: 110, fontWeight: 900, lineHeight: 1 })}>
+                η
+              </div>
+              <div className="tc-a tc-in" style={cv({ '--d': '250ms', width: 300 })}>
+                <div style={{ fontFamily: mono, fontSize: 20, letterSpacing: '0.1em', color: C.gold, marginBottom: 22 }}>LEARNING RATE</div>
+                <div style={{ position: 'relative', height: 10, borderRadius: 5, background: 'rgba(169,183,217,0.28)' }}>
+                  <div className="tc-a ak-knob" />
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 18, fontFamily: mono, fontSize: 18, color: C.dim }}>
+                  <span>tiny steps</span>
+                  <span>huge steps</span>
+                </div>
+              </div>
+              <div className="tc-a tc-in" style={cv({ '--d': '550ms', fontFamily: mono, fontSize: 34, fontWeight: 700, whiteSpace: 'nowrap' })}>
+                w ← w − <span style={{ color: C.gold }}>η</span> · ∂L/∂w
+              </div>
+            </div>
+            <AkBullet x={1370} y={650} w={430} d={500}>
+              the amount of change per iteration is the <span style={{ color: C.gold }}>learning rate</span>
+            </AkBullet>
+          </div>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak3.transition = settle;
+
+/* ───────────────────────── 32 · LLMs ───────────────────────── */
+
+const AK_USES = [
+  { t: 'generation', c: '#4DA6FF' },
+  { t: 'classification', c: C.green },
+  { t: 'extraction', c: C.gold },
+  { t: 'summarization', c: '#B07AD0' },
+  { t: 'Q&A', c: C.teal },
+];
+const AK_MODELS = [
+  { t: 'Meta Llama', c: '#4DA6FF' },
+  { t: 'OpenAI GPT', c: C.green },
+  { t: 'xAI Grok', c: '#C9D3EC' },
+  { t: 'Qwen', c: '#B07AD0' },
+  { t: 'IBM Granite & Slate', c: C.gold },
+];
+const AK_SAMPLES = ['Paris.', 'Paris, of course!', 'The capital is Paris.'];
+
+const Ak4: Page = () => {
+  return (
+    <Frame eyebrow="32 · AI 101 · LLMs" title={<AkTitle size={84}>LLMs</AkTitle>}>
+      <style>{AK_CSS}</style>
+      <AkStage>
+        {/* click 1 — what is an LLM */}
+        <Step duration={200}>
+          <AkCard x={120} y={290} w={530} h={640} color="#4DA6FF" label="WHAT IS AN LLM">
+            <div style={{ fontSize: 34, fontWeight: 800, lineHeight: 1.25, marginBottom: 22 }}>
+              A <span style={{ color: '#4DA6FF' }}>general-purpose</span> language model for:
+            </div>
+            <div>
+              {AK_USES.map((u, i) => (
+                <AkChip key={u.t} color={u.c} d={300 + i * 150} fs={30}>
+                  {u.t}
+                </AkChip>
+              ))}
+            </div>
+            <div
+              className="tc-a tc-in"
+              style={cv({ '--d': '1200ms', marginTop: 34, padding: '18px 22px', borderRadius: 16, background: 'rgba(3,5,12,0.7)', border: '2px dashed rgba(77,166,255,0.5)', fontFamily: mono, fontSize: 24, lineHeight: 1.5 })}
+            >
+              <div style={{ color: C.muted }}>Columbus is the capital of</div>
+              <div style={{ position: 'relative', height: 40, marginTop: 6 }}>
+                {['Ohio', 'the', 'a'].map((w, i) => (
+                  <span key={w} className="tc-a ak-cycle" style={cv({ '--dl': `${1.2 + i * 2}s`, position: 'absolute', left: 0, top: 0, color: [C.green, C.gold, '#B07AD0'][i], fontWeight: 700, opacity: 0 })}>
+                    {w}
+                    <span style={{ color: C.dim, fontSize: 18, marginLeft: 14 }}>{['92%', '3%', '2%'][i]}</span>
+                  </span>
+                ))}
+              </div>
+              <div style={{ color: C.dim, fontSize: 18 }}>next-token prediction</div>
+            </div>
+          </AkCard>
+        </Step>
+        {/* click 2 — the models */}
+        <Step duration={200}>
+          <AkCard x={690} y={290} w={530} h={640} color={C.green} label="MODELS">
+            {AK_MODELS.map((m, i) => (
+              <div key={m.t} className="tc-a tc-in" style={cv({ '--d': `${200 + i * 170}ms`, display: 'flex', alignItems: 'center', gap: 18, marginBottom: 20 })}>
+                <span
+                  className="tc-a ak-glowf"
+                  style={cv({ '--gc': m.c, '--dl': `${1 + i * 0.4}s`, width: 22, height: 22, borderRadius: '50%', background: m.c, flexShrink: 0 })}
+                />
+                <span style={{ fontSize: 40, fontWeight: 800, letterSpacing: '-0.03em', color: m.c === '#C9D3EC' ? '#F3F6FC' : '#F3F6FC', borderBottom: `4px solid ${m.c}`, paddingBottom: 2 }}>{m.t}</span>
+              </div>
+            ))}
+            <div className="tc-a tc-in" style={cv({ '--d': '1200ms', marginTop: 30, fontFamily: mono, fontSize: 22, lineHeight: 1.5, color: C.muted })}>
+              Open weights, closed APIs, and everything in between.
+            </div>
+          </AkCard>
+        </Step>
+        {/* click 3 — non-deterministic */}
+        <Step duration={200}>
+          <AkCard x={1260} y={290} w={540} h={640} color={C.gold} label="AI IS NON-DETERMINISTIC">
+            <div style={{ fontFamily: mono, fontSize: 20, color: C.muted, marginBottom: 8 }}>same prompt → different answers</div>
+            <div className="tc-a tc-in" style={cv({ '--d': '200ms', position: 'relative', height: 70, borderRadius: 14, border: `2px solid ${C.gold}`, background: 'rgba(255,197,107,0.1)' })}>
+              {AK_SAMPLES.map((s, i) => (
+                <span key={s} className="tc-a ak-cycle" style={cv({ '--dl': `${i * 2}s`, position: 'absolute', left: 20, top: 18, fontSize: 30, fontWeight: 800, color: C.gold, opacity: 0 })}>
+                  {s}
+                </span>
+              ))}
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '500ms', marginTop: 26, fontSize: 28, fontWeight: 800 })}>
+              Prompt Engineering
+            </div>
+            <div style={{ marginTop: 10 }}>
+              <AkChip color={C.teal} d={700} fs={26}>
+                zero-shot
+              </AkChip>
+              <AkChip color={C.green} d={850} fs={26}>
+                one-shot
+              </AkChip>
+              <AkChip color={C.gold} d={1000} fs={26}>
+                few-shot
+              </AkChip>
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '1200ms', marginTop: 10, fontSize: 26, lineHeight: 1.35, fontWeight: 700 })}>
+              Run locally with <span style={{ color: '#4DA6FF' }}>Ollama</span> — an open-source platform and runtime.
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '1450ms', marginTop: 14, fontSize: 26, lineHeight: 1.35, fontWeight: 700, color: C.muted })}>
+              Foundational Models and Inferencing
+            </div>
+          </AkCard>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak4.transition = settle;
+
+/* ───────────────────────── 33 · tokens and the context window ───────────────────────── */
+
+const AK_TOKS = [
+  { t: 'Col', id: '1163' },
+  { t: 'umbus', id: '28372' },
+  { t: 'is', id: '374' },
+  { t: 'the', id: '279' },
+  { t: 'capital', id: '6864' },
+  { t: 'of', id: '315' },
+  { t: 'Ohio', id: '14352' },
+  { t: '.', id: '13' },
+];
+
+const Ak5: Page = () => {
+  return (
+    <Frame eyebrow="33 · AI 101 · TOKENS" title={<AkTitle size={64}>Tokens and the context window</AkTitle>}>
+      <style>{AK_CSS}</style>
+      <AkStage>
+        {/* click 1 — tokens */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div className="tc-a tc-in" style={cv({ '--d': '0ms', position: 'absolute', left: 120, top: 262, fontFamily: mono, fontSize: 24, letterSpacing: '0.12em', color: C.gold })}>
+              THE MODEL READS TOKENS, NOT WORDS
+            </div>
+            <div style={{ position: 'absolute', left: 120, top: 310, display: 'inline-flex', flexDirection: 'column' }}>
+              <div className="tc-a tc-in" style={cv({ '--d': '150ms', fontSize: 36, fontWeight: 700, color: C.muted, marginBottom: 16 })}>
+                “Columbus is the capital of Ohio.”
+              </div>
+              <div style={{ display: 'flex', gap: 14 }}>
+                {AK_TOKS.map((k, i) => (
+                  <div key={k.t + k.id} style={{ textAlign: 'center' }}>
+                    <div
+                      className="tc-a tc-in"
+                      style={cv({ '--d': `${600 + i * 170}ms`, padding: '12px 26px', borderRadius: 16, border: `3px solid ${AI_PALETTE[i % 5]}`, background: `${AI_PALETTE[i % 5]}26`, fontSize: 54, fontWeight: 800, letterSpacing: '-0.02em' })}
+                    >
+                      {k.t}
+                    </div>
+                    <div className="tc-a tc-in" style={cv({ '--d': `${900 + i * 170}ms`, marginTop: 8, fontFamily: mono, fontSize: 20, color: C.dim })}>
+                      {k.id}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="tc-a tc-in" style={cv({ '--d': '2100ms', height: 16, marginTop: 8, borderLeft: `4px solid ${C.gold}`, borderRight: `4px solid ${C.gold}`, borderBottom: `4px solid ${C.gold}`, borderRadius: '0 0 10px 10px' })} />
+              <div className="tc-a tc-in" style={cv({ '--d': '2250ms', textAlign: 'center', marginTop: 8, fontSize: 36, fontWeight: 900, color: C.gold })}>
+                8 tokens
+              </div>
+              <div className="tc-a tc-in" style={cv({ '--d': '2400ms', marginTop: 4, fontFamily: mono, fontSize: 20, color: C.dim })}>
+                Illustrative split. Each model family has its own tokenizer.
+              </div>
+            </div>
+          </div>
+        </Step>
+        {/* click 2 — the context window */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div style={{ position: 'absolute', left: 120, top: 622, width: 1680, display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <span className="tc-a tc-in" style={cv({ '--d': '0ms', fontFamily: mono, fontSize: 24, letterSpacing: '0.12em', color: C.gold })}>
+                CONTEXT WINDOW = PROMPT + ANSWER
+              </span>
+              <span className="tc-a tc-in" style={cv({ '--d': '200ms', fontSize: 32, fontWeight: 800 })}>
+                <span style={{ color: '#B07AD0' }}>Qwen3-8B</span> · 32,768 tokens
+              </span>
+            </div>
+            <div style={{ position: 'absolute', left: 120, top: 676, width: 1680, height: 76, display: 'flex', borderRadius: 18, overflow: 'hidden', border: '3px solid rgba(169,183,217,0.5)' }}>
+              <div className="tc-a ak-bar" style={cv({ '--t': '1300ms', '--d': '300ms', width: 1260, background: 'rgba(77,166,255,0.38)', borderRight: '3px solid #03050C', display: 'flex', alignItems: 'center', paddingLeft: 24, fontSize: 28, fontWeight: 800, whiteSpace: 'nowrap' })}>
+                PROMPT <span style={{ color: '#4DA6FF', marginLeft: 12 }}>· 24,576 input tokens</span>
+              </div>
+              <div className="tc-a ak-fade" style={cv({ '--d': '1500ms', flex: 1, background: 'rgba(91,228,155,0.38)', display: 'flex', alignItems: 'center', paddingLeft: 22, fontSize: 28, fontWeight: 800, whiteSpace: 'nowrap' })}>
+                ANSWER <span style={{ color: C.green, marginLeft: 12 }}>· 8,192</span>
+              </div>
+            </div>
+          </div>
+        </Step>
+        {/* click 3 — squeezing the answer */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div style={{ position: 'absolute', left: 120, top: 818, width: 900, height: 60, display: 'flex', borderRadius: 14, overflow: 'hidden', border: '3px solid rgba(255,93,108,0.7)' }}>
+              <div className="tc-a ak-squeeze" style={cv({ '--w0': '675px', '--w1': '900px', width: 675, flexShrink: 0, background: 'rgba(77,166,255,0.42)', display: 'flex', alignItems: 'center', paddingLeft: 20, fontSize: 24, fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden' })}>
+                PROMPT
+              </div>
+              <div style={{ flex: 1, minWidth: 0, background: 'rgba(91,228,155,0.38)', display: 'flex', alignItems: 'center', paddingLeft: 16, fontSize: 24, fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden' }}>
+                ANSWER
+              </div>
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '300ms', position: 'absolute', left: 1060, top: 796, width: 740, fontSize: 28, lineHeight: 1.3, fontWeight: 700 })}>
+              Fill the window with prompt and there’s <span style={{ color: C.red }}>no room for the answer</span> — and every token in the window takes{' '}
+              <span style={{ color: '#4DA6FF' }}>KV-cache memory</span>.
+            </div>
+          </div>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak5.transition = settle;
+
+/* ───────────────────────── 34 · attention and the KV cache ───────────────────────── */
+
+const AK_SENT = ['The', 'cat', 'sat', 'on', 'the', 'mat'];
+const AK_ATT = [0.15, 0.35, 0.8, 0.6, 0.5];
+const akCx = (i: number) => 320 + i * 256;
+const akArc = (i: number) => {
+  const h = 90 + (5 - i) * 28;
+  return `M ${akCx(5)} 430 C ${akCx(5)} ${430 - h}, ${akCx(i)} ${430 - h}, ${akCx(i)} 430`;
+};
+
+const Ak6: Page = () => {
+  return (
+    <Frame eyebrow="34 · AI 101 · ATTENTION" title={<AkTitle size={64}>Attention and the KV cache</AkTitle>}>
+      <style>{AK_CSS}</style>
+      <AkStage>
+        {/* click 1 — the tokens */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            {AK_SENT.map((w, i) => (
+              <div
+                key={`${w}${i}`}
+                className="tc-a tc-in"
+                style={cv({ '--d': `${i * 170}ms`, position: 'absolute', left: akCx(i) - 110, top: 430, width: 220, height: 90, boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 18, border: `3px solid ${i === 5 ? C.gold : AI_PALETTE[i % 5]}`, background: i === 5 ? 'rgba(255,197,107,0.2)' : `${AI_PALETTE[i % 5]}22`, fontSize: 52, fontWeight: 800 })}
+              >
+                {w}
+              </div>
+            ))}
+          </div>
+        </Step>
+        {/* click 2 — attention */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+              {AK_ATT.map((a, i) => (
+                <g key={`a${i}`}>
+                  <path className="tc-a ak-draw" style={cv({ '--t': '900ms', '--d': `${300 + (4 - i) * 160}ms` })} pathLength={1} d={akArc(i)} fill="none" stroke={C.gold} strokeWidth={2 + a * 9} strokeLinecap="round" opacity={0.35 + a * 0.5} />
+                  <path className="tc-a ak-flowr" style={cv({ '--t': `${1.2 + i * 0.2}s` })} d={akArc(i)} fill="none" stroke="#FFF3D6" strokeWidth={3} strokeLinecap="round" />
+                </g>
+              ))}
+              <rect className="tc-a ak-pop" style={cv({ '--d': '100ms' })} x={akCx(5) - 124} y={420} width={248} height={110} rx={26} fill="none" stroke={C.gold} strokeWidth={4} />
+              <g className="tc-a ak-drop" style={cv({ '--d': '400ms' })}>
+                <rect x={akCx(5) - 100} y={546} width={200} height={40} rx={20} fill={C.gold} />
+                <text x={akCx(5)} y={574} textAnchor="middle" fontSize={22} fontWeight={800} fill="#2A1C03" style={{ fontFamily: mono }}>
+                  NEW TOKEN
+                </text>
+              </g>
+            </svg>
+            <AkCard x={120} y={700} w={530} h={250} color={C.gold} label="ATTENTION">
+              <div style={{ fontSize: 30, fontWeight: 700, lineHeight: 1.3 }}>Each new token looks back to decide which earlier tokens matter.</div>
+            </AkCard>
+          </div>
+        </Step>
+        {/* click 3 — the KV cache */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+              {AK_SENT.slice(0, 5).map((w, i) => (
+                <g key={`kv${i}`}>
+                  <g className="tc-a ak-drop" style={cv({ '--d': `${200 + i * 170}ms` })}>
+                    <rect x={akCx(i) - 74} y={548} width={68} height={46} rx={10} fill="#4DA6FF" />
+                    <text x={akCx(i) - 40} y={579} textAnchor="middle" fontSize={26} fontWeight={800} fill="#03050C" style={{ fontFamily: mono }}>
+                      K
+                    </text>
+                    <rect x={akCx(i) + 6} y={548} width={68} height={46} rx={10} fill="#B07AD0" />
+                    <text x={akCx(i) + 40} y={579} textAnchor="middle" fontSize={26} fontWeight={800} fill="#fff" style={{ fontFamily: mono }}>
+                      V
+                    </text>
+                  </g>
+                </g>
+              ))}
+              <g className="tc-a ak-fade" style={cv({ '--d': '1100ms' })}>
+                <path d={`M ${akCx(0) - 100} 614 L ${akCx(0) - 100} 628 L ${akCx(4) + 100} 628 L ${akCx(4) + 100} 614`} fill="none" stroke={C.teal} strokeWidth={3} />
+                <text x={(akCx(0) + akCx(4)) / 2} y={662} textAnchor="middle" fontSize={22} letterSpacing="0.1em" fill={C.teal} style={{ fontFamily: mono }}>
+                  EARLIER TOKENS · keys + values already cached
+                </text>
+              </g>
+            </svg>
+            <AkCard x={690} y={700} w={530} h={250} color="#4DA6FF" label="KV CACHE">
+              <div style={{ fontSize: 30, fontWeight: 700, lineHeight: 1.3 }}>Keys and values for earlier tokens are stored, not recomputed.</div>
+            </AkCard>
+          </div>
+        </Step>
+        {/* click 4 — the cost */}
+        <Step duration={200}>
+          <AkCard x={1260} y={700} w={540} h={250} color={C.red} label="THE COST">
+            <div style={{ fontSize: 30, fontWeight: 700, lineHeight: 1.3 }}>The cache grows with every token in the context.</div>
+            <div style={{ marginTop: 22, height: 26, borderRadius: 13, background: 'rgba(255,93,108,0.18)', overflow: 'hidden' }}>
+              <div className="tc-a ak-bar" style={cv({ '--t': '3000ms', '--d': '400ms', height: '100%', borderRadius: 13, background: 'linear-gradient(90deg, #FFC56B, #FF5D6C)' })} />
+            </div>
+            <div style={{ marginTop: 8, fontFamily: mono, fontSize: 20, color: C.dim }}>memory ▸ ▸ ▸</div>
+          </AkCard>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak6.transition = settle;
+
+/* ───────────────────────── 35 · generative, agentic, encoder / decoder ───────────────────────── */
+
+const Ak7: Page = () => {
+  const lbl = { fontFamily: mono } as CSSProperties;
+  return (
+    <Frame eyebrow="35 · AI 101 · TERMS" title={<AkTitle size={58}>Generative AI, agentic AI, encoders &amp; decoders</AkTitle>}>
+      <style>{AK_CSS}</style>
+      <AkStage>
+        {/* click 1 — generative */}
+        <Step duration={200}>
+          <AkCard x={120} y={290} w={530} h={640} color="#4DA6FF" label="GENERATIVE AI">
+            <div style={{ fontSize: 30, fontWeight: 700, lineHeight: 1.3 }}>
+              Generates <span style={{ color: '#4DA6FF' }}>text, images, videos</span> or other data — often in response to prompts.
+            </div>
+            <svg width={464} height={270} viewBox="0 0 464 270" style={{ display: 'block', marginTop: 24 }}>
+              <g className="tc-a ak-glowf" style={cv({ '--gc': '#4DA6FF', '--dl': '0.5s' })}>
+                <rect x={4} y={100} width={120} height={64} rx={14} fill="rgba(77,166,255,0.18)" stroke="#4DA6FF" strokeWidth={3} />
+                <text x={64} y={140} textAnchor="middle" fontSize={22} fill="#4DA6FF" style={lbl}>
+                  prompt
+                </text>
+              </g>
+              <line className="tc-a ak-flow" x1={130} y1={132} x2={190} y2={132} stroke={C.gold} strokeWidth={4} strokeLinecap="round" />
+              <rect x={196} y={20} width={264} height={224} rx={20} fill="rgba(3,5,12,0.7)" stroke="rgba(169,183,217,0.4)" strokeWidth={2} />
+              {/* text */}
+              <g className="tc-a ak-cycle" style={cv({ '--dl': '0s', opacity: 0 })}>
+                <rect x={226} y={70} width={204} height={14} rx={7} fill="#4DA6FF" />
+                <rect x={226} y={100} width={160} height={14} rx={7} fill="#5BE49B" />
+                <rect x={226} y={130} width={190} height={14} rx={7} fill="#FFC56B" />
+                <rect x={226} y={160} width={120} height={14} rx={7} fill="#B07AD0" />
+                <text x={328} y={214} textAnchor="middle" fontSize={20} fill={C.muted} style={lbl}>
+                  text
+                </text>
+              </g>
+              {/* image */}
+              <g className="tc-a ak-cycle" style={cv({ '--dl': '2s', opacity: 0 })}>
+                <rect x={236} y={56} width={184} height={124} rx={10} fill="#0B1A33" stroke="#4DA6FF" strokeWidth={3} />
+                <circle cx={384} cy={88} r={14} fill={C.gold} />
+                <polygon points="236,180 296,106 336,150 366,120 420,180" fill="#5BE49B" />
+                <text x={328} y={214} textAnchor="middle" fontSize={20} fill={C.muted} style={lbl}>
+                  image
+                </text>
+              </g>
+              {/* video */}
+              <g className="tc-a ak-cycle" style={cv({ '--dl': '4s', opacity: 0 })}>
+                <rect x={236} y={56} width={184} height={124} rx={10} fill="#1A0B2E" stroke="#B07AD0" strokeWidth={3} />
+                <polygon points="304,86 304,150 358,118" fill="#fff" />
+                {[0, 1, 2, 3, 4, 5].map((k) => (
+                  <rect key={k} x={242 + k * 30} y={186} width={18} height={10} rx={2} fill="#B07AD0" />
+                ))}
+                <text x={328} y={226} textAnchor="middle" fontSize={20} fill={C.muted} style={lbl}>
+                  video
+                </text>
+              </g>
+              {[
+                [150, 60],
+                [24, 70],
+                [168, 200],
+              ].map(([x, y], i) => (
+                <path key={`sp${i}`} className="tc-a tc-spark" style={cv({ '--d': `${i * 0.5}s` })} d={`M ${x} ${y - 10} L ${x + 3} ${y - 3} L ${x + 10} ${y} L ${x + 3} ${y + 3} L ${x} ${y + 10} L ${x - 3} ${y + 3} L ${x - 10} ${y} L ${x - 3} ${y - 3} Z`} fill={C.gold} />
+              ))}
+            </svg>
+          </AkCard>
+        </Step>
+        {/* click 2 — agentic */}
+        <Step duration={200}>
+          <AkCard x={690} y={290} w={530} h={640} color={C.green} label="AGENTIC AI">
+            <div style={{ fontSize: 30, fontWeight: 700, lineHeight: 1.3 }}>
+              Takes a <span style={{ color: C.green }}>goal</span>, breaks it into steps, decides, uses <span style={{ color: C.gold }}>tools</span> or data sources — and acts with some autonomy.
+            </div>
+            <svg width={464} height={270} viewBox="0 0 464 270" style={{ display: 'block', marginTop: 14 }}>
+              <g className="tc-a ak-pop" style={cv({ '--d': '300ms' })}>
+                <rect x={4} y={8} width={130} height={44} rx={22} fill="rgba(91,228,155,0.2)" stroke={C.green} strokeWidth={3} />
+                <text x={69} y={38} textAnchor="middle" fontSize={22} fontWeight={800} fill={C.green} style={lbl}>
+                  GOAL
+                </text>
+              </g>
+              {[
+                { t: 'plan', y: 98 },
+                { t: 'decide', y: 154 },
+                { t: 'act', y: 210 },
+              ].map((s, i) => (
+                <g key={s.t}>
+                  <line className="tc-a ak-draw" style={cv({ '--t': '500ms', '--d': `${500 + i * 200}ms` })} pathLength={1} x1={32} y1={i === 0 ? 54 : s.y - 52} x2={32} y2={s.y - 14} stroke={C.green} strokeWidth={3} />
+                  <rect className="tc-a ak-pop" style={cv({ '--d': `${600 + i * 200}ms` })} x={14} y={s.y - 14} width={36} height={36} rx={9} fill="none" stroke={C.green} strokeWidth={3} />
+                  <path className="tc-a ak-tick" style={cv({ '--dl': `${1 + i * 1.3}s`, opacity: 0 })} d={`M 22 ${s.y + 5} L 30 ${s.y + 13} L 44 ${s.y - 6}`} fill="none" stroke={C.green} strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" />
+                  <text className="tc-a ak-fade" style={{ ...cv({ '--d': `${800 + i * 200}ms` }), ...lbl }} x={66} y={s.y + 14} fontSize={26} fontWeight={700} fill="#F3F6FC">
+                    {s.t}
+                  </text>
+                  <line className="tc-a ak-flow" style={cv({ '--dl': `${-i * 0.4}s` })} x1={180} y1={s.y + 4} x2={290} y2={s.y + 4} stroke={C.gold} strokeWidth={3.5} strokeLinecap="round" />
+                </g>
+              ))}
+              {[
+                { t: 'search', y: 98 },
+                { t: 'code', y: 154 },
+                { t: 'data', y: 210 },
+              ].map((s, i) => (
+                <g key={s.t} className="tc-a ak-expert" style={cv({ '--dl': `${i * 2}s` })}>
+                  <rect x={296} y={s.y - 16} width={150} height={42} rx={21} fill="rgba(255,197,107,0.18)" stroke={C.gold} strokeWidth={3} />
+                  <text x={371} y={s.y + 12} textAnchor="middle" fontSize={22} fill={C.gold} style={lbl}>
+                    {s.t}
+                  </text>
+                </g>
+              ))}
+            </svg>
+          </AkCard>
+        </Step>
+        {/* click 3 — encoder / decoder */}
+        <Step duration={200}>
+          <AkCard x={1260} y={290} w={540} h={640} color="#B07AD0" label="ENCODER / DECODER">
+            <div style={{ fontSize: 30, fontWeight: 700, lineHeight: 1.3 }}>
+              An <span style={{ color: '#4DA6FF' }}>encoder</span> builds a representation of the input; a <span style={{ color: C.gold }}>decoder</span> generates what comes next.
+            </div>
+            <svg width={474} height={270} viewBox="0 0 474 270" style={{ display: 'block', marginTop: 24 }}>
+              <g className="tc-a ak-pop" style={cv({ '--d': '300ms' })}>
+                <rect x={0} y={96} width={64} height={52} rx={12} fill="rgba(169,183,217,0.16)" stroke={C.muted} strokeWidth={2.5} />
+                <text x={32} y={129} textAnchor="middle" fontSize={20} fill={C.muted} style={lbl}>
+                  input
+                </text>
+              </g>
+              <line className="tc-a ak-flow" x1={68} y1={122} x2={96} y2={122} stroke="#4DA6FF" strokeWidth={3.5} strokeLinecap="round" />
+              <g className="tc-a ak-pop" style={cv({ '--d': '500ms' })}>
+                <rect x={100} y={70} width={110} height={104} rx={16} fill="rgba(77,166,255,0.2)" stroke="#4DA6FF" strokeWidth={3.5} />
+                <text x={155} y={116} textAnchor="middle" fontSize={20} fontWeight={800} fill="#4DA6FF" style={lbl}>
+                  ENCODER
+                </text>
+              </g>
+              <g className="tc-a ak-fade" style={cv({ '--d': '900ms' })}>
+                {[0, 1, 2, 3].map((k) => (
+                  <rect key={k} className="tc-a ak-breathe" style={cv({ '--dl': `${k * 0.25}s` })} x={226} y={76 + k * 26} width={24} height={20} rx={5} fill={AI_PALETTE[k]} />
+                ))}
+              </g>
+              <line className="tc-a ak-flow" x1={254} y1={122} x2={274} y2={122} stroke={C.gold} strokeWidth={3.5} strokeLinecap="round" />
+              <g className="tc-a ak-pop" style={cv({ '--d': '1100ms' })}>
+                <rect x={278} y={70} width={110} height={104} rx={16} fill="rgba(255,197,107,0.2)" stroke={C.gold} strokeWidth={3.5} />
+                <text x={333} y={116} textAnchor="middle" fontSize={20} fontWeight={800} fill={C.gold} style={lbl}>
+                  DECODER
+                </text>
+              </g>
+              <line className="tc-a ak-flow" x1={392} y1={122} x2={414} y2={122} stroke={C.gold} strokeWidth={3.5} strokeLinecap="round" />
+              <g className="tc-a ak-pop" style={cv({ '--d': '1300ms' })}>
+                <rect x={418} y={96} width={56} height={52} rx={12} fill="rgba(91,228,155,0.2)" stroke={C.green} strokeWidth={2.5} />
+                <text x={446} y={129} textAnchor="middle" fontSize={20} fill={C.green} style={lbl}>
+                  next
+                </text>
+              </g>
+              <g className="tc-a ak-drop" style={cv({ '--d': '1700ms' })}>
+                <rect x={60} y={206} width={354} height={44} rx={22} fill="rgba(255,197,107,0.14)" stroke={C.gold} strokeWidth={2.5} strokeDasharray="8 6" />
+                <text x={237} y={235} textAnchor="middle" fontSize={21} fontWeight={700} fill={C.gold} style={lbl}>
+                  most chat LLMs: decoder-only
+                </text>
+              </g>
+            </svg>
+          </AkCard>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak7.transition = settle;
+
+/* ───────────────────────── 36 · stay curious — the demo ───────────────────────── */
+
+const AK_STARS = (() => {
+  const r = aiRand(36);
+  return Array.from({ length: 36 }, () => ({ x: 130 + r() * 1040, y: 300 + r() * 640, s: 2 + r() * 4, d: r() * 3 }));
+})();
+
+const AkCuriousTitle = () => (
+  <AkTitle size={84}>
+    Stay <span className="ai-shine">Curious</span>
+  </AkTitle>
+);
+
+const AkLink = ({ href, w, n, td = '300ms', size = 26 }: { href: string; w: number; n: number; td?: string; size?: number }) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noreferrer"
+    style={{ display: 'inline-block', padding: '14px 22px', borderRadius: 14, background: 'rgba(3,5,12,0.85)', border: `2px solid ${C.gold}`, color: C.gold, textDecoration: 'none', fontFamily: mono, fontSize: size }}
+  >
+    <span className="tc-a ai-type" style={cv({ '--w': `${w}px`, '--n': n, '--td': td, display: 'inline-block', verticalAlign: 'bottom' })}>
+      {href.replace(/^https?:\/\//, '')}
+    </span>
+    <span className="ai-cursor" style={{ display: 'inline-block', width: 12, height: size, marginLeft: 4, background: C.gold, opacity: 0, verticalAlign: 'bottom' }} />
+  </a>
+);
+
+const Ak8: Page = () => {
+  return (
+    <Frame eyebrow="36 · AI 101 · STAY CURIOUS" title={<AkCuriousTitle />}>
+      <style>
+        {AI_CSS}
+        {AK_CSS}
+      </style>
+      <AkStage>
+        {/* click 1 — a demo */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+              {AK_STARS.map((s, i) => (
+                <circle
+                  // biome-ignore lint/suspicious/noArrayIndexKey: static generated geometry
+                  key={i}
+                  className="tc-a ak-breathe"
+                  style={cv({ '--t': `${2 + (i % 4) * 0.6}s`, '--dl': `${s.d}s` })}
+                  cx={s.x}
+                  cy={s.y}
+                  r={s.s}
+                  fill="#F3F6FC"
+                />
+              ))}
+              <g className="tc-a ak-pop" style={cv({ '--d': '200ms' })}>
+                <circle cx={230} cy={850} r={80} fill="#1B4D8F" stroke="#4DA6FF" strokeWidth={4} />
+                <path d="M 190 820 q 22 -22 48 -6 q 18 14 -4 34 q -24 14 -44 -4 z M 250 876 q 22 -8 34 10 q -10 22 -34 12 z" fill="#5BE49B" />
+                <text x={230} y={972} textAnchor="middle" fontSize={22} fill={C.muted} style={{ fontFamily: mono }}>
+                  EARTH
+                </text>
+              </g>
+            </svg>
+            <div className="tc-a tc-in" style={cv({ '--d': '400ms', position: 'absolute', left: 1250, top: 300, width: 550, fontSize: 64, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.04em' })}>
+              And now a <span className="ai-shine">demo!</span>
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '800ms', position: 'absolute', left: 1250, top: 440, width: 550, fontSize: 48, lineHeight: 1.15, fontWeight: 800, color: C.gold, letterSpacing: '-0.03em' })}>
+              Let’s build something!
+            </div>
+          </div>
+        </Step>
+        {/* click 2 — a galactic trip to Mars */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={akSvg}>
+              <path className="tc-a ak-draw" style={cv({ '--t': '2400ms', '--d': '200ms' })} pathLength={1} d="M 300 830 C 520 470, 820 960, 1010 500" fill="none" stroke={C.gold} strokeWidth={4} strokeLinecap="round" />
+              <g className="tc-a ak-pop" style={cv({ '--d': '2000ms' })}>
+                <circle className="tc-a ak-ripple" style={cv({ '--dl': '0s', transformBox: 'fill-box', transformOrigin: 'center' })} cx={1040} cy={470} r={64} fill="none" stroke="#FF5D6C" strokeWidth={3} />
+                <circle className="tc-a ak-ripple" style={cv({ '--dl': '1.5s', transformBox: 'fill-box', transformOrigin: 'center' })} cx={1040} cy={470} r={64} fill="none" stroke="#FF5D6C" strokeWidth={3} />
+                <circle cx={1040} cy={470} r={64} fill="#B5432E" stroke="#FF8A4C" strokeWidth={4} />
+                <circle cx={1016} cy={450} r={12} fill="#8A2F1F" />
+                <circle cx={1066} cy={494} r={16} fill="#8A2F1F" />
+                <circle cx={1054} cy={436} r={7} fill="#8A2F1F" />
+                <text x={1040} y={576} textAnchor="middle" fontSize={22} fill="#FF8A4C" style={{ fontFamily: mono }}>
+                  MARS
+                </text>
+              </g>
+            </svg>
+            <div
+              className="tc-a ak-rocket"
+              style={cv({ position: 'absolute', left: 0, top: 0, fontSize: 64, lineHeight: 1, offsetPath: "path('M 300 830 C 520 470, 820 960, 1010 500')", offsetRotate: 'auto 45deg', offsetAnchor: '50% 50%' })}
+            >
+              🚀
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '300ms', position: 'absolute', left: 1250, top: 600, width: 550, fontSize: 38, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.02em' })}>
+              How about a <span style={{ color: '#4DA6FF' }}>Galactic Travel Website</span> to book your vacation to <span style={{ color: '#FF8A4C' }}>Mars</span>!
+            </div>
+          </div>
+        </Step>
+        {/* click 3 — the repo */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', left: 1250, top: 810 }}>
+            <div className="tc-a tc-in" style={cv({ '--d': '0ms', fontFamily: mono, fontSize: 20, letterSpacing: '0.12em', color: C.dim, marginBottom: 10 })}>
+              THE CODE
+            </div>
+            <AkLink href="https://github.com/IBM/galaxium-travels" w={620} n={36} size={25} />
+          </div>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak8.transition = settle;
+
+/* ───────────────────────── 37 · stay curious — tools you need ───────────────────────── */
+
+const Ak9: Page = () => {
+  return (
+    <Frame eyebrow="37 · AI 101 · STAY CURIOUS" title={<AkCuriousTitle />}>
+      <style>
+        {AI_CSS}
+        {AK_CSS}
+      </style>
+      <AkStage>
+        <Step duration={200}>
+          <div className="tc-a tc-in" style={cv({ '--d': '0ms', position: 'absolute', left: 120, top: 280, fontSize: 66, fontWeight: 900, letterSpacing: '-0.04em' })}>
+            Tools you <span className="ai-shine">need</span>
+          </div>
+        </Step>
+        {/* click 2 — LinkedIn */}
+        <Step duration={200}>
+          <AkCard x={120} y={430} w={820} h={470} color="#0A8CFF" label="LINKEDIN">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 40, marginTop: 26 }}>
+              <div style={{ position: 'relative', width: 190, height: 190, flexShrink: 0 }}>
+                <div className="tc-a ak-ripple" style={cv({ '--dl': '0s', position: 'absolute', inset: 0, borderRadius: 40, border: '3px solid #0A66C2' })} />
+                <div className="tc-a ak-ripple" style={cv({ '--dl': '1.5s', position: 'absolute', inset: 0, borderRadius: 40, border: '3px solid #0A66C2' })} />
+                <div className="tc-a ak-pop" style={cv({ '--d': '300ms', position: 'absolute', inset: 0, borderRadius: 40, background: '#0A66C2', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 120, fontWeight: 900, letterSpacing: '-0.06em' })}>
+                  in
+                </div>
+              </div>
+              <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.3 }}>
+                <div className="tc-a tc-in" style={cv({ '--d': '600ms' })}>
+                  Build your <span style={{ color: '#4DA6FF' }}>network</span>
+                </div>
+                <div className="tc-a tc-in" style={cv({ '--d': '850ms' })}>
+                  Share what you <span style={{ color: C.green }}>learn</span>
+                </div>
+                <div className="tc-a tc-in" style={cv({ '--d': '1100ms' })}>
+                  Be <span style={{ color: C.gold }}>found</span>
+                </div>
+              </div>
+            </div>
+          </AkCard>
+        </Step>
+        {/* click 3 — GitHub */}
+        <Step duration={200}>
+          <AkCard x={980} y={430} w={820} h={470} color="#B07AD0" label="GITHUB">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 40, marginTop: 26 }}>
+              <div style={{ position: 'relative', width: 190, height: 190, flexShrink: 0 }}>
+                <svg width={190} height={190} viewBox="0 0 190 190" style={{ display: 'block' }}>
+                  <circle className="tc-a ak-pop" style={cv({ '--d': '300ms' })} cx={95} cy={95} r={90} fill="#161B26" stroke="#F3F6FC" strokeWidth={5} />
+                  <g fill="none" stroke="#F3F6FC" strokeWidth={7} strokeLinecap="round">
+                    <path className="tc-a ak-draw" style={cv({ '--t': '700ms', '--d': '600ms' })} pathLength={1} d="M 70 52 L 70 138" />
+                    <path className="tc-a ak-draw" style={cv({ '--t': '800ms', '--d': '900ms' })} pathLength={1} d="M 70 112 C 70 82, 126 108, 126 74" />
+                  </g>
+                  <circle className="tc-a ak-pop" style={cv({ '--d': '600ms' })} cx={70} cy={52} r={13} fill={C.green} />
+                  <circle className="tc-a ak-pop" style={cv({ '--d': '700ms' })} cx={70} cy={138} r={13} fill="#4DA6FF" />
+                  <circle className="tc-a ak-pop" style={cv({ '--d': '1500ms' })} cx={126} cy={74} r={13} fill={C.gold} />
+                </svg>
+              </div>
+              <div style={{ fontSize: 34, fontWeight: 700, lineHeight: 1.3 }}>
+                <div className="tc-a tc-in" style={cv({ '--d': '600ms' })}>
+                  Where code <span style={{ color: C.green }}>lives</span>
+                </div>
+                <div className="tc-a tc-in" style={cv({ '--d': '850ms' })}>
+                  Fork it, <span style={{ color: '#B07AD0' }}>learn</span> from it
+                </div>
+                <div className="tc-a tc-in" style={cv({ '--d': '1100ms' })}>
+                  Your <span style={{ color: C.gold }}>portfolio</span>
+                </div>
+              </div>
+            </div>
+          </AkCard>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak9.transition = settle;
+
+/* ───────────────────────── 38 · stay curious — keep learning ───────────────────────── */
+
+const AK_EXPERTS = Array.from({ length: 8 }, (_, i) => ({ x: 500 + (i % 2) * 150, y: 20 + Math.floor(i / 2) * 140 }));
+
+const Ak10: Page = () => {
+  const lbl = { fontFamily: mono } as CSSProperties;
+  return (
+    <Frame eyebrow="38 · AI 101 · STAY CURIOUS" title={<AkCuriousTitle />}>
+      <style>
+        {AI_CSS}
+        {AK_CSS}
+      </style>
+      <AkStage>
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div className="tc-a tc-in" style={cv({ '--d': '0ms', position: 'absolute', left: 120, top: 290, fontSize: 80, fontWeight: 900, letterSpacing: '-0.04em', lineHeight: 1 })}>
+              KEEP <span className="ai-shine">LEARNING!</span>
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '500ms', position: 'absolute', left: 120, top: 420, width: 760, fontSize: 40, lineHeight: 1.2, fontWeight: 800, letterSpacing: '-0.02em' })}>
+              IBM’s <span style={{ color: C.gold }}>A Mixture of Experts</span> podcast
+            </div>
+            {/* podcast player */}
+            <div className="tc-a tc-in" style={cv({ '--d': '800ms', position: 'absolute', left: 120, top: 560, width: 760, height: 120, boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: 26, padding: '0 28px', borderRadius: 60, background: 'rgba(11,16,32,0.9)', border: `3px solid ${C.teal}` })}>
+              <svg width={64} height={64} viewBox="0 0 64 64">
+                <circle cx={32} cy={32} r={30} fill={C.teal} />
+                <polygon points="26,19 26,45 48,32" fill="#03050C" />
+              </svg>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 7, height: 80, flex: 1 }}>
+                {Array.from({ length: 26 }, (_, i) => (
+                  <span
+                    // biome-ignore lint/suspicious/noArrayIndexKey: static decoration
+                    key={i}
+                    className="tc-a tc-sbar"
+                    style={cv({ '--d': `${(i * 0.13) % 1.2}s`, width: 10, height: 20 + ((i * 37) % 52), flexShrink: 0 })}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </Step>
+        {/* click 2 — the mixture of experts */}
+        <Step duration={200}>
+          <svg width={820} height={620} viewBox="0 0 820 620" style={{ position: 'absolute', left: 980, top: 290, overflow: 'visible' }}>
+            <g className="tc-a ak-pop" style={cv({ '--d': '100ms' })}>
+              <rect x={0} y={250} width={100} height={64} rx={16} fill="rgba(169,183,217,0.16)" stroke={C.muted} strokeWidth={3} />
+              <text x={50} y={290} textAnchor="middle" fontSize={22} fill={C.muted} style={lbl}>
+                token
+              </text>
+            </g>
+            <line className="tc-a ak-flow" x1={104} y1={282} x2={190} y2={282} stroke="#4DA6FF" strokeWidth={4} strokeLinecap="round" />
+            <g className="tc-a ak-pop" style={cv({ '--d': '400ms' })}>
+              <circle cx={250} cy={282} r={62} fill="rgba(77,166,255,0.2)" stroke="#4DA6FF" strokeWidth={4} />
+              <text x={250} y={290} textAnchor="middle" fontSize={24} fontWeight={800} fill="#4DA6FF" style={lbl}>
+                router
+              </text>
+            </g>
+            {AK_EXPERTS.map((e, i) => (
+              <g key={`ex${e.x}-${e.y}`}>
+                <line x1={312} y1={282} x2={e.x} y2={e.y + 55} stroke="rgba(169,183,217,0.22)" strokeWidth={2} className="tc-a ak-fade" style={cv({ '--d': `${700 + i * 60}ms` })} />
+                <line className="tc-a ak-expert" style={cv({ '--dl': `${(i * 0.75) % 6}s` })} x1={312} y1={282} x2={e.x} y2={e.y + 55} stroke={C.gold} strokeWidth={3.5} />
+                <g className="tc-a ak-pop" style={cv({ '--d': `${800 + i * 90}ms` })}>
+                  <g className="tc-a ak-expert" style={cv({ '--dl': `${(i * 0.75) % 6}s` })}>
+                    <rect x={e.x} y={e.y} width={130} height={110} rx={18} fill="rgba(255,197,107,0.2)" stroke={C.gold} strokeWidth={3.5} />
+                    <text x={e.x + 65} y={e.y + 52} textAnchor="middle" fontSize={20} fill={C.gold} style={lbl}>
+                      expert
+                    </text>
+                    <text x={e.x + 65} y={e.y + 84} textAnchor="middle" fontSize={30} fontWeight={900} fill="#F3F6FC">
+                      {i + 1}
+                    </text>
+                  </g>
+                </g>
+              </g>
+            ))}
+            <text className="tc-a ak-fade" style={{ ...cv({ '--d': '1800ms' }), ...lbl }} x={410} y={606} textAnchor="middle" fontSize={22} fill={C.muted}>
+              only a few experts wake up per token
+            </text>
+          </svg>
+        </Step>
+        {/* click 3 — the link */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', left: 120, top: 740 }}>
+            <div className="tc-a tc-in" style={cv({ '--d': '0ms', fontFamily: mono, fontSize: 20, letterSpacing: '0.12em', color: C.dim, marginBottom: 10 })}>
+              LISTEN
+            </div>
+            <AkLink href="https://www.ibm.com/think/podcasts/mixture-of-experts" w={740} n={46} size={24} />
+          </div>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak10.transition = settle;
+
+/* ───────────────────────── 39 · this concludes ───────────────────────── */
+
+const AK_CLOUD: { t: string; x: number; y: number; s: number; c: string; d: number }[] = [
+  { t: 'machine learning', x: 1200, y: 560, s: 54, c: '#4DA6FF', d: 0 },
+  { t: 'deep learning', x: 1330, y: 340, s: 42, c: C.gold, d: 120 },
+  { t: 'models', x: 1560, y: 450, s: 50, c: C.green, d: 240 },
+  { t: 'data', x: 1620, y: 640, s: 60, c: '#B07AD0', d: 360 },
+  { t: 'classification', x: 1230, y: 700, s: 36, c: C.teal, d: 480 },
+  { t: 'regression', x: 1500, y: 790, s: 38, c: C.red, d: 600 },
+  { t: 'neural', x: 1210, y: 430, s: 34, c: '#FF8A4C', d: 720 },
+  { t: 'training', x: 1280, y: 810, s: 40, c: C.green, d: 840 },
+  { t: 'inference', x: 1600, y: 320, s: 34, c: '#4DA6FF', d: 960 },
+  { t: 'weights', x: 1470, y: 900, s: 32, c: C.gold, d: 1080 },
+  { t: 'bias', x: 1215, y: 910, s: 30, c: '#B07AD0', d: 1200 },
+  { t: 'tokens', x: 1670, y: 880, s: 34, c: C.teal, d: 1320 },
+  { t: 'features', x: 1420, y: 640, s: 30, c: '#C9D3EC', d: 1440 },
+  { t: 'agents', x: 1690, y: 540, s: 36, c: '#FF8A4C', d: 1560 },
+];
+
+const Ak11: Page = () => {
+  const rows: { y: number; h: number; node: ReactNode }[] = [
+    {
+      y: 290,
+      h: 90,
+      node: (
+        <>
+          In the future you will <span style={{ color: '#4DA6FF' }}>orchestrate agents</span>…
+        </>
+      ),
+    },
+    {
+      y: 392,
+      h: 130,
+      node: (
+        <>
+          We are living through the <span style={{ color: C.gold }}>fastest, most exciting, fundamental shift</span> of our economy, our lives and how work gets done…
+        </>
+      ),
+    },
+    {
+      y: 534,
+      h: 130,
+      node: (
+        <>
+          Within the last year, AI proved it could do the work of <span style={{ color: C.green }}>100 programmers</span>. In the coming years AI will grow{' '}
+          <span style={{ color: '#B07AD0' }}>arms and legs</span> and live with us…
+        </>
+      ),
+    },
+  ];
+  return (
+    <Frame eyebrow="39 · AI 101 · WRAP-UP" title={<AkTitle size={84}>This Concludes</AkTitle>}>
+      <style>
+        {AI_CSS}
+        {AK_CSS}
+      </style>
+      <AkStage>
+        {/* click 1 — the word cloud assembles */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            {AK_CLOUD.map((w) => (
+              <span
+                key={w.t}
+                className="tc-a ak-word"
+                style={cv({ '--d': `${w.d}ms`, '--t': `${3.4 + (w.d % 5) * 0.2}s`, position: 'absolute', left: w.x, top: w.y, fontSize: w.s, fontWeight: 800, letterSpacing: '-0.02em', color: w.c, whiteSpace: 'nowrap', textShadow: `0 0 22px ${w.c}66` })}
+              >
+                {w.t}
+              </span>
+            ))}
+          </div>
+        </Step>
+        {/* click 2 — the future */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            {rows.map((r, i) => (
+              <div key={r.y} className="tc-a tc-in" style={cv({ '--d': `${i * 450}ms`, position: 'absolute', left: 120, top: r.y, width: 1000, height: r.h, fontSize: 33, lineHeight: 1.3, fontWeight: 700 })}>
+                {r.node}
+              </div>
+            ))}
+          </div>
+        </Step>
+        {/* click 3 — the warning */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div className="tc-a tc-in" style={cv({ '--d': '0ms', position: 'absolute', left: 120, top: 686, width: 1000, fontSize: 52, lineHeight: 1.1, fontWeight: 900, letterSpacing: '-0.03em' })}>
+              The Future is <span className="ai-shine">now!</span>
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '500ms', position: 'absolute', left: 120, top: 760, width: 1000, fontSize: 33, lineHeight: 1.3, fontWeight: 700 })}>
+              Do not anthropomorphize AI, it’s <span style={{ color: C.red }}>not alive</span>… We really do not understand how it works.
+            </div>
+          </div>
+        </Step>
+        {/* click 4 — use the silence */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div className="tc-a tc-in" style={cv({ '--d': '0ms', position: 'absolute', left: 120, top: 850, width: 1000, fontSize: 36, lineHeight: 1.2, fontWeight: 800, color: C.muted })}>
+              Smart people are allowed to think. You are all smart.
+            </div>
+            <div className="tc-a tc-in ai-glow" style={cv({ '--d': '700ms', '--g0': 'rgba(255,197,107,0)', '--g1': 'rgba(255,197,107,0.7)', position: 'absolute', left: 120, top: 910, display: 'inline-block', padding: '4px 30px', borderRadius: 18, background: C.gold, color: '#2A1C03', fontSize: 52, fontWeight: 900, letterSpacing: '-0.03em' })}>
+              Use the silence.
+            </div>
+          </div>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak11.transition = settle;
+
+/* ───────────────────────── 40 · about the speaker ───────────────────────── */
+
+const AK_STATS = [
+  { n: '6', l: 'patents', c: C.gold },
+  { n: '17', l: 'years at MAPSYS', c: '#4DA6FF' },
+  { n: '2', l: 'engineering degrees', c: C.green },
+];
+
+const Ak12: Page = () => {
+  return (
+    <Frame eyebrow="40 · AI 101 · ABOUT THE SPEAKER" title={<AkTitle size={72}>About the speaker:</AkTitle>}>
+      <style>
+        {AI_CSS}
+        {AK_CSS}
+      </style>
+      <AkStage>
+        {/* click 1 — who */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <div style={{ position: 'absolute', left: 120, top: 290, width: 380, height: 412 }}>
+              <div className="tc-a ak-ripple" style={cv({ '--dl': '0s', position: 'absolute', inset: 0, borderRadius: 28, border: `3px solid ${C.gold}` })} />
+              <div className="tc-a ak-ripple" style={cv({ '--dl': '1.5s', position: 'absolute', inset: 0, borderRadius: 28, border: `3px solid ${C.gold}` })} />
+              <img
+                className="tc-a ak-pop"
+                src={akSpeaker}
+                alt="Portrait of Daneyand “DJ” Singley"
+                style={cv({ '--d': '100ms', position: 'relative', display: 'block', width: 380, height: 412, objectFit: 'cover', borderRadius: 28, border: '6px solid #fff', boxSizing: 'border-box', boxShadow: '0 0 44px rgba(255,197,107,0.4)' })}
+              />
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '500ms', position: 'absolute', left: 120, top: 730, fontSize: 40, fontWeight: 900, letterSpacing: '-0.03em' })}>
+              Daneyand “DJ” Singley
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '700ms', position: 'absolute', left: 120, top: 790, fontSize: 30, fontWeight: 700, color: C.gold })}>
+              Technical Leader &amp; Field CTO · IBM
+            </div>
+            <div className="tc-a tc-in" style={cv({ '--d': '950ms', position: 'absolute', left: 120, top: 856, fontFamily: mono, fontSize: 28, lineHeight: 1.55, color: C.muted })}>
+              <div>
+                ✉ <span style={{ color: '#F3F6FC' }}>Daneyand@IBM.com</span>
+              </div>
+              <div>
+                ☎ <span style={{ color: '#F3F6FC' }}>802-598-6057</span>
+              </div>
+            </div>
+          </div>
+        </Step>
+        {/* click 2 — the career */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', inset: 0 }}>
+            <AkBullet x={640} y={300} w={1160} fs={34} d={0}>
+              <span style={{ color: '#4DA6FF' }}>17 years at MAPSYS</span>, an IBM Business Partner in Columbus, Ohio — Executive Director &amp; Chief Architect, leading the reseller business for a decade
+            </AkBullet>
+            <AkBullet x={640} y={450} w={1160} fs={34} d={450}>
+              Began at IBM as a <span style={{ color: C.gold }}>microprocessor design engineer</span> — Apple G5 Macs, Nintendo Wii and Wii U, IBM Power servers — before moving to technical sales
+            </AkBullet>
+            <AkBullet x={640} y={600} w={1160} fs={34} d={900} color={C.green}>
+              <span style={{ color: C.green }}>Six patents</span> and several published papers
+            </AkBullet>
+            <AkBullet x={640} y={680} w={1160} fs={34} d={1350} color="#B07AD0">
+              <span style={{ color: '#D6B2EE' }}>BS Computer Engineering</span>, Rutgers · <span style={{ color: '#D6B2EE' }}>MS Electrical Engineering</span>, University of Vermont
+            </AkBullet>
+          </div>
+        </Step>
+        {/* click 3 — by the numbers */}
+        <Step duration={200}>
+          <div style={{ position: 'absolute', left: 640, top: 800, display: 'flex', gap: 34 }}>
+            {AK_STATS.map((s, i) => (
+              <div key={s.l} className="tc-a tc-in ai-glow" style={cv({ '--d': `${i * 250}ms`, '--g0': `${s.c}00`, '--g1': `${s.c}88`, width: 340, padding: '18px 0', borderRadius: 22, border: `3px solid ${s.c}`, background: `${s.c}1c`, textAlign: 'center' })}>
+                <div style={{ fontSize: 80, fontWeight: 900, lineHeight: 1, color: s.c }}>{s.n}</div>
+                <div style={{ marginTop: 4, fontFamily: mono, fontSize: 22, letterSpacing: '0.06em', color: C.muted }}>{s.l}</div>
+              </div>
+            ))}
+          </div>
+        </Step>
+      </AkStage>
+    </Frame>
+  );
+};
+Ak12.transition = settle;
+
 export const meta: SlideMeta = {
   title: 'What a career in technology looks like & how AI changes everything',
   createdAt: '2026-11-07T16:09:51.435Z',
 };
-export default [Cover, Agenda, Powers, Hello, College, Winlab, Internship, Tru64, Luck, WalkHome, IbmJob, IbmMore, MareNostrum, ShowTell, Learning, Patents, ThirdPoint, Tragedy, Opportunity, FourthPoint, IbmSales, SellingDesigned, Entrepreneurship, Mapsys, Customers, Speaking, BackAtIbm, FellIntoAi] satisfies Page[];
+export default [Cover, Agenda, Powers, Hello, College, Winlab, Internship, Tru64, Luck, WalkHome, IbmJob, IbmMore, MareNostrum, ShowTell, Learning, Patents, ThirdPoint, Tragedy, Opportunity, FourthPoint, IbmSales, SellingDesigned, Entrepreneurship, Mapsys, Customers, Speaking, BackAtIbm, FellIntoAi, Ak1, Ak2, Ak3, Ak4, Ak5, Ak6, Ak7, Ak8, Ak9, Ak10, Ak11, Ak12] satisfies Page[];
